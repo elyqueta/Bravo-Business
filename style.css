@@ -730,6 +730,16 @@ footer{
 }
 .modal-btn-wish:hover{border-color:var(--danger);color:var(--danger);background:#fff0f0}
 .modal-btn-wish.wishlisted{background:#fff0f0;color:var(--danger);border-color:#ffd0d0}
+.location{
+  width: 100%;
+  max-width: 100%;
+}
+.location iframe{
+  width: 100%;
+  height: 480px;
+  border: none;
+  border-radius: 10px;
+}
 
 /* RESPONSIVE MODAL */
 @media(max-width:680px){

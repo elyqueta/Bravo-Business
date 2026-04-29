@@ -1,12 +1,61 @@
 /* ════════ DATA ════════ */
 const products = [
-  {id:'BB-R001',name:'Coletes',   cat:'roupas',     price:14500, oldPrice:16000, img:'images/produtos/roupas/colete2.jpeg',badge:'sale'},
-  {id:'BB-R002',name:'Colete Cardigan',   cat:'roupas',     price:8000,oldPrice:9500,img:'images/produtos/roupas/Colete_Cardigan.jpeg',badge:'Sale'},
-  {id:'BB-R003',name:'Equipamento Desportivos',     cat:'roupas',     price:7500, img:'images/produtos/roupas/equipamento_barca.jpeg'},
-  {id:'BB-R004',name:'T-Shirt Lisas (todas as cores)',   cat:'roupas',     price:6000,             img:'images/produtos/roupas/tshirtAll2.jpeg'},
-  {id:'BB-R005',name:'Fato Social',   cat:'roupas',     price:65000,oldPrice:80000,img:'images/produtos/roupas/fato2.jpeg',badge:'Sale'},
-    {id:'BB-C001',name:'Chuteira de Futebol',     cat:'tenis',      price:25000, img:'images/produtos/calcados/chuteira.jpeg',badge:'Novo'},
-  {id:'BB-C002',name:'Chuteira de Futsal',       cat:'tenis',      price:14000,             img:'images/produtos/calcados/chuteira_sem_pitao.jpeg'},
+  {
+    id:'BB-R001',
+    name:'Coletes',
+    cat:'roupas',
+    price:14500,
+    oldPrice:16000,
+    img:'images/produtos/roupas/colete2.jpeg',
+    badge:'sale'
+  },
+  {
+    id:'BB-R002',
+    name:'Colete Cardigan',
+    cat:'roupas',
+    price:8000,
+    oldPrice:9500,
+    img:'images/produtos/roupas/Colete_Cardigan.jpeg',
+    badge:'Sale'
+  },
+  {
+    id:'BB-R003',
+    name:'Equipamento Desportivos',
+    cat:'roupas',
+    price:7500,
+    img:'images/produtos/roupas/equipamento_barca.jpeg'
+  },
+  {
+    id:'BB-R004',
+    name:'T-Shirt Lisas (todas as cores)',
+    cat:'roupas',
+    price:6000,
+    img:'images/produtos/roupas/tshirtAll2.jpeg'
+  },
+  {
+    id:'BB-R005',
+    name:'Fato Social',
+    cat:'roupas',
+    price:65000,
+    oldPrice:80000,
+    img:'images/produtos/roupas/fato2.jpeg',
+    badge:'Sale'
+  },
+  {
+    id:'BB-C001',
+    name:'Chuteira de Futebol',
+    cat:'tenis',
+    price:25000,
+    img:'images/produtos/calcados/chuteira.jpeg',
+    badge:'Novo'
+  },
+  {
+    id:'BB-C002',
+    name:'Chuteira de Futsal',
+    cat:'tenis',
+    price:14000,
+    img:'images/produtos/calcados/chuteira_sem_pitao.jpeg'
+  },
   // {id:'BB-T004',name:'Trainer Pro Carbon',     cat:'tenis',      price:82000,             img:'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=600&q=80',badge:'Premium'},
   // {id:'BB-T005',name:'Slide Comfort Pool',     cat:'tenis',      price:12000,             img:'https://images.unsplash.com/photo-1603487742131-4160ec999306?w=600&q=80'},
   // {id:'BB-A001',name:'Relógio Minimalista Gold',cat:'acessorios', price:95000,             img:'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80',badge:'Premium'},
