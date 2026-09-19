@@ -1,0 +1,89 @@
+<main class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-brand">
+      <img src="assets/images/logo.jpeg" alt="Bravo Business" /><strong
+        >BRAVO<em>BUSINESS</em></strong
+      >
+    </div>
+    <nav class="admin-nav">
+      <a routerLink="/admin"
+        ><i class="fa-solid fa-chart-line"></i>Visão geral</a
+      ><a class="active" routerLink="/admin/produtos"
+        ><i class="fa-solid fa-boxes-stacked"></i>Produtos</a
+      ><a routerLink="/admin/categorias"
+        ><i class="fa-solid fa-layer-group"></i>Categorias</a
+      >
+    </nav>
+  </aside>
+  <section class="admin-content">
+    <header class="admin-topbar">
+      <div>
+        <span class="eyebrow">Bravo Business · Catálogo</span>
+        <h1>{{ editingId ? "Editar produto" : "Novo produto" }}</h1>
+        <p>Preenche os dados que aparecem na loja.</p>
+      </div>
+      <a routerLink="/admin/produtos" class="admin-secondary"
+        ><i class="fa-solid fa-arrow-left"></i> Voltar</a
+      >
+    </header>
+    <div class="admin-error" *ngIf="error">
+      <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
+    </div>
+    <form
+      class="admin-form admin-form-page"
+      [formGroup]="form"
+      (ngSubmit)="save()"
+    >
+      <label>Nome<input formControlName="name" /></label
+      ><label
+        >Categoria<select formControlName="categorySlug">
+          <option *ngFor="let category of categories" [value]="category.slug">
+            {{ category.label }}
+          </option>
+        </select></label
+      ><label>Preço<input type="number" formControlName="price" /></label
+      ><label
+        >Preço anterior<input type="number" formControlName="oldPrice" /></label
+      ><label
+        >Badge<select formControlName="badge">
+          <option value="">Sem badge</option>
+          <option value="Novo">Novo</option>
+          <option value="Sale">Sale</option>
+          <option value="Premium">Premium</option>
+        </select></label
+      ><label
+        >Imagem principal<input
+          type="file"
+          accept="image/*"
+          (change)="onImageSelected($event)"
+        />
+        <small>{{
+          editingId
+            ? "Escolhe uma nova imagem apenas se quiseres substituir a actual."
+            : "PNG, JPG ou WEBP até 5 MB."
+        }}</small>
+      </label>
+      <div class="admin-image-preview" *ngIf="imagePreview || product?.img">
+        <img
+          [src]="imagePreview || product?.img"
+          alt="Pré-visualização do produto"
+        />
+      </div>
+      <label class="wide"
+        >Descrição<textarea
+          formControlName="description"
+          rows="5"
+        ></textarea></label
+      ><label class="wide"
+        >Galeria <small>Uma URL por linha</small
+        ><textarea formControlName="gallery" rows="5"></textarea>
+      </label>
+      <div class="admin-form-actions wide">
+        <button type="submit" class="admin-primary" [disabled]="loading">
+          <i class="fa-solid fa-floppy-disk"></i
+          >{{ editingId ? "Guardar alterações" : "Criar produto" }}
+        </button>
+      </div>
+    </form>
+  </section>
+</main>

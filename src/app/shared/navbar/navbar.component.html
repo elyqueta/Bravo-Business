@@ -14,12 +14,12 @@
     <li>
       <a routerLink="/loja/produtos" routerLinkActive="active">Produtos</a>
     </li>
-    <li><a routerLink="/loja/roupas" routerLinkActive="active">Roupas</a></li>
-    <li>
-      <a routerLink="/loja/calcados" routerLinkActive="active">Calçados</a>
-    </li>
-    <li>
-      <a routerLink="/loja/acessorios" routerLinkActive="active">Acessórios</a>
+    <li *ngFor="let category of store.categories()">
+      <a
+        [routerLink]="store.categoryMeta[category.slug].route"
+        routerLinkActive="active"
+        >{{ category.label }}</a
+      >
     </li>
     <li><a routerLink="/contactos" routerLinkActive="active">Contacto</a></li>
   </ul>
@@ -67,25 +67,23 @@
     </button>
   </div>
   <div class="mob-body">
+    <a routerLink="/loja" (click)="closeMobile()"
+      ><i class="fa-solid fa-store"></i>Loja</a
+    >
+    <a routerLink="/loja/produtos" (click)="closeMobile()"
+      ><i class="fa-solid fa-box"></i>Produtos</a
+    >
     <a
-      *ngFor="
-        let link of [
-          { label: 'Loja', route: '/loja', icon: 'fa-store' },
-          { label: 'Produtos', route: '/loja/produtos', icon: 'fa-box' },
-          { label: 'Roupas', route: '/loja/roupas', icon: 'fa-shirt' },
-          {
-            label: 'Calçados',
-            route: '/loja/calcados',
-            icon: 'fa-shoe-prints',
-          },
-          { label: 'Acessórios', route: '/loja/acessorios', icon: 'fa-gem' },
-          { label: 'Contacto', route: '/contactos', icon: 'fa-location-dot' },
-        ]
-      "
-      [routerLink]="link.route"
+      *ngFor="let category of store.categories()"
+      [routerLink]="store.categoryMeta[category.slug].route"
       (click)="closeMobile()"
-      ><i class="fa-solid" [ngClass]="link.icon"></i>{{ link.label }}</a
-    ><a href="https://wa.me/244957103656" target="_blank" class="wa-link"
+      ><i class="fa-solid" [ngClass]="category.icon || 'fa-box'"></i
+      >{{ category.label }}</a
+    >
+    <a routerLink="/contactos" (click)="closeMobile()"
+      ><i class="fa-solid fa-location-dot"></i>Contacto</a
+    >
+    <a href="https://wa.me/244957103656" target="_blank" class="wa-link"
       ><i class="fa-brands fa-whatsapp"></i>WhatsApp</a
     >
   </div>

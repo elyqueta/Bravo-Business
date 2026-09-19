@@ -1,0 +1,101 @@
+<main class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-brand">
+      <img src="assets/images/logo.jpeg" alt="Bravo Business" /><strong
+        >BRAVO<em>BUSINESS</em></strong
+      >
+    </div>
+    <nav class="admin-nav">
+      <a routerLink="/admin"
+        ><i class="fa-solid fa-chart-line"></i>Visão geral</a
+      ><a class="active" routerLink="/admin/produtos"
+        ><i class="fa-solid fa-boxes-stacked"></i>Produtos</a
+      ><a routerLink="/admin/categorias"
+        ><i class="fa-solid fa-layer-group"></i>Categorias</a
+      >
+    </nav>
+    <div class="admin-sidebar-foot">
+      <a routerLink="/loja"><i class="fa-solid fa-store"></i> Ver loja</a>
+    </div>
+  </aside>
+  <section class="admin-content">
+    <header class="admin-topbar">
+      <div>
+        <span class="eyebrow">Bravo Business · Catálogo</span>
+        <h1>Produtos</h1>
+        <p>Consulta, edita e remove produtos da loja.</p>
+      </div>
+      <a routerLink="/admin/produtos/novo" class="admin-primary"
+        ><i class="fa-solid fa-plus"></i> Novo produto</a
+      >
+    </header>
+    <div class="admin-error" *ngIf="error">
+      <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
+    </div>
+    <section class="admin-panel">
+      <div class="admin-panel-head">
+        <h2>Todos os produtos</h2>
+        <div class="admin-panel-actions">
+          <input
+            class="admin-search"
+            [(ngModel)]="search"
+            (ngModelChange)="load()"
+            placeholder="Pesquisar produtos"
+          /><button class="admin-refresh" (click)="load()">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+        </div>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Categoria</th>
+              <th>Preço</th>
+              <th>Badge</th>
+              <th>Acções</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of products">
+              <td>
+                <div class="admin-product-cell">
+                  <img [src]="product.img" [alt]="product.name" /><span
+                    >{{ product.name }}<small>{{ product.id }}</small></span
+                  >
+                </div>
+              </td>
+              <td>{{ product.categorySlug }}</td>
+              <td>{{ product.price | number }} Kz</td>
+              <td>
+                <span class="admin-badge" *ngIf="product.badge">{{
+                  product.badge
+                }}</span>
+              </td>
+              <td>
+                <div class="admin-row-actions">
+                  <a
+                    [routerLink]="['/admin/produtos', product.id, 'editar']"
+                    title="Editar"
+                    ><i class="fa-solid fa-pen"></i></a
+                  ><button
+                    class="delete"
+                    (click)="delete(product)"
+                    title="Eliminar"
+                  >
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="admin-empty" *ngIf="!loading && !products.length">
+          <i class="fa-solid fa-box-open"></i>
+          <p>Nenhum produto encontrado.</p>
+        </div>
+      </div>
+    </section>
+  </section>
+</main>

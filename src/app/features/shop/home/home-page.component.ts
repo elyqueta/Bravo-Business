@@ -12,7 +12,9 @@ import { Category, StoreService } from "../../../core/store.service";
 })
 export class HomePageComponent implements OnInit, OnDestroy {
   readonly store = inject(StoreService);
-  readonly categories: Category[] = ["roupas", "tenis", "acessorios"];
+  get categories(): Category[] {
+    return this.store.categorySlugs();
+  }
   readonly slides = [
     {
       bg: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80",

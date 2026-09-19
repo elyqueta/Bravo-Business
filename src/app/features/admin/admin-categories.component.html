@@ -1,0 +1,60 @@
+<main class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-brand">
+      <img src="assets/images/logo.jpeg" alt="Bravo Business" /><strong
+        >BRAVO<em>BUSINESS</em></strong
+      >
+    </div>
+    <nav class="admin-nav">
+      <a routerLink="/admin"
+        ><i class="fa-solid fa-chart-line"></i>Visão geral</a
+      ><a routerLink="/admin/produtos"
+        ><i class="fa-solid fa-boxes-stacked"></i>Produtos</a
+      ><a class="active" routerLink="/admin/categorias"
+        ><i class="fa-solid fa-layer-group"></i>Categorias</a
+      >
+    </nav>
+  </aside>
+  <section class="admin-content">
+    <header class="admin-topbar">
+      <div>
+        <span class="eyebrow">Bravo Business · Catálogo</span>
+        <h1>Categorias</h1>
+        <p>Organiza os produtos por colecção.</p>
+      </div>
+      <a routerLink="/admin/categorias/nova" class="admin-primary"
+        ><i class="fa-solid fa-plus"></i> Nova categoria</a
+      >
+    </header>
+    <div class="admin-error" *ngIf="error">
+      <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
+    </div>
+    <section class="admin-panel">
+      <div class="admin-panel-head">
+        <h2>Todas as categorias</h2>
+        <button class="admin-refresh" (click)="load()">
+          <i class="fa-solid fa-arrows-rotate"></i> Actualizar
+        </button>
+      </div>
+      <div class="admin-category-list">
+        <article
+          class="admin-category-card"
+          *ngFor="let category of categories"
+        >
+          <i class="fa-solid" [ngClass]="category.icon || 'fa-box'"></i
+          ><strong>{{ category.label }}</strong
+          ><span>{{ category.slug }} · Prefixo {{ category.prefix }}</span>
+          <div class="admin-row-actions category-actions">
+            <a
+              [routerLink]="['/admin/categorias', category.id, 'editar']"
+              title="Editar"
+              ><i class="fa-solid fa-pen"></i></a
+            ><button class="delete" (click)="delete(category)" title="Eliminar">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </article>
+      </div>
+    </section>
+  </section>
+</main>

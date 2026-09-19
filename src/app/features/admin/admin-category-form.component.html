@@ -1,0 +1,91 @@
+<main class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-brand">
+      <img src="assets/images/logo.jpeg" alt="Bravo Business" /><strong
+        >BRAVO<em>BUSINESS</em></strong
+      >
+    </div>
+    <nav class="admin-nav">
+      <a routerLink="/admin"
+        ><i class="fa-solid fa-chart-line"></i>Visão geral</a
+      ><a routerLink="/admin/produtos"
+        ><i class="fa-solid fa-boxes-stacked"></i>Produtos</a
+      ><a class="active" routerLink="/admin/categorias"
+        ><i class="fa-solid fa-layer-group"></i>Categorias</a
+      >
+    </nav>
+  </aside>
+  <section class="admin-content">
+    <header class="admin-topbar">
+      <div>
+        <span class="eyebrow">Bravo Business · Catálogo</span>
+        <h1>{{ editingId ? "Editar categoria" : "Nova categoria" }}</h1>
+        <p>Define como a categoria aparece na loja.</p>
+      </div>
+      <a routerLink="/admin/categorias" class="admin-secondary"
+        ><i class="fa-solid fa-arrow-left"></i> Voltar</a
+      >
+    </header>
+    <div class="admin-error" *ngIf="error">
+      <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
+    </div>
+    <form
+      class="admin-form admin-form-page category-form-page"
+      [formGroup]="form"
+      (ngSubmit)="save()"
+    >
+      <label>Nome<input formControlName="label" placeholder="Roupas" /></label
+      ><label
+        >Prefixo<input
+          formControlName="prefix"
+          maxlength="1"
+          placeholder="R" /></label
+      ><label
+        >Ícone Font Awesome<button
+          type="button"
+          class="icon-picker-trigger"
+          (click)="iconPickerOpen = true"
+        >
+          <i class="fa-solid" [ngClass]="form.controls.icon.value"></i
+          ><span>{{ form.controls.icon.value }}</span
+          ><i class="fa-solid fa-chevron-down"></i></button></label
+      ><label
+        >Âncora<input formControlName="anchor" placeholder="s-roupas"
+      /></label>
+      <div class="admin-form-actions wide">
+        <button class="admin-primary" type="submit" [disabled]="loading">
+          <i class="fa-solid fa-floppy-disk"></i
+          >{{ editingId ? "Guardar alterações" : "Criar categoria" }}
+        </button>
+      </div>
+    </form>
+  </section>
+</main>
+<div
+  class="icon-picker-overlay"
+  *ngIf="iconPickerOpen"
+  (click)="iconPickerOpen = false"
+>
+  <section class="icon-picker-modal" (click)="$event.stopPropagation()">
+    <header>
+      <div>
+        <span class="eyebrow">Visual selector</span>
+        <h2>Escolhe um ícone</h2>
+      </div>
+      <button type="button" (click)="iconPickerOpen = false">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </header>
+    <div class="icon-picker-grid">
+      <button
+        type="button"
+        *ngFor="let icon of iconOptions"
+        [class.selected]="form.controls.icon.value === icon"
+        (click)="selectIcon(icon)"
+      >
+        <i class="fa-solid" [ngClass]="icon"></i
+        ><span>{{ icon.replace("fa-", "") }}</span>
+      </button>
+    </div>
+  </section>
+</div>

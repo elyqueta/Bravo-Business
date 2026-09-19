@@ -1,6 +1,11 @@
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable, signal } from "@angular/core";
+import { environment } from "../../environments/environment";
+import { CategoryApi, ProductApi } from "./api.models";
+import { ApiResponse } from "./api.models";
+import { Observable, catchError, map, of } from "rxjs";
 
-export type Category = "roupas" | "tenis" | "acessorios";
+export type Category = string;
 
 export interface Product {
   id: string;
@@ -10,6 +15,9 @@ export interface Product {
   img: string;
   oldPrice?: number;
   badge?: string;
+  description?: string | null;
+  features?: string[] | null;
+  gallery?: string[] | null;
 }
 
 export interface CartItem extends Product {
@@ -20,7 +28,7 @@ export interface CartItem extends Product {
 export class StoreService {
   private readonly cartStorageKey = "bravo-business-cart";
   private readonly wishlistStorageKey = "bravo-business-wishlist";
-  readonly products: Product[] = [
+  private readonly mockProducts: Product[] = [
     {
       id: "BB-R001",
       name: "Coletes",
@@ -86,8 +94,42 @@ export class StoreService {
       badge: "Novo",
     },
   ];
+  private readonly productsState = signal<Product[]>(this.mockProducts);
+  private readonly categoriesState = signal<CategoryApi[]>([
+    {
+      id: "roupas",
+      slug: "roupas",
+      label: "Roupas",
+      icon: "fa-shirt",
+      prefix: "R",
+      anchor: "s-roupas",
+    },
+    {
+      id: "tenis",
+      slug: "tenis",
+      label: "Calçados",
+      icon: "fa-shoe-prints",
+      prefix: "C",
+      anchor: "s-calcados",
+    },
+    {
+      id: "acessorios",
+      slug: "acessorios",
+      label: "Acessórios",
+      icon: "fa-gem",
+      prefix: "A",
+      anchor: "s-acessorios",
+    },
+  ]);
+  readonly catalogReady = signal(false);
+  readonly catalogVersion = signal(0);
+  private catalogRequestsPending = 2;
+  readonly catalogError = signal("");
+  get products(): Product[] {
+    return this.productsState();
+  }
   readonly categoryMeta: Record<
-    Category,
+    string,
     { label: string; icon: string; route: string }
   > = {
     roupas: { label: "Roupas", icon: "fa-shirt", route: "/loja/roupas" },
@@ -102,25 +144,140 @@ export class StoreService {
       route: "/loja/acessorios",
     },
   };
+  categories() {
+    return this.categoriesState();
+  }
+  categorySlugs(): string[] {
+    return this.categories().map((category) => category.slug);
+  }
+  routeSlug(value: string): string {
+    return value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+  }
+  categoryFromRoute(routeSegment: string): Category | undefined {
+    return this.categories().find(
+      (category) =>
+        category.slug === routeSegment ||
+        this.categoryMeta[category.slug]?.route === `/loja/${routeSegment}`,
+    )?.slug;
+  }
   readonly cart = signal<CartItem[]>([]);
   readonly wishlist = signal<string[]>([]);
   readonly dark = signal(false);
 
-  constructor() {
+  constructor(private readonly http: HttpClient) {
+    this.loadCatalog();
     this.restoreCart();
     this.restoreWishlist();
+  }
+
+  private loadCatalog(): void {
+    const params = new HttpParams().set("page", 1).set("limit", 100);
+    this.http
+      .get<{
+        status: string;
+        data: ProductApi[];
+      }>(`${environment.apiUrl}/products`, { params })
+      .subscribe({
+        next: (response) => {
+          this.productsState.set(
+            response.data.map((product) => this.fromApiProduct(product)),
+          );
+          this.catalogVersion.update((version) => version + 1);
+          this.restoreCart();
+          this.restoreWishlist();
+          this.finishCatalogRequest();
+        },
+        error: () => {
+          this.catalogError.set(
+            "Não foi possível carregar o catálogo online. A mostrar os produtos disponíveis localmente.",
+          );
+          this.catalogVersion.update((version) => version + 1);
+          this.finishCatalogRequest();
+        },
+      });
+    this.http
+      .get<{
+        status: string;
+        data: CategoryApi[];
+      }>(`${environment.apiUrl}/categories`)
+      .subscribe({
+        next: (response) => {
+          const categories = response.data.map((category) => ({
+            ...category,
+            slug: this.routeSlug(category.slug),
+          }));
+          this.categoriesState.set(categories);
+          categories.forEach((category) => this.updateCategoryMeta(category));
+          this.catalogVersion.update((version) => version + 1);
+          this.finishCatalogRequest();
+        },
+        error: () => {
+          this.catalogVersion.update((version) => version + 1);
+          this.finishCatalogRequest();
+        },
+      });
+  }
+
+  private finishCatalogRequest(): void {
+    this.catalogRequestsPending -= 1;
+    if (this.catalogRequestsPending === 0) this.catalogReady.set(true);
+  }
+
+  private fromApiProduct(product: ProductApi): Product {
+    return {
+      id: product.id,
+      name: product.name,
+      cat: this.routeSlug(product.categorySlug),
+      price: product.price,
+      oldPrice: product.oldPrice ?? undefined,
+      img: product.img,
+      badge: product.badge ?? undefined,
+      description: product.description,
+      features: product.features,
+      gallery: product.gallery,
+    };
+  }
+
+  private updateCategoryMeta(category: CategoryApi): void {
+    const slug = this.routeSlug(category.slug);
+    const route =
+      slug === "tenis" || slug === "calcados"
+        ? "/loja/calcados"
+        : `/loja/${slug}`;
+    this.categoryMeta[slug] = {
+      label: category.label,
+      icon: category.icon || "fa-box",
+      route,
+    };
   }
 
   formatPrice(value: number): string {
     return `${value.toLocaleString("pt-AO")} Kz`;
   }
   categoryLabel(category: Category): string {
-    return this.categoryMeta[category].label;
+    return this.categoryMeta[category]?.label || category;
   }
   productsFor(category?: Category): Product[] {
     return category
       ? this.products.filter((product) => product.cat === category)
       : this.products;
+  }
+  productById(id: string): Observable<Product | null> {
+    return this.http
+      .get<
+        ApiResponse<ProductApi>
+      >(`${environment.apiUrl}/products/${encodeURIComponent(id)}`)
+      .pipe(
+        map((response) => this.fromApiProduct(response.data)),
+        catchError(() =>
+          of(this.products.find((product) => product.id === id) || null),
+        ),
+      );
   }
   cartCount(): number {
     return this.cart().reduce((total, item) => total + item.qty, 0);

@@ -1,0 +1,49 @@
+<main class="admin-auth">
+  <section class="admin-auth-brand">
+    <img src="assets/images/logo.jpeg" alt="Bravo Business" /><span
+      class="eyebrow"
+      >Bravo Business · Backoffice</span
+    >
+    <h1>Gestão com clareza.</h1>
+    <p>Administra o catálogo e mantém a tua loja em movimento.</p>
+  </section>
+  <section class="admin-auth-card">
+    <a routerLink="/loja" class="admin-back"
+      ><i class="fa-solid fa-arrow-left"></i>Voltar à loja</a
+    >
+    <div class="admin-auth-heading">
+      <span class="eyebrow">Área reservada</span>
+      <h2>Entrar no backoffice</h2>
+      <p>Usa as credenciais de administrador para continuar.</p>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <label
+        >Email<input
+          type="email"
+          formControlName="email"
+          placeholder="admin@bravo.co.ao" /></label
+      ><small *ngIf="form.controls.email.touched && form.controls.email.invalid"
+        >Indica um email válido.</small
+      ><label
+        >Password<input
+          type="password"
+          formControlName="password"
+          placeholder="A tua password" /></label
+      ><small
+        *ngIf="form.controls.password.touched && form.controls.password.invalid"
+        >A password deve ter pelo menos 6 caracteres.</small
+      >
+      <p class="admin-form-error" *ngIf="error">
+        <i class="fa-solid fa-circle-exclamation"></i>{{ error }}
+      </p>
+      <button class="admin-submit" [disabled]="loading">
+        <i
+          class="fa-solid"
+          [class.fa-right-to-bracket]="!loading"
+          [class.fa-spinner]="loading"
+        ></i
+        >{{ loading ? "A entrar..." : "Entrar" }}
+      </button>
+    </form>
+  </section>
+</main>

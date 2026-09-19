@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit, inject } from "@angular/core";
+import { Component, OnInit, effect, inject } from "@angular/core";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { Product, StoreService } from "../../../core/store.service";
 
@@ -16,6 +16,14 @@ export class ProductDetailPageComponent implements OnInit {
   private readonly router = inject(Router);
   product?: Product;
   selectedImage = 0;
+  private productId = "";
+
+  constructor() {
+    effect(() => {
+      this.store.catalogVersion();
+      this.updateFromCatalog();
+    });
+  }
 
   readonly galleries: Record<string, string[]> = {
     "BB-R001": [
@@ -76,26 +84,36 @@ export class ProductDetailPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
-      const product = this.store.products.find(
-        (item) => item.id === params.get("id"),
-      );
-      if (!product) {
-        void this.router.navigateByUrl("/loja/produtos");
-        return;
-      }
-      this.product = product;
-      this.selectedImage = 0;
+      this.productId = params.get("id") || "";
+      this.updateFromCatalog();
     });
+  }
+
+  private updateFromCatalog(): void {
+    if (!this.productId) return;
+    const product = this.store.products.find(
+      (item) => item.id === this.productId,
+    );
+    if (!product) {
+      if (this.store.catalogReady())
+        void this.router.navigateByUrl("/loja/produtos");
+      return;
+    }
+    this.product = product;
+    this.selectedImage = 0;
   }
 
   images(): string[] {
     return this.product
-      ? this.galleries[this.product.id] || [this.product.img]
+      ? this.product.gallery?.length
+        ? [this.product.img, ...this.product.gallery]
+        : this.galleries[this.product.id] || [this.product.img]
       : [];
   }
   description(): string {
     return this.product
-      ? this.descriptions[this.product.id] ||
+      ? this.product.description ||
+          this.descriptions[this.product.id] ||
           "Produto seleccionado pela Bravo Business com atenção à qualidade e ao detalhe."
       : "";
   }

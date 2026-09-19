@@ -7,6 +7,12 @@ import { WishlistPageComponent } from "./features/shop/account/wishlist-page.com
 import { AdminPageComponent } from "./features/admin/admin-page.component";
 import { InfoPageComponent } from "./features/info/info-page.component";
 import { ProductDetailPageComponent } from "./features/shop/product-detail/product-detail-page.component";
+import { AdminLoginComponent } from "./features/admin/admin-login.component";
+import { adminGuard } from "./core/admin.guard";
+import { AdminProductsComponent } from "./features/admin/admin-products.component";
+import { AdminProductFormComponent } from "./features/admin/admin-product-form.component";
+import { AdminCategoriesComponent } from "./features/admin/admin-categories.component";
+import { AdminCategoryFormComponent } from "./features/admin/admin-category-form.component";
 
 export const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "loja" },
@@ -18,7 +24,38 @@ export const routes: Routes = [
   { path: "loja/produto/:id", component: ProductDetailPageComponent },
   { path: "loja/:category", component: CatalogPageComponent },
   { path: "contactos", component: ContactosPageComponent },
-  { path: "admin", component: AdminPageComponent },
+  { path: "admin/login", component: AdminLoginComponent },
+  { path: "admin", component: AdminPageComponent, canActivate: [adminGuard] },
+  {
+    path: "admin/produtos",
+    component: AdminProductsComponent,
+    canActivate: [adminGuard],
+  },
+  {
+    path: "admin/produtos/novo",
+    component: AdminProductFormComponent,
+    canActivate: [adminGuard],
+  },
+  {
+    path: "admin/produtos/:id/editar",
+    component: AdminProductFormComponent,
+    canActivate: [adminGuard],
+  },
+  {
+    path: "admin/categorias",
+    component: AdminCategoriesComponent,
+    canActivate: [adminGuard],
+  },
+  {
+    path: "admin/categorias/nova",
+    component: AdminCategoryFormComponent,
+    canActivate: [adminGuard],
+  },
+  {
+    path: "admin/categorias/:id/editar",
+    component: AdminCategoryFormComponent,
+    canActivate: [adminGuard],
+  },
   {
     path: "sobre",
     component: InfoPageComponent,

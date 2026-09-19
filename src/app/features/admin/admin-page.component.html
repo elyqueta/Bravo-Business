@@ -1,34 +1,86 @@
-<section class="page-hero admin-hero">
-  <div>
-    <span class="eyebrow">Bravo Business · Backoffice</span>
-    <h1>Gestão da loja</h1>
-    <p>Área preparada para gerir catálogo, pedidos e conteúdo.</p>
-  </div>
-</section>
-<main class="admin-page">
-  <div class="admin-grid">
-    <article>
-      <i class="fa-solid fa-boxes-stacked"></i
-      ><strong>{{ store.products.length }}</strong
-      ><span>Produtos no catálogo</span>
-    </article>
-    <article>
-      <i class="fa-solid fa-layer-group"></i><strong>3</strong
-      ><span>Categorias activas</span>
-    </article>
-    <article>
-      <i class="fa-solid fa-bag-shopping"></i
-      ><strong>{{ store.cartCount() }}</strong
-      ><span>Itens no carrinho actual</span>
-    </article>
-  </div>
-  <section class="admin-note">
-    <i class="fa-solid fa-lock"></i>
-    <div>
-      <h2>Backoffice em preparação</h2>
-      <p>
-        Esta área já tem rota própria para a próxima fase de gestão autenticada.
-      </p>
+<main class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-brand">
+      <img src="assets/images/logo.jpeg" alt="Bravo Business" /><strong
+        >BRAVO<em>BUSINESS</em></strong
+      >
     </div>
+    <nav class="admin-nav">
+      <a
+        routerLink="/admin"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        ><i class="fa-solid fa-chart-line"></i>Visão geral</a
+      >
+      <a routerLink="/admin/produtos" routerLinkActive="active"
+        ><i class="fa-solid fa-boxes-stacked"></i>Produtos</a
+      >
+      <a routerLink="/admin/categorias" routerLinkActive="active"
+        ><i class="fa-solid fa-layer-group"></i>Categorias</a
+      >
+    </nav>
+    <div class="admin-sidebar-foot">
+      <p>{{ auth.user()?.fullName || "Administrador" }}</p>
+      <button (click)="logout()">
+        <i class="fa-solid fa-right-from-bracket"></i> Terminar sessão
+      </button>
+    </div>
+  </aside>
+  <section class="admin-content">
+    <header class="admin-topbar">
+      <div>
+        <span class="eyebrow">Bravo Business · Backoffice</span>
+        <h1>Visão geral</h1>
+        <p>Gere o catálogo conectado à tua API.</p>
+      </div>
+      <button class="admin-refresh" (click)="loadAll()">
+        <i class="fa-solid fa-arrows-rotate"></i> Actualizar
+      </button>
+    </header>
+    <div class="admin-error" *ngIf="error">
+      <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
+    </div>
+    <div class="admin-success" *ngIf="success">
+      <i class="fa-solid fa-circle-check"></i> {{ success }}
+    </div>
+    <section class="admin-stats">
+      <article class="admin-stat">
+        <i class="fa-solid fa-boxes-stacked"></i
+        ><strong>{{ products.length }}</strong
+        ><span>Produtos carregados</span>
+      </article>
+      <article class="admin-stat">
+        <i class="fa-solid fa-layer-group"></i
+        ><strong>{{ categories.length }}</strong
+        ><span>Categorias activas</span>
+      </article>
+      <article class="admin-stat">
+        <i class="fa-solid fa-chart-simple"></i
+        ><strong>{{
+          categories.length
+            ? (products.length / categories.length).toFixed(0)
+            : 0
+        }}</strong
+        ><span>Média por categoria</span>
+      </article>
+    </section>
+    <section class="admin-panel">
+      <div class="admin-panel-head">
+        <h2>Catálogo</h2>
+        <a class="admin-link-button" routerLink="/admin/produtos"
+          >Gerir produtos <i class="fa-solid fa-arrow-right"></i
+        ></a>
+      </div>
+      <div class="admin-category-list">
+        <article
+          class="admin-category-card"
+          *ngFor="let category of categories"
+        >
+          <i class="fa-solid" [ngClass]="category.icon || 'fa-box'"></i
+          ><strong>{{ category.label }}</strong
+          ><span>Prefixo {{ category.prefix }} · {{ category.slug }}</span>
+        </article>
+      </div>
+    </section>
   </section>
 </main>

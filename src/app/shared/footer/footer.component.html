@@ -50,19 +50,10 @@
             ><i class="fa-solid fa-box"></i>Produtos</a
           >
         </li>
-        <li>
-          <a routerLink="/loja/roupas"
-            ><i class="fa-solid fa-shirt"></i>Roupas</a
-          >
-        </li>
-        <li>
-          <a routerLink="/loja/calcados"
-            ><i class="fa-solid fa-shoe-prints"></i>Calçados</a
-          >
-        </li>
-        <li>
-          <a routerLink="/loja/acessorios"
-            ><i class="fa-solid fa-gem"></i>Acessórios</a
+        <li *ngFor="let category of store.categories()">
+          <a [routerLink]="store.categoryMeta[category.slug].route"
+            ><i class="fa-solid" [ngClass]="category.icon || 'fa-box'"></i
+            >{{ category.label }}</a
           >
         </li>
       </ul>
