@@ -1,0 +1,42 @@
+<section class="page-hero">
+  <div>
+    <span class="eyebrow">A tua selecção</span>
+    <h1>Carrinho</h1>
+    <p>Confirma os teus produtos antes de finalizar pelo WhatsApp.</p>
+  </div>
+</section>
+<main class="account-page">
+  <div class="empty-state" *ngIf="!store.cart().length">
+    <i class="fa-solid fa-bag-shopping"></i>
+    <h2>O teu carrinho está vazio</h2>
+    <p>Adiciona produtos para começar.</p>
+    <a routerLink="/loja/produtos" class="btn-prim">Explorar produtos</a>
+  </div>
+  <div class="account-list" *ngIf="store.cart().length">
+    <div class="ditem" *ngFor="let item of store.cart()">
+      <div class="ditem-img"><img [src]="item.img" [alt]="item.name" /></div>
+      <div class="ditem-info">
+        <p class="ditem-code">{{ item.id }}</p>
+        <p class="ditem-name">{{ item.name }}</p>
+        <div class="qty">
+          <button class="qbtn" (click)="store.changeQuantity(item.id, -1)">
+            -</button
+          ><span class="qnum">{{ item.qty }}</span
+          ><button class="qbtn" (click)="store.changeQuantity(item.id, 1)">
+            +
+          </button>
+        </div>
+      </div>
+      <strong class="ditem-price">{{
+        store.formatPrice(item.price * item.qty)
+      }}</strong>
+    </div>
+    <div class="account-total">
+      <span>Total</span
+      ><strong>{{ store.formatPrice(store.cartTotal()) }}</strong>
+    </div>
+    <button class="btn-wa" (click)="checkout()">
+      <i class="fa-brands fa-whatsapp"></i>Finalizar via WhatsApp
+    </button>
+  </div>
+</main>

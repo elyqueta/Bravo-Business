@@ -1,0 +1,29 @@
+<article class="pcard rv vis">
+  <a
+    class="pimg"
+    [routerLink]="['/loja/produto', product.id]"
+    aria-label="Ver detalhes do produto"
+    ><img [src]="product.img" [alt]="product.name" loading="lazy" /><span
+      *ngIf="product.badge"
+      class="pbadge"
+      [class]="badgeClass(product.badge)"
+      >{{ product.badge }}</span
+    ></a
+  >
+  <div class="pinfo">
+    <p class="pcode">{{ product.id }}</p>
+    <p class="pname">{{ product.name }}</p>
+    <p class="pcat">{{ store.categoryLabel(product.cat) }}</p>
+    <div class="pfooter">
+      <div class="pprice">
+        <span class="old" *ngIf="product.oldPrice">{{
+          store.formatPrice(product.oldPrice)
+        }}</span
+        >{{ store.formatPrice(product.price) }}
+      </div>
+      <button class="btn-add" (click)="add()">
+        <i class="fa-solid fa-bag-shopping"></i> Adicionar
+      </button>
+    </div>
+  </div>
+</article>

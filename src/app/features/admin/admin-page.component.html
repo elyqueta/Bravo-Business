@@ -1,0 +1,34 @@
+<section class="page-hero admin-hero">
+  <div>
+    <span class="eyebrow">Bravo Business · Backoffice</span>
+    <h1>Gestão da loja</h1>
+    <p>Área preparada para gerir catálogo, pedidos e conteúdo.</p>
+  </div>
+</section>
+<main class="admin-page">
+  <div class="admin-grid">
+    <article>
+      <i class="fa-solid fa-boxes-stacked"></i
+      ><strong>{{ store.products.length }}</strong
+      ><span>Produtos no catálogo</span>
+    </article>
+    <article>
+      <i class="fa-solid fa-layer-group"></i><strong>3</strong
+      ><span>Categorias activas</span>
+    </article>
+    <article>
+      <i class="fa-solid fa-bag-shopping"></i
+      ><strong>{{ store.cartCount() }}</strong
+      ><span>Itens no carrinho actual</span>
+    </article>
+  </div>
+  <section class="admin-note">
+    <i class="fa-solid fa-lock"></i>
+    <div>
+      <h2>Backoffice em preparação</h2>
+      <p>
+        Esta área já tem rota própria para a próxima fase de gestão autenticada.
+      </p>
+    </div>
+  </section>
+</main>

@@ -1,0 +1,122 @@
+<section class="hero">
+  <div
+    class="slide"
+    *ngFor="let slide of slides; let index = index"
+    [class.on]="currentSlide === index"
+  >
+    <div
+      class="slide-bg"
+      [style.background-image]="'url(' + slide.bg + ')'"
+    ></div>
+    <div class="slide-ov"></div>
+    <div class="slide-cnt">
+      <span class="slide-tag"
+        ><i class="fa-solid" [ngClass]="slide.icon"></i> {{ slide.tag }}</span
+      >
+      <h1 class="slide-title">
+        <ng-container *ngFor="let line of slide.title"
+          >{{ line }}<br
+        /></ng-container>
+      </h1>
+      <p class="slide-sub">{{ slide.sub }}</p>
+      <div class="slide-btns">
+        <a [routerLink]="slide.href" class="btn-prim"
+          ><i class="fa-solid fa-arrow-down"></i> {{ slide.action }}</a
+        ><a href="https://wa.me/244957103656" target="_blank" class="btn-ghost"
+          ><i class="fa-brands fa-whatsapp"></i> Falar Connosco</a
+        >
+      </div>
+    </div>
+  </div>
+  <div class="hero-dots">
+    <button
+      *ngFor="let slide of slides; let index = index"
+      class="hdot"
+      [class.on]="currentSlide === index"
+      (click)="currentSlide = index"
+    ></button>
+  </div>
+</section>
++
+<div class="features rv vis">
+  <div class="feat">
+    <div class="feat-ico"><i class="fa-solid fa-truck-fast"></i></div>
+    <div>
+      <p class="feat-lbl">Entrega Rápida</p>
+      <p class="feat-dsc">Luanda e arredores</p>
+    </div>
+  </div>
+  <div class="feat">
+    <div class="feat-ico"><i class="fa-solid fa-shield-halved"></i></div>
+    <div>
+      <p class="feat-lbl">Qualidade Garantida</p>
+      <p class="feat-dsc">Produtos seleccionados</p>
+    </div>
+  </div>
+  <div class="feat">
+    <div class="feat-ico"><i class="fa-solid fa-rotate-left"></i></div>
+    <div>
+      <p class="feat-lbl">Troca Fácil</p>
+      <p class="feat-dsc">Até 7 dias após compra</p>
+    </div>
+  </div>
+  <div class="feat">
+    <div class="feat-ico"><i class="fa-brands fa-whatsapp"></i></div>
+    <div>
+      <p class="feat-lbl">Suporte WhatsApp</p>
+      <p class="feat-dsc">Resposta em minutos</p>
+    </div>
+  </div>
+</div>
++
+<section class="home-categories">
+  <div class="page-heading">
+    <span class="eyebrow">Explora a colecção</span>
+    <h2>Escolhe o teu estilo</h2>
+    <p>Peças seleccionadas para acompanhar todos os teus dias.</p>
+  </div>
+  <div class="category-links">
+    <a
+      *ngFor="let category of categories"
+      [routerLink]="store.categoryMeta[category].route"
+      class="category-link"
+      ><span class="cat-ico"
+        ><i
+          class="fa-solid"
+          [ngClass]="store.categoryMeta[category].icon"
+        ></i></span
+      ><strong>{{ store.categoryLabel(category) }}</strong
+      ><i class="fa-solid fa-arrow-right"></i
+    ></a>
+  </div>
+</section>
++
+<section class="cat-sec home-products" *ngFor="let category of categories">
+  <div class="cat-sec-hd">
+    <div class="cat-hd-left">
+      <div class="cat-ico">
+        <i class="fa-solid" [ngClass]="store.categoryMeta[category].icon"></i>
+      </div>
+      <h2 class="cat-title">{{ store.categoryLabel(category) }}</h2>
+    </div>
+    <a [routerLink]="store.categoryMeta[category].route" class="see-all"
+      >Ver todos <i class="fa-solid fa-arrow-right"></i
+    ></a>
+  </div>
+  <div class="pgrid">
+    <app-product-card
+      *ngFor="let product of productsFor(category)"
+      [product]="product"
+    ></app-product-card>
+  </div>
+</section>
++
+<div class="promo rv vis">
+  <div>
+    <h2>ATÉ <em>20% de desconto no off</em><br />NA NOVA COLEÇÃO</h2>
+    <p>Aproveite descontos exclusivos por tempo limitado.</p>
+  </div>
+  <a routerLink="/loja/produtos" class="btn-white"
+    ><i class="fa-solid fa-tags"></i> Ver Promoções</a
+  >
+</div>

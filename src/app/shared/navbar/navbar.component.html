@@ -1,0 +1,100 @@
+<nav id="navbar">
+  <a routerLink="/loja" class="nav-logo" (click)="closeMobile()"
+    ><img src="assets/images/logo.jpeg" alt="Bravo Business" class="logo-img"
+  /></a>
+  <ul class="nav-links">
+    <li>
+      <a
+        routerLink="/loja"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        ><i class="fa-solid fa-store"></i> Loja</a
+      >
+    </li>
+    <li>
+      <a routerLink="/loja/produtos" routerLinkActive="active">Produtos</a>
+    </li>
+    <li><a routerLink="/loja/roupas" routerLinkActive="active">Roupas</a></li>
+    <li>
+      <a routerLink="/loja/calcados" routerLinkActive="active">Calçados</a>
+    </li>
+    <li>
+      <a routerLink="/loja/acessorios" routerLinkActive="active">Acessórios</a>
+    </li>
+    <li><a routerLink="/contactos" routerLinkActive="active">Contacto</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="icn" (click)="store.toggleTheme()" title="Tema">
+      <i
+        class="fa-solid"
+        [class.fa-moon]="!store.dark()"
+        [class.fa-sun]="store.dark()"
+      ></i>
+    </button>
+    <a routerLink="/loja/favoritos" class="icn" title="Favoritos"
+      ><i class="fa-regular fa-heart"></i
+      ><span class="icn-badge red" [class.on]="store.wishlist().length">{{
+        store.wishlist().length
+      }}</span></a
+    >
+    <a routerLink="/loja/carrinho" class="icn" title="Carrinho"
+      ><i class="fa-solid fa-bag-shopping"></i
+      ><span class="icn-badge" [class.on]="store.cartCount()">{{
+        store.cartCount()
+      }}</span></a
+    >
+    <button
+      class="hbg"
+      [class.on]="mobileOpen"
+      (click)="toggleMobile()"
+      aria-label="Menu"
+    >
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mob-overlay" [class.on]="mobileOpen" (click)="closeMobile()"></div>
+<div class="mob-menu" [class.on]="mobileOpen">
+  <div class="mob-head">
+    <div class="nav-logo">
+      <img src="assets/images/logo.jpeg" alt="logo" class="logo-img" /><span
+        class="logo-txt"
+        >BRAVO<em>BUSINESS</em></span
+      >
+    </div>
+    <button class="mob-close" (click)="closeMobile()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="mob-body">
+    <a
+      *ngFor="
+        let link of [
+          { label: 'Loja', route: '/loja', icon: 'fa-store' },
+          { label: 'Produtos', route: '/loja/produtos', icon: 'fa-box' },
+          { label: 'Roupas', route: '/loja/roupas', icon: 'fa-shirt' },
+          {
+            label: 'Calçados',
+            route: '/loja/calcados',
+            icon: 'fa-shoe-prints',
+          },
+          { label: 'Acessórios', route: '/loja/acessorios', icon: 'fa-gem' },
+          { label: 'Contacto', route: '/contactos', icon: 'fa-location-dot' },
+        ]
+      "
+      [routerLink]="link.route"
+      (click)="closeMobile()"
+      ><i class="fa-solid" [ngClass]="link.icon"></i>{{ link.label }}</a
+    ><a href="https://wa.me/244957103656" target="_blank" class="wa-link"
+      ><i class="fa-brands fa-whatsapp"></i>WhatsApp</a
+    >
+  </div>
+  <div class="mob-foot">
+    <div class="theme-row">
+      <span><i class="fa-solid fa-circle-half-stroke"></i>Tema Escuro</span>
+      <div class="tog" [class.on]="store.dark()" (click)="store.toggleTheme()">
+        <div class="tog-knob"></div>
+      </div>
+    </div>
+  </div>
+</div>

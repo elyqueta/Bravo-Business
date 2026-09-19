@@ -1,0 +1,59 @@
+<section class="page-hero">
+  <div>
+    <span class="eyebrow">Bravo Business · Loja</span>
+    <h1>{{ title() }}</h1>
+    <p>Descobre peças seleccionadas para elevar o teu estilo.</p>
+  </div>
+</section>
+<main class="catalog-page">
+  <div class="catalog-toolbar">
+    <label class="search-field"
+      ><i class="fa-solid fa-magnifying-glass"></i
+      ><input
+        [(ngModel)]="search"
+        (ngModelChange)="apply()"
+        placeholder="Pesquisar produtos" /></label
+    ><label
+      ><span>Preço máximo</span
+      ><input
+        type="range"
+        min="0"
+        max="100000"
+        step="5000"
+        [(ngModel)]="maxPrice"
+        (ngModelChange)="apply()"
+      /><strong>{{ store.formatPrice(maxPrice) }}</strong></label
+    ><label
+      ><span>Ordenar</span
+      ><select [(ngModel)]="sort" (ngModelChange)="apply()">
+        <option value="featured">Destaques</option>
+        <option value="price-low">Preço mais baixo</option>
+        <option value="price-high">Preço mais alto</option>
+      </select></label
+    ><button class="filter-clear" (click)="clear()">Limpar filtros</button>
+  </div>
+  <div class="catalog-meta">
+    <p>{{ products.length }} produtos encontrados</p>
+    <div class="catalog-categories">
+      <a routerLink="/loja/produtos">Todos</a
+      ><a
+        *ngFor="let category of categories"
+        [routerLink]="store.categoryMeta[category].route"
+        >{{ store.categoryLabel(category) }}</a
+      >
+    </div>
+  </div>
+  <div class="pgrid" *ngIf="products.length; else empty">
+    <app-product-card
+      *ngFor="let product of products"
+      [product]="product"
+    ></app-product-card>
+  </div>
+  <ng-template #empty
+    ><div class="empty-state">
+      <i class="fa-solid fa-box-open"></i>
+      <h2>Nenhum produto encontrado</h2>
+      <p>Ajusta os filtros para encontrar o que procuras.</p>
+    </div></ng-template
+  >
+</main>

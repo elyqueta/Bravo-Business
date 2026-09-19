@@ -1,0 +1,120 @@
+.catalog-page {
+  padding: 56px 48px 88px;
+  max-width: 1400px;
+  margin: auto;
+}
+.catalog-toolbar {
+  display: flex;
+  align-items: end;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  margin-bottom: 24px;
+}
+.catalog-toolbar label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.search-field {
+  min-width: 250px;
+  flex: 1;
+  position: relative;
+}
+.search-field i {
+  position: absolute;
+  left: 13px;
+  bottom: 13px;
+  color: var(--accent);
+}
+.search-field input {
+  padding-left: 36px !important;
+}
+.catalog-toolbar input,
+.catalog-toolbar select {
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface2);
+  color: var(--text);
+  padding: 0 12px;
+  font: inherit;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.catalog-toolbar input[type="range"] {
+  accent-color: var(--accent);
+  padding: 0;
+}
+.catalog-toolbar strong {
+  font-size: 12px;
+  color: var(--text);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.filter-clear {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 8px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 11px;
+  font-weight: 700;
+}
+.catalog-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 28px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.catalog-categories {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.catalog-categories a {
+  color: var(--accent);
+  font-weight: 700;
+}
+.empty-state {
+  text-align: center;
+  padding: 90px 20px;
+  color: var(--muted);
+}
+.empty-state i {
+  font-size: 48px;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+.empty-state h2 {
+  color: var(--text);
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 34px;
+}
+@media (max-width: 620px) {
+  .catalog-page {
+    padding: 32px 18px 64px;
+  }
+  .catalog-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .search-field {
+    min-width: 0;
+  }
+  .catalog-meta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,21 @@
+<section class="page-hero">
+  <div>
+    <span class="eyebrow">A tua selecção</span>
+    <h1>Favoritos</h1>
+    <p>Guarda as peças que queres rever mais tarde.</p>
+  </div>
+</section>
+<main class="catalog-page">
+  <div class="empty-state" *ngIf="!products().length">
+    <i class="fa-regular fa-heart"></i>
+    <h2>Nenhum favorito ainda</h2>
+    <p>Explora a loja e guarda os teus produtos preferidos.</p>
+    <a routerLink="/loja/produtos" class="btn-prim">Explorar produtos</a>
+  </div>
+  <div class="pgrid" *ngIf="products().length">
+    <app-product-card
+      *ngFor="let product of products()"
+      [product]="product"
+    ></app-product-card>
+  </div>
+</main>
