@@ -1,0 +1,7 @@
+<div class="cat-nav" id="products">
+  <div class="cat-inner">
+    <button *ngFor="let cat of categories; let i = index" class="cat-pill" [class.on]="i === 0" (click)="selectedCategory.emit(cat.key)">
+      <i [class]="cat.icon"></i> {{ cat.label }}
+    </button>
+  </div>
+</div>

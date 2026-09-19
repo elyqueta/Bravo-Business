@@ -1,0 +1,58 @@
+<section class="cart-page">
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <h1 class="font-display text-5xl text-gray-900 mb-8">O TEU<br><em class="text-amber-500">CARRINHO</em></h1>
+
+    <div *ngIf="items.length === 0" class="text-center py-20 bg-white rounded-3xl">
+      <i class="fa-solid fa-bag-shopping text-6xl text-gray-200 mb-4"></i>
+      <p class="text-gray-500 text-lg">O teu carrinho está vazio.</p>
+      <a routerLink="/products" class="btn-primary mt-6 inline-flex">Explorar Produtos</a>
+    </div>
+
+    <div *ngIf="items.length > 0" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2 space-y-4">
+        <div *ngFor="let item of items" class="bg-white rounded-2xl p-4 flex gap-4 items-center border border-gray-100">
+          <div class="w-24 h-24 rounded-xl bg-gray-100 overflow-hidden flex-shrink-0">
+            <img [src]="item.image" [alt]="item.name" class="w-full h-full object-cover">
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="font-semibold text-gray-900 truncate">{{ item.name }}</h3>
+            <p class="text-sm text-gray-500">{{ item.price.toLocaleString('pt-AO') }} Kz</p>
+            <div class="flex items-center gap-2 mt-2">
+              <button class="qty-btn" (click)="updateQty(item.id, -1)">−</button>
+              <span class="qty-value">{{ item.quantity }}</span>
+              <button class="qty-btn" (click)="updateQty(item.id, 1)">+</button>
+              <button class="ml-auto text-red-500 text-sm" (click)="removeItem(item.id)">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="font-display text-xl">{{ (item.price * item.quantity).toLocaleString('pt-AO') }} Kz</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-6 border border-gray-100 h-fit">
+        <h3 class="font-display text-2xl mb-4">RESUMO</h3>
+        <div class="space-y-3 text-sm">
+          <div class="flex justify-between">
+            <span class="text-gray-500">Subtotal ({{ count }} itens)</span>
+            <span class="font-medium">{{ total.toLocaleString('pt-AO') }} Kz</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-500">Entrega</span>
+            <span class="font-medium text-green-600">Grátis</span>
+          </div>
+          <div class="border-t border-gray-100 pt-3 flex justify-between">
+            <span class="font-semibold">Total</span>
+            <span class="font-display text-2xl">{{ total.toLocaleString('pt-AO') }} Kz</span>
+          </div>
+        </div>
+        <button class="btn-wa w-full mt-6" (click)="checkoutWhatsApp()">
+          <i class="fa-brands fa-whatsapp"></i> Finalizar via WhatsApp
+        </button>
+        <a routerLink="/products" class="btn-outline w-full mt-3 text-center inline-flex">Continuar Comprando</a>
+      </div>
+    </div>
+  </div>
+</section>

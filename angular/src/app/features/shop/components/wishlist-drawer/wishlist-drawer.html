@@ -1,0 +1,32 @@
+<div class="drw-overlay" id="wishOv" [class.on]="isOpen" (click)="close()"></div>
+<div class="drw" id="wishDrw" [class.on]="isOpen">
+  <div class="drw-hd">
+    <span class="drw-title"><i class="fa-solid fa-heart"></i> Favoritos</span>
+    <button class="drw-close" (click)="close()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="drw-body" id="wishBody">
+    <div class="drw-empty" id="wishEmpty" *ngIf="global.wishlist.length === 0">
+      <i class="fa-regular fa-heart"></i>
+      <p>Nenhum favorito ainda.<br>Clica em <i class="fa-solid fa-heart" style="color:var(--danger)"></i> nos produtos para guardar!</p>
+    </div>
+    <div id="wishItems" *ngIf="global.wishlist.length > 0">
+      <div class="ditem" *ngFor="let id of global.wishlist">
+        <div class="ditem-img"><img [src]="product?.img" [alt]="product?.name"></div>
+        <div class="ditem-info">
+          <p class="ditem-code">{{ product?.id }}</p>
+          <p class="ditem-name">{{ product?.name }}</p>
+          <div class="ditem-ctrl">
+            <button class="btn-to-cart" (click)="addToCart(id)"><i class="fa-solid fa-bag-shopping"></i> Adicionar ao carrinho</button>
+            <button class="btn-rm" (click)="toggleWish(id)"><i class="fa-solid fa-trash-can" style="font-size:9px"></i> Remover</button>
+          </div>
+        </div>
+        <div class="ditem-price">{{ global.fmt(product?.price || 0) }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="drw-ft" id="wishFt" *ngIf="global.wishlist.length > 0">
+    <button class="btn-wa" id="wishWaBtn" (click)="checkoutWhatsApp()" style="background:var(--accent)">
+      <i class="fa-brands fa-whatsapp"></i>Pedir Favoritos via WhatsApp
+    </button>
+  </div>
+</div>

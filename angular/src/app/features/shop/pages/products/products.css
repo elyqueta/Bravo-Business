@@ -1,0 +1,7 @@
+.products-page {
+  min-height: 100vh;
+  background: #fff;
+}
+[data-theme='dark'] .products-page {
+  background: #0f172a;
+}

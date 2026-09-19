@@ -1,0 +1,60 @@
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <img src="assets/images/logo.jpeg" alt="Bravo Business" class="logo-img">
+    <span class="logo-txt">BRAVO<em>BUSINESS</em></span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#products"><i class="fa-solid fa-store" style="font-size:10px;margin-right:4px"></i>Loja</a></li>
+    <li><a href="#s-roupas">Roupas</a></li>
+    <li><a href="#s-calcados">Calçados</a></li>
+    <li><a href="#s-acessorios">Acessórios</a></li>
+    <li><a href="#footer">Contacto</a></li>
+  </ul>
+
+  <div class="nav-actions">
+    <button class="icn" (click)="toggleTheme()" title="Tema">
+      <i class="fa-solid" [class.fa-moon]="!global.dark" [class.fa-sun]="global.dark" id="themeIco"></i>
+    </button>
+    <button class="icn" (click)="openWishlist()" title="Favoritos">
+      <i class="fa-regular fa-heart"></i>
+      <span class="icn-badge red" [class.on]="global.wishlist.length > 0">{{ global.wishlist.length }}</span>
+    </button>
+    <button class="icn" (click)="openCart()" title="Carrinho">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <span class="icn-badge" [class.on]="global.cart.length > 0">{{ cartCount() }}</span>
+    </button>
+    <button class="hbg" (click)="toggleMobile()" aria-label="Menu" [class.on]="mobileOpen">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mob-overlay" [class.on]="mobileOpen" (click)="closeMobile()"></div>
+<div class="mob-menu" [class.on]="mobileOpen">
+  <div class="mob-head">
+    <div class="nav-logo">
+      <img src="assets/images/logo.jpeg" alt="logo" class="logo-img">
+      <span class="logo-txt">BRAVO<em>BUSINESS</em></span>
+    </div>
+    <button class="mob-close" (click)="closeMobile()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="mob-body">
+    <a href="#products" (click)="closeMobile()"><i class="fa-solid fa-store"></i>Loja Completa</a>
+    <a href="#s-roupas" (click)="closeMobile()"><i class="fa-solid fa-shirt"></i>Roupas</a>
+    <a href="#s-calcados" (click)="closeMobile()"><i class="fa-solid fa-shoe-prints"></i>Calçados</a>
+    <a href="#s-acessorios" (click)="closeMobile()"><i class="fa-solid fa-gem"></i>Acessórios</a>
+    <a href="#footer" (click)="closeMobile()"><i class="fa-solid fa-location-dot"></i>Localização</a>
+    <a href="#" (click)="openWishlist(); closeMobile()"><i class="fa-regular fa-heart" style="color:var(--danger)"></i>Favoritos</a>
+    <a href="#" (click)="openCart(); closeMobile()"><i class="fa-solid fa-bag-shopping"></i>Carrinho</a>
+    <a href="https://wa.me/244957103656" target="_blank" class="wa-link" (click)="closeMobile()">
+      <i class="fa-brands fa-whatsapp"></i>WhatsApp
+    </a>
+  </div>
+  <div class="mob-foot">
+    <div class="theme-row">
+      <span><i class="fa-solid fa-circle-half-stroke" style="margin-right:8px;color:var(--accent)"></i>Tema Escuro</span>
+      <div class="tog" [class.on]="global.dark" (click)="toggleTheme()"><div class="tog-knob"></div></div>
+    </div>
+  </div>
+</div>

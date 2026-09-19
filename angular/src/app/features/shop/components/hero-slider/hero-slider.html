@@ -1,0 +1,25 @@
+<section class="hero" id="home">
+  <div class="slide on" *ngFor="let slide of slides; let i = index" [class.on]="i === current()">
+    <div class="slide-bg" [style.backgroundImage]="'url(' + slide.bg + ')'"></div>
+    <div class="slide-ov"></div>
+    <div class="slide-cnt">
+      <span class="slide-tag" [innerHTML]="slide.tag"></span>
+      <h1 class="slide-title" [innerHTML]="slide.title"></h1>
+      <p class="slide-sub">{{ slide.sub }}</p>
+      <div class="slide-btns">
+        <a *ngFor="let btn of slide.btns"
+           [href]="btn.external ? btn.link : null"
+           [routerLink]="btn.external ? null : btn.link"
+           [class]="btn.cls"
+           [target]="btn.external ? '_blank' : undefined"
+           [innerHTML]="btn.text">
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-dots">
+    <button class="hdot" *ngFor="let s of slides; let i = index" [class.on]="i === current()" (click)="goSlide(i)"></button>
+  </div>
+  <button class="hero-arrow prev" (click)="prev()"><i class="fa-solid fa-chevron-left"></i></button>
+  <button class="hero-arrow next" (click)="next()"><i class="fa-solid fa-chevron-right"></i></button>
+</section>

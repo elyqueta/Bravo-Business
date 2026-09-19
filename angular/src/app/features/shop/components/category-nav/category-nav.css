@@ -1,0 +1,44 @@
+.cat-nav {
+  padding: 1.5rem 0;
+  overflow-x: auto;
+}
+.cat-inner {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  gap: 0.75rem;
+}
+.cat-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 9999px;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+[data-theme='dark'] .cat-pill {
+  background: #1e293b;
+  color: #d1d5db;
+}
+.cat-pill:hover {
+  background: #e5e7eb;
+}
+[data-theme='dark'] .cat-pill:hover {
+  background: #374151;
+}
+.cat-pill.on {
+  background: #111827;
+  color: #fff;
+}
+[data-theme='dark'] .cat-pill.on {
+  background: #f59e0b;
+  color: #fff;
+}

@@ -1,0 +1,30 @@
+.products-section {
+  background: #fff;
+}
+[data-theme='dark'] .products-section {
+  background: #0f172a;
+}
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border: 1px solid #111827;
+  color: #111827;
+  border-radius: 0.75rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.btn-outline:hover {
+  background: #111827;
+  color: #fff;
+}
+[data-theme='dark'] .btn-outline {
+  border-color: #fff;
+  color: #fff;
+}
+[data-theme='dark'] .btn-outline:hover {
+  background: #fff;
+  color: #111827;
+}
