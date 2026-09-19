@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { RouterLink, RouterLinkActive } from "@angular/router";
+import { AuthService } from "../../core/auth.service";
 import { StoreService } from "../../core/store.service";
 
 @Component({
@@ -10,6 +11,7 @@ import { StoreService } from "../../core/store.service";
   templateUrl: "./navbar.component.html",
 })
 export class NavbarComponent {
+  readonly auth = inject(AuthService);
   readonly store = inject(StoreService);
   mobileOpen = false;
   closeMobile(): void {
@@ -17,5 +19,8 @@ export class NavbarComponent {
   }
   toggleMobile(): void {
     this.mobileOpen = !this.mobileOpen;
+  }
+  logout(): void {
+    this.auth.logout();
   }
 }

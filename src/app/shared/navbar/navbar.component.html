@@ -94,5 +94,8 @@
         <div class="tog-knob"></div>
       </div>
     </div>
+    <button class="logout-btn" *ngIf="auth.isAuthenticated()" (click)="logout()">
+      Terminar sessão
+    </button>
   </div>
 </div>

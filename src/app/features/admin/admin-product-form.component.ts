@@ -108,9 +108,16 @@ export class AdminProductFormComponent implements OnInit {
     payload.append("categorySlug", value.categorySlug);
     payload.append("name", value.name);
     payload.append("description", value.description);
-    payload.append("price", String(Number(value.price)));
-    if (Number(value.oldPrice) > 0)
-      payload.append("oldPrice", String(Number(value.oldPrice)));
+    const price =
+      typeof value.price === "number"
+        ? value.price
+        : Number(String(value.price).replace(",", "."));
+    const oldPrice =
+      typeof value.oldPrice === "number"
+        ? value.oldPrice
+        : Number(String(value.oldPrice).replace(",", "."));
+    payload.append("price", String(Number.isNaN(price) ? 0 : price));
+    payload.append("oldPrice", String(Number.isNaN(oldPrice) ? 0 : oldPrice));
     if (value.badge) payload.append("badge", value.badge);
     const gallery = value.gallery
       .split("\n")
