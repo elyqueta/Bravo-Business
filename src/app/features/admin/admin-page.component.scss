@@ -346,6 +346,7 @@
   height: 100%;
   object-fit: cover;
 }
+.admin-gallery-preview{display:flex;gap:10px;flex-wrap:wrap}.admin-gallery-preview img{width:86px;height:86px;object-fit:cover;border-radius:7px;border:1px solid var(--border);background:var(--surface2)}
 .icon-picker-trigger {
   height: 42px;
   display: flex;

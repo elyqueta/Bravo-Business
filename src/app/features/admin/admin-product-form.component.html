@@ -75,9 +75,25 @@
           rows="5"
         ></textarea></label
       ><label class="wide"
-        >Galeria <small>Uma URL por linha</small
-        ><textarea formControlName="gallery" rows="5"></textarea>
+        >Galeria por URL <small>Opcional · uma URL por linha</small
+        ><textarea formControlName="gallery" rows="3"></textarea>
       </label>
+      <label class="wide"
+        >Adicionar imagens da galeria
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          (change)="onGallerySelected($event)"
+        /><small>Selecciona várias imagens · cada uma até 5 MB.</small></label
+      >
+      <div class="admin-gallery-preview wide" *ngIf="galleryPreviews.length">
+        <img
+          *ngFor="let preview of galleryPreviews"
+          [src]="preview"
+          alt="Pré-visualização da galeria"
+        />
+      </div>
       <div class="admin-form-actions wide">
         <button type="submit" class="admin-primary" [disabled]="loading">
           <i class="fa-solid fa-floppy-disk"></i

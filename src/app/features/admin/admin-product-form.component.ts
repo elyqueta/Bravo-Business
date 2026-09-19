@@ -24,6 +24,8 @@ export class AdminProductFormComponent implements OnInit {
   error = "";
   imageFile: File | null = null;
   imagePreview = "";
+  galleryFiles: File[] = [];
+  galleryPreviews: string[] = [];
   readonly form = this.formBuilder.nonNullable.group({
     categorySlug: ["", Validators.required],
     name: ["", [Validators.required, Validators.maxLength(200)]],
@@ -77,6 +79,21 @@ export class AdminProductFormComponent implements OnInit {
     this.imagePreview = URL.createObjectURL(file);
     this.error = "";
   }
+  onGallerySelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const files = Array.from(input.files || []);
+    const invalid = files.find(
+      (file) => !file.type.startsWith("image/") || file.size > 5 * 1024 * 1024,
+    );
+    if (invalid) {
+      this.error = "Todas as imagens devem ser válidas e ter no máximo 5 MB.";
+      input.value = "";
+      return;
+    }
+    this.galleryFiles = files;
+    this.galleryPreviews = files.map((file) => URL.createObjectURL(file));
+    this.error = "";
+  }
   save(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -91,24 +108,29 @@ export class AdminProductFormComponent implements OnInit {
     payload.append("categorySlug", value.categorySlug);
     payload.append("name", value.name);
     payload.append("description", value.description);
-    payload.append("price", String(value.price));
-    if (value.oldPrice) payload.append("oldPrice", String(value.oldPrice));
+    payload.append("price", String(Number(value.price)));
+    if (Number(value.oldPrice) > 0)
+      payload.append("oldPrice", String(Number(value.oldPrice)));
     if (value.badge) payload.append("badge", value.badge);
     const gallery = value.gallery
       .split("\n")
       .map((item) => item.trim())
       .filter(Boolean);
-    if (gallery.length) payload.append("gallery", JSON.stringify(gallery));
+    if (gallery.length) payload.append("galleryUrls", JSON.stringify(gallery));
     if (this.imageFile)
       payload.append("img", this.imageFile, this.imageFile.name);
+    this.galleryFiles.forEach((file) =>
+      payload.append("gallery", file, file.name),
+    );
     this.loading = true;
     const request = this.editingId
       ? this.api.updateProduct(this.editingId, payload)
       : this.api.createProduct(payload);
     request.subscribe({
       next: () => void this.router.navigateByUrl("/admin/produtos"),
-      error: () => {
-        this.error = "Não foi possível guardar o produto.";
+      error: (response: { error?: { message?: string; details?: Array<{ field?: string; message?: string }> } }) => {
+        const details = response.error?.details?.map((detail) => `${detail.field || "campo"}: ${detail.message || "valor inválido"}`).join(" ");
+        this.error = details || response.error?.message || "Não foi possível guardar o produto.";
         this.loading = false;
       },
     });
