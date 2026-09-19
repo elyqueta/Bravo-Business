@@ -18,6 +18,8 @@ export interface CartItem extends Product {
 
 @Injectable({ providedIn: "root" })
 export class StoreService {
+  private readonly cartStorageKey = "bravo-business-cart";
+  private readonly wishlistStorageKey = "bravo-business-wishlist";
   readonly products: Product[] = [
     {
       id: "BB-R001",
@@ -104,6 +106,11 @@ export class StoreService {
   readonly wishlist = signal<string[]>([]);
   readonly dark = signal(false);
 
+  constructor() {
+    this.restoreCart();
+    this.restoreWishlist();
+  }
+
   formatPrice(value: number): string {
     return `${value.toLocaleString("pt-AO")} Kz`;
   }
@@ -133,6 +140,7 @@ export class StoreService {
     if (item) item.qty++;
     else items.push({ ...product, qty: 1 });
     this.cart.set(items);
+    this.persistCart(items);
   }
   changeQuantity(id: string, change: number): void {
     const items = this.cart()
@@ -141,14 +149,76 @@ export class StoreService {
       )
       .filter((item) => item.qty > 0);
     this.cart.set(items);
+    this.persistCart(items);
   }
   toggleWish(product: Product): void {
     const ids = this.wishlist();
-    this.wishlist.set(
-      ids.includes(product.id)
-        ? ids.filter((id) => id !== product.id)
-        : [...ids, product.id],
+    const updatedIds = ids.includes(product.id)
+      ? ids.filter((id) => id !== product.id)
+      : [...ids, product.id];
+    this.wishlist.set(updatedIds);
+    this.persistWishlist(updatedIds);
+  }
+
+  private restoreCart(): void {
+    const stored = this.readStorage(this.cartStorageKey);
+    if (!Array.isArray(stored)) return;
+    const restored = stored
+      .map((entry: unknown) => {
+        if (
+          !this.isStorageRecord(entry) ||
+          typeof entry["id"] !== "string" ||
+          typeof entry["qty"] !== "number"
+        )
+          return null;
+        const product = this.products.find((item) => item.id === entry["id"]);
+        return product && Number.isInteger(entry["qty"]) && entry["qty"] > 0
+          ? { ...product, qty: entry["qty"] }
+          : null;
+      })
+      .filter((item): item is CartItem => item !== null);
+    this.cart.set(restored);
+  }
+
+  private restoreWishlist(): void {
+    const stored = this.readStorage(this.wishlistStorageKey);
+    if (!Array.isArray(stored)) return;
+    const restored = stored.filter(
+      (id: unknown): id is string =>
+        typeof id === "string" &&
+        this.products.some((product) => product.id === id),
     );
+    this.wishlist.set(restored);
+  }
+
+  private persistCart(items: CartItem[]): void {
+    this.writeStorage(
+      this.cartStorageKey,
+      items.map(({ id, qty }) => ({ id, qty })),
+    );
+  }
+
+  private persistWishlist(ids: string[]): void {
+    this.writeStorage(this.wishlistStorageKey, ids);
+  }
+
+  private readStorage(key: string): unknown {
+    try {
+      const value = localStorage.getItem(key);
+      return value ? JSON.parse(value) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private writeStorage(key: string, value: unknown): void {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch {}
+  }
+
+  private isStorageRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === "object" && value !== null;
   }
   toggleTheme(): void {
     this.dark.update((value) => !value);

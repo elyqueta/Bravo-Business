@@ -6,6 +6,7 @@ import { CartPageComponent } from "./features/shop/account/cart-page.component";
 import { WishlistPageComponent } from "./features/shop/account/wishlist-page.component";
 import { AdminPageComponent } from "./features/admin/admin-page.component";
 import { InfoPageComponent } from "./features/info/info-page.component";
+import { ProductDetailPageComponent } from "./features/shop/product-detail/product-detail-page.component";
 
 export const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "loja" },
@@ -14,7 +15,7 @@ export const routes: Routes = [
   { path: "loja/produtos", component: CatalogPageComponent },
   { path: "loja/carrinho", component: CartPageComponent },
   { path: "loja/favoritos", component: WishlistPageComponent },
-  { path: "loja/produto/:id", component: CatalogPageComponent },
+  { path: "loja/produto/:id", component: ProductDetailPageComponent },
   { path: "loja/:category", component: CatalogPageComponent },
   { path: "contactos", component: ContactosPageComponent },
   { path: "admin", component: AdminPageComponent },

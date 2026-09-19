@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, EventEmitter, inject, Input, Output } from "@angular/core";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { Product, StoreService } from "../../core/store.service";
 
 @Component({
@@ -13,11 +13,15 @@ export class ProductCardComponent {
   @Input({ required: true }) product!: Product;
   @Output() added = new EventEmitter<void>();
   readonly store = inject(StoreService);
+  private readonly router = inject(Router);
   badgeClass(badge?: string): string {
     return badge === "Sale" ? "sale" : badge === "Premium" ? "premium" : "";
   }
   add(): void {
     this.store.addCart(this.product);
     this.added.emit();
+  }
+  openDetails(): void {
+    void this.router.navigate(["/loja/produto", this.product.id]);
   }
 }

@@ -1,4 +1,10 @@
-<article class="pcard rv vis">
+<article
+  class="pcard rv vis"
+  (click)="openDetails()"
+  role="link"
+  tabindex="0"
+  (keydown.enter)="openDetails()"
+>
   <a
     class="pimg"
     [routerLink]="['/loja/produto', product.id]"
@@ -21,7 +27,7 @@
         }}</span
         >{{ store.formatPrice(product.price) }}
       </div>
-      <button class="btn-add" (click)="add()">
+      <button class="btn-add" (click)="$event.stopPropagation(); add()">
         <i class="fa-solid fa-bag-shopping"></i> Adicionar
       </button>
     </div>

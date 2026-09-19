@@ -1,0 +1,98 @@
+<ng-container *ngIf="product as item; else loading">
+  <main class="product-detail">
+    <div class="detail-breadcrumb">
+      <a routerLink="/loja">Loja</a><i class="fa-solid fa-chevron-right"></i
+      ><a [routerLink]="store.categoryMeta[item.cat].route">{{
+        store.categoryLabel(item.cat)
+      }}</a
+      ><i class="fa-solid fa-chevron-right"></i><span>{{ item.name }}</span>
+    </div>
+    <div class="detail-layout">
+      <section class="detail-gallery" aria-label="Galeria do produto">
+        <div class="detail-thumbs">
+          <button
+            *ngFor="let image of images(); let index = index"
+            class="detail-thumb"
+            [class.active]="selectedImage === index"
+            (click)="selectImage(index)"
+          >
+            <img [src]="image" [alt]="item.name + ' imagem ' + (index + 1)" />
+          </button>
+        </div>
+        <div class="detail-main-image">
+          <img [src]="images()[selectedImage]" [alt]="item.name" /><span
+            *ngIf="item.badge"
+            class="pbadge"
+            [class]="badgeClass(item.badge)"
+            >{{ item.badge }}</span
+          >
+        </div>
+      </section>
+      <section class="detail-info">
+        <p class="detail-code">
+          <i class="fa-solid fa-barcode"></i>{{ item.id }}
+        </p>
+        <p class="detail-category">
+          <i class="fa-solid" [ngClass]="store.categoryMeta[item.cat].icon"></i
+          >{{ store.categoryLabel(item.cat) }}
+        </p>
+        <h1>{{ item.name }}</h1>
+        <div class="detail-rating">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i
+          ><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i
+          ><i class="fa-solid fa-star"></i
+          ><span>Produto seleccionado pela Bravo Business</span>
+        </div>
+        <div class="detail-divider"></div>
+        <p class="detail-description">{{ description() }}</p>
+        <div class="detail-features">
+          <div>
+            <i class="fa-solid fa-circle-check"></i>Qualidade seleccionada
+          </div>
+          <div>
+            <i class="fa-solid fa-truck-fast"></i>Entrega em Luanda e arredores
+          </div>
+          <div>
+            <i class="fa-solid fa-rotate-left"></i>Troca fácil até 7 dias
+          </div>
+        </div>
+        <div class="detail-divider"></div>
+        <div class="detail-price">
+          <span *ngIf="item.oldPrice" class="old">{{
+            store.formatPrice(item.oldPrice)
+          }}</span
+          ><strong>{{ store.formatPrice(item.price) }}</strong>
+        </div>
+        <div class="detail-actions">
+          <button class="detail-cart" (click)="addToCart()">
+            <i class="fa-solid fa-bag-shopping"></i>Adicionar ao carrinho</button
+          ><button
+            class="detail-wish"
+            [class.wishlisted]="store.isWishlisted(item.id)"
+            (click)="toggleWish()"
+          >
+            <i
+              class="fa-heart"
+              [class.fa-solid]="store.isWishlisted(item.id)"
+              [class.fa-regular]="!store.isWishlisted(item.id)"
+            ></i
+            >{{
+              store.isWishlisted(item.id)
+                ? "Remover dos favoritos"
+                : "Guardar nos favoritos"
+            }}
+          </button>
+        </div>
+        <a routerLink="/loja/produtos" class="back-link"
+          ><i class="fa-solid fa-arrow-left"></i>Continuar a explorar</a
+        >
+      </section>
+    </div>
+  </main>
+</ng-container>
+<ng-template #loading
+  ><main class="detail-loading">
+    <i class="fa-solid fa-spinner"></i>
+    <p>A carregar produto...</p>
+  </main></ng-template
+>
