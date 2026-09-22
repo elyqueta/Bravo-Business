@@ -33,16 +33,16 @@
         *ngIf="form.controls.password.touched && form.controls.password.invalid"
         >A password deve ter pelo menos 6 caracteres.</small
       >
-      <p class="admin-form-error" *ngIf="error">
-        <i class="fa-solid fa-circle-exclamation"></i>{{ error }}
+      <p class="admin-form-error" *ngIf="error()">
+        <i class="fa-solid fa-circle-exclamation"></i>{{ error() }}
       </p>
-      <button class="admin-submit" [disabled]="loading">
+      <button class="admin-submit" [disabled]="loading()">
         <i
           class="fa-solid"
-          [class.fa-right-to-bracket]="!loading"
-          [class.fa-spinner]="loading"
+          [class.fa-right-to-bracket]="!loading()"
+          [class.fa-spinner]="loading()"
         ></i
-        >{{ loading ? "A entrar..." : "Entrar" }}
+        >{{ loading() ? "A entrar..." : "Entrar" }}
       </button>
     </form>
   </section>

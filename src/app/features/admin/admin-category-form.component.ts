@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit, inject } from "@angular/core";
+import { Component, OnInit, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { AdminApiService } from "../../core/admin-api.service";
@@ -17,11 +17,11 @@ export class AdminCategoryFormComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  readonly category = signal<CategoryApi | null>(null);
+  readonly loading = signal(false);
+  readonly error = signal("");
+  readonly iconPickerOpen = signal(false);
   editingId: string | null = null;
-  category?: CategoryApi;
-  error = "";
-  loading = false;
-  iconPickerOpen = false;
   readonly iconOptions = [
     "fa-shirt",
     "fa-shoe-prints",
@@ -56,36 +56,42 @@ export class AdminCategoryFormComponent implements OnInit {
     this.editingId = id;
     this.api.categories().subscribe({
       next: (response) => {
-        this.category = response.data.find((item) => item.id === id);
-        if (this.category)
+        this.category.set(
+          response.data.find((item) => item.id === id) ?? null
+        );
+        if (this.category()) {
           this.form.patchValue({
-            label: this.category.label,
-            icon: this.category.icon || "fa-box",
-            prefix: this.category.prefix,
-            anchor: this.category.anchor,
+            label: this.category()!.label,
+            icon: this.category()!.icon || "fa-box",
+            prefix: this.category()!.prefix,
+            anchor: this.category()!.anchor,
           });
+        }
       },
-      error: () => (this.error = "Não foi possível carregar a categoria."),
+      error: () => (this.error.set("Não foi possível carregar a categoria.")),
     });
   }
   selectIcon(icon: string): void {
     this.form.patchValue({ icon });
-    this.iconPickerOpen = false;
+    this.iconPickerOpen.set(false);
+  }
+  openIconPicker(): void {
+    this.iconPickerOpen.set(true);
   }
   save(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
-    this.loading = true;
+    this.loading.set(true);
     const request = this.editingId
       ? this.api.updateCategory(this.editingId, this.form.getRawValue())
       : this.api.createCategory(this.form.getRawValue());
     request.subscribe({
       next: () => void this.router.navigateByUrl("/admin/categorias"),
       error: () => {
-        this.error = "Não foi possível guardar a categoria.";
-        this.loading = false;
+        this.error.set("Não foi possível guardar a categoria.");
+        this.loading.set(false);
       },
     });
   }

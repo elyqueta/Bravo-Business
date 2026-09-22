@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit, inject } from "@angular/core";
+import { Component, OnInit, inject, signal } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import { AdminApiService } from "../../core/admin-api.service";
@@ -14,34 +14,47 @@ import { ProductApi } from "../../core/api.models";
 })
 export class AdminProductsComponent implements OnInit {
   readonly api = inject(AdminApiService);
-  products: ProductApi[] = [];
-  search = "";
-  loading = false;
-  error = "";
+  readonly products = signal<ProductApi[]>([]);
+  readonly search = signal("");
+  readonly loading = signal(false);
+  readonly error = signal("");
+  readonly deletingId = signal<string | null>(null);
+  private loadTimeout?: number;
   ngOnInit(): void {
     this.load();
   }
+  onSearchChange(value: string): void {
+    this.search.set(value);
+    clearTimeout(this.loadTimeout);
+    this.loadTimeout = window.setTimeout(() => this.load(), 350);
+  }
   load(): void {
-    this.loading = true;
-    this.api.products(this.search).subscribe({
+    this.loading.set(true);
+    this.api.products(this.search()).subscribe({
       next: (response) => {
-        this.products = response.data;
-        this.loading = false;
+        this.products.set(response.data);
+        this.loading.set(false);
       },
       error: () => {
-        this.error =
-          "Não foi possível carregar os produtos. Confirma se a API está activa.";
-        this.loading = false;
+        this.error.set(
+          "Não foi possível carregar os produtos. Confirma se a API está activa."
+        );
+        this.loading.set(false);
       },
     });
   }
   delete(product: ProductApi): void {
     if (!window.confirm(`Remover ${product.name}?`)) return;
-    this.api
-      .deleteProduct(product.id)
-      .subscribe({
-        next: () => this.load(),
-        error: () => (this.error = "Não foi possível remover o produto."),
-      });
+    this.deletingId.set(product.id);
+    this.api.deleteProduct(product.id).subscribe({
+      next: () => {
+        this.deletingId.set(null);
+        this.load();
+      },
+      error: () => {
+        this.deletingId.set(null);
+        this.error.set("Não foi possível remover o produto.");
+      },
+    });
   }
 }

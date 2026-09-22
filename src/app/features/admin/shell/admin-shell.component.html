@@ -1,0 +1,38 @@
+<main class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-brand">
+      <img src="assets/images/logo.jpeg" alt="Bravo Business" /><strong
+        >BRAVO<em>BUSINESS</em></strong
+      >
+    </div>
+    <nav class="admin-nav">
+      <a
+        routerLink="/admin"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        ><i class="fa-solid fa-chart-line"></i>Visão geral</a
+      >
+      <a routerLink="/admin/produtos" routerLinkActive="active"
+        ><i class="fa-solid fa-boxes-stacked"></i>Produtos</a
+      >
+      <a routerLink="/admin/categorias" routerLinkActive="active"
+        ><i class="fa-solid fa-layer-group"></i>Categorias</a
+      >
+      <a class="admin-nav-logout-mobile" (click)="logout()" title="Terminar sessão"
+        ><i class="fa-solid fa-right-from-bracket"></i
+      ></a>
+    </nav>
+    <div class="admin-sidebar-foot">
+      <p>{{ auth.user()?.fullName || "Administrador" }}</p>
+      <button (click)="logout()">
+        <i class="fa-solid fa-right-from-bracket"></i> Terminar sessão
+      </button>
+      <a routerLink="/loja" class="admin-sidebar-store"
+        ><i class="fa-solid fa-store"></i> Ver loja</a
+      >
+    </div>
+  </aside>
+  <section class="admin-content">
+    <router-outlet></router-outlet>
+  </section>
+</main>

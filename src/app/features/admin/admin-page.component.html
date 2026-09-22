@@ -1,31 +1,3 @@
-<main class="admin-shell">
-  <aside class="admin-sidebar">
-    <div class="admin-sidebar-brand">
-      <img src="assets/images/logo.jpeg" alt="Bravo Business" /><strong
-        >BRAVO<em>BUSINESS</em></strong
-      >
-    </div>
-    <nav class="admin-nav">
-      <a
-        routerLink="/admin"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        ><i class="fa-solid fa-chart-line"></i>Visão geral</a
-      >
-      <a routerLink="/admin/produtos" routerLinkActive="active"
-        ><i class="fa-solid fa-boxes-stacked"></i>Produtos</a
-      >
-      <a routerLink="/admin/categorias" routerLinkActive="active"
-        ><i class="fa-solid fa-layer-group"></i>Categorias</a
-      >
-    </nav>
-    <div class="admin-sidebar-foot">
-      <p>{{ auth.user()?.fullName || "Administrador" }}</p>
-      <button (click)="logout()">
-        <i class="fa-solid fa-right-from-bracket"></i> Terminar sessão
-      </button>
-    </div>
-  </aside>
   <section class="admin-content">
     <header class="admin-topbar">
       <div>
@@ -37,28 +9,28 @@
         <i class="fa-solid fa-arrows-rotate"></i> Actualizar
       </button>
     </header>
-    <div class="admin-error" *ngIf="error">
-      <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
+    <div class="admin-error" *ngIf="error()">
+      <i class="fa-solid fa-circle-exclamation"></i> {{ error() }}
     </div>
-    <div class="admin-success" *ngIf="success">
-      <i class="fa-solid fa-circle-check"></i> {{ success }}
+    <div class="admin-success" *ngIf="success()">
+      <i class="fa-solid fa-circle-check"></i> {{ success() }}
     </div>
     <section class="admin-stats">
       <article class="admin-stat">
         <i class="fa-solid fa-boxes-stacked"></i
-        ><strong>{{ products.length }}</strong
+        ><strong>{{ products().length }}</strong
         ><span>Produtos carregados</span>
       </article>
       <article class="admin-stat">
         <i class="fa-solid fa-layer-group"></i
-        ><strong>{{ categories.length }}</strong
+        ><strong>{{ categories().length }}</strong
         ><span>Categorias activas</span>
       </article>
       <article class="admin-stat">
         <i class="fa-solid fa-chart-simple"></i
         ><strong>{{
-          categories.length
-            ? (products.length / categories.length).toFixed(0)
+          categories().length
+            ? (products().length / categories().length).toFixed(0)
             : 0
         }}</strong
         ><span>Média por categoria</span>
@@ -74,7 +46,7 @@
       <div class="admin-category-list">
         <article
           class="admin-category-card"
-          *ngFor="let category of categories"
+          *ngFor="let category of categories()"
         >
           <i class="fa-solid" [ngClass]="category.icon || 'fa-box'"></i
           ><strong>{{ category.label }}</strong
@@ -83,4 +55,3 @@
       </div>
     </section>
   </section>
-</main>

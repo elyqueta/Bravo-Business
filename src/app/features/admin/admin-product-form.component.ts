@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit, inject } from "@angular/core";
+import { Component, OnInit, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { AdminApiService } from "../../core/admin-api.service";
@@ -17,67 +17,81 @@ export class AdminProductFormComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  categories: CategoryApi[] = [];
-  product?: ProductApi;
+  readonly categories = signal<CategoryApi[]>([]);
+  readonly product = signal<ProductApi | null>(null);
+  readonly loading = signal(false);
+  readonly error = signal("");
+  readonly imagePreview = signal("");
+  readonly galleryPreviews = signal<string[]>([]);
   editingId: string | null = null;
-  loading = false;
-  error = "";
   imageFile: File | null = null;
-  imagePreview = "";
   galleryFiles: File[] = [];
-  galleryPreviews: string[] = [];
+  private objectUrls: string[] = [];
   readonly form = this.formBuilder.nonNullable.group({
     categorySlug: ["", Validators.required],
     name: ["", [Validators.required, Validators.maxLength(200)]],
     description: [""],
     price: [0, [Validators.required, Validators.min(0)]],
     oldPrice: [0],
-    img: [""],
     badge: ["" as ProductBadge | ""],
     gallery: [""],
   });
   ngOnInit(): void {
-    this.api.categories().subscribe({
-      next: (response) => {
-        this.categories = response.data;
-        this.form.patchValue({ categorySlug: this.categories[0]?.slug || "" });
-      },
-      error: () => (this.error = "Não foi possível carregar categorias."),
-    });
     const id = this.route.snapshot.paramMap.get("id");
     if (id) {
       this.editingId = id;
+    }
+    this.api.categories().subscribe({
+      next: (response) => {
+        this.categories.set(response.data);
+        if (!this.editingId) {
+          this.form.patchValue({ categorySlug: this.categories()[0]?.slug || "" });
+        }
+      },
+      error: () => (this.error.set("Não foi possível carregar categorias.")),
+    });
+    if (id) {
       this.api.products(id).subscribe({
         next: (response) => {
-          this.product = response.data.find((item) => item.id === id);
-          if (this.product)
+          this.product.set(
+            response.data.find((item) => item.id === id) ?? null
+          );
+          if (this.product()) {
             this.form.patchValue({
-              categorySlug: this.product.categorySlug,
-              name: this.product.name,
-              description: this.product.description || "",
-              price: this.product.price,
-              oldPrice: this.product.oldPrice || 0,
-              img: this.product.img,
-              badge: this.product.badge || "",
-              gallery: (this.product.gallery || []).join("\n"),
+              categorySlug: this.product()!.categorySlug,
+              name: this.product()!.name,
+              description: this.product()!.description || "",
+              price: this.product()!.price,
+              oldPrice: this.product()!.oldPrice || 0,
+              badge: this.product()!.badge || "",
+              gallery: (this.product()!.gallery || []).join("\n"),
             });
+          }
         },
-        error: () => (this.error = "Não foi possível carregar o produto."),
+        error: () => (this.error.set("Não foi possível carregar o produto.")),
       });
     }
+  }
+  ngOnDestroy(): void {
+    this.objectUrls.forEach((url) => URL.revokeObjectURL(url));
+  }
+  private trackObjectUrl(url: string): void {
+    this.objectUrls.push(url);
   }
   onImageSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0] || null;
     if (!file) return;
     if (!file.type.startsWith("image/") || file.size > 5 * 1024 * 1024) {
-      this.error = "Escolhe uma imagem válida até 5 MB.";
+      this.error.set("Escolhe uma imagem válida até 5 MB.");
       input.value = "";
       return;
     }
     this.imageFile = file;
-    this.imagePreview = URL.createObjectURL(file);
-    this.error = "";
+    const url = URL.createObjectURL(file);
+    this.trackObjectUrl(url);
+    this.imagePreview.set(url);
+    this.error.set("");
   }
   onGallerySelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -86,13 +100,15 @@ export class AdminProductFormComponent implements OnInit {
       (file) => !file.type.startsWith("image/") || file.size > 5 * 1024 * 1024,
     );
     if (invalid) {
-      this.error = "Todas as imagens devem ser válidas e ter no máximo 5 MB.";
+      this.error.set("Todas as imagens devem ser válidas e ter no máximo 5 MB.");
       input.value = "";
       return;
     }
     this.galleryFiles = files;
-    this.galleryPreviews = files.map((file) => URL.createObjectURL(file));
-    this.error = "";
+    const urls = files.map((file) => URL.createObjectURL(file));
+    urls.forEach((url) => this.trackObjectUrl(url));
+    this.galleryPreviews.set(urls);
+    this.error.set("");
   }
   save(): void {
     if (this.form.invalid) {
@@ -100,7 +116,7 @@ export class AdminProductFormComponent implements OnInit {
       return;
     }
     if (!this.editingId && !this.imageFile) {
-      this.error = "Selecciona uma imagem principal para o produto.";
+      this.error.set("Selecciona uma imagem principal para o produto.");
       return;
     }
     const value = this.form.getRawValue();
@@ -129,7 +145,7 @@ export class AdminProductFormComponent implements OnInit {
     this.galleryFiles.forEach((file) =>
       payload.append("gallery", file, file.name),
     );
-    this.loading = true;
+    this.loading.set(true);
     const request = this.editingId
       ? this.api.updateProduct(this.editingId, payload)
       : this.api.createProduct(payload);
@@ -137,8 +153,8 @@ export class AdminProductFormComponent implements OnInit {
       next: () => void this.router.navigateByUrl("/admin/produtos"),
       error: (response: { error?: { message?: string; details?: Array<{ field?: string; message?: string }> } }) => {
         const details = response.error?.details?.map((detail) => `${detail.field || "campo"}: ${detail.message || "valor inválido"}`).join(" ");
-        this.error = details || response.error?.message || "Não foi possível guardar o produto.";
-        this.loading = false;
+        this.error.set(details || response.error?.message || "Não foi possível guardar o produto.");
+        this.loading.set(false);
       },
     });
   }

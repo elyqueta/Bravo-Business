@@ -1,20 +1,3 @@
-<main class="admin-shell">
-  <aside class="admin-sidebar">
-    <div class="admin-sidebar-brand">
-      <img src="assets/images/logo.jpeg" alt="Bravo Business" /><strong
-        >BRAVO<em>BUSINESS</em></strong
-      >
-    </div>
-    <nav class="admin-nav">
-      <a routerLink="/admin"
-        ><i class="fa-solid fa-chart-line"></i>Visão geral</a
-      ><a routerLink="/admin/produtos"
-        ><i class="fa-solid fa-boxes-stacked"></i>Produtos</a
-      ><a class="active" routerLink="/admin/categorias"
-        ><i class="fa-solid fa-layer-group"></i>Categorias</a
-      >
-    </nav>
-  </aside>
   <section class="admin-content">
     <header class="admin-topbar">
       <div>
@@ -26,8 +9,8 @@
         ><i class="fa-solid fa-plus"></i> Nova categoria</a
       >
     </header>
-    <div class="admin-error" *ngIf="error">
-      <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
+    <div class="admin-error" *ngIf="error()">
+      <i class="fa-solid fa-circle-exclamation"></i> {{ error() }}
     </div>
     <section class="admin-panel">
       <div class="admin-panel-head">
@@ -39,7 +22,7 @@
       <div class="admin-category-list">
         <article
           class="admin-category-card"
-          *ngFor="let category of categories"
+          *ngFor="let category of categories()"
         >
           <i class="fa-solid" [ngClass]="category.icon || 'fa-box'"></i
           ><strong>{{ category.label }}</strong
@@ -49,7 +32,7 @@
               [routerLink]="['/admin/categorias', category.id, 'editar']"
               title="Editar"
               ><i class="fa-solid fa-pen"></i></a
-            ><button class="delete" (click)="delete(category)" title="Eliminar">
+            ><button class="delete" (click)="delete(category)" [disabled]="deletingId() === category.id" title="Eliminar">
               <i class="fa-solid fa-trash"></i>
             </button>
           </div>
@@ -57,4 +40,3 @@
       </div>
     </section>
   </section>
-</main>

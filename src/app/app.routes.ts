@@ -13,6 +13,7 @@ import { AdminProductsComponent } from "./features/admin/admin-products.componen
 import { AdminProductFormComponent } from "./features/admin/admin-product-form.component";
 import { AdminCategoriesComponent } from "./features/admin/admin-categories.component";
 import { AdminCategoryFormComponent } from "./features/admin/admin-category-form.component";
+import { AdminShellComponent } from "./features/admin/shell/admin-shell.component";
 
 export const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "loja" },
@@ -25,36 +26,19 @@ export const routes: Routes = [
   { path: "loja/:category", component: CatalogPageComponent },
   { path: "contactos", component: ContactosPageComponent },
   { path: "admin/login", component: AdminLoginComponent },
-  { path: "admin", component: AdminPageComponent, canActivate: [adminGuard] },
   {
-    path: "admin/produtos",
-    component: AdminProductsComponent,
+    path: "admin",
+    component: AdminShellComponent,
     canActivate: [adminGuard],
-  },
-  {
-    path: "admin/produtos/novo",
-    component: AdminProductFormComponent,
-    canActivate: [adminGuard],
-  },
-  {
-    path: "admin/produtos/:id/editar",
-    component: AdminProductFormComponent,
-    canActivate: [adminGuard],
-  },
-  {
-    path: "admin/categorias",
-    component: AdminCategoriesComponent,
-    canActivate: [adminGuard],
-  },
-  {
-    path: "admin/categorias/nova",
-    component: AdminCategoryFormComponent,
-    canActivate: [adminGuard],
-  },
-  {
-    path: "admin/categorias/:id/editar",
-    component: AdminCategoryFormComponent,
-    canActivate: [adminGuard],
+    children: [
+      { path: "", component: AdminPageComponent },
+      { path: "produtos", component: AdminProductsComponent },
+      { path: "produtos/novo", component: AdminProductFormComponent },
+      { path: "produtos/:id/editar", component: AdminProductFormComponent },
+      { path: "categorias", component: AdminCategoriesComponent },
+      { path: "categorias/nova", component: AdminCategoryFormComponent },
+      { path: "categorias/:id/editar", component: AdminCategoryFormComponent },
+    ],
   },
   {
     path: "sobre",
