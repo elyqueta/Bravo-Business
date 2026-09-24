@@ -9,12 +9,10 @@
         ><i class="fa-solid fa-plus"></i> Novo produto</a
       >
     </header>
-    <div class="admin-error" *ngIf="error()">
-      <i class="fa-solid fa-circle-exclamation"></i> {{ error() }}
-    </div>
     <section class="admin-panel">
       <div class="admin-panel-head">
         <h2>Todos os produtos</h2>
+        <span class="admin-results-count">{{ products().length }} resultados</span>
         <div class="admin-panel-actions">
           <input
             class="admin-search"
@@ -27,7 +25,7 @@
         </div>
       </div>
       <div class="admin-table-wrap">
-        <table class="admin-table">
+        <table class="admin-table hide-sm">
           <thead>
             <tr>
               <th>Produto</th>
@@ -38,23 +36,29 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let product of products()">
-              <td>
-                <div class="admin-product-cell">
-                  <img [src]="product.img" [alt]="product.name" /><span
-                    >{{ product.name }}<small>{{ product.id }}</small></span
-                  >
-                </div>
-              </td>
-              <td>{{ product.categorySlug }}</td>
-              <td>{{ product.price | number }} Kz</td>
-              <td>
-                <span class="admin-badge" *ngIf="product.badge">{{
-                  product.badge
-                }}</span>
-              </td>
+            @if (loading() && !products().length) {
+              <tr class="skel-row"><td colspan="5"><app-skeleton-row [count]="5"></app-skeleton-row></td></tr>
+            } @else {
+              <tr *ngFor="let product of products()">
+                <td>
+                  <div class="admin-product-cell">
+                    <img [src]="product.img" [alt]="product.name" /><span
+                      >{{ product.name }}<small>{{ product.id }}</small></span
+                    >
+                  </div>
+                </td>
+                <td>{{ product.categorySlug }}</td>
+                <td>{{ product.price | number }} Kz</td>
+                <td>
+                  <span class="admin-badge" *ngIf="product.badge">{{
+                    product.badge
+                  }}</span>
+                </td>
               <td>
                 <div class="admin-row-actions">
+                  <a [routerLink]="['/admin/produtos', product.id]" title="Ver">
+                    <i class="fa-solid fa-eye"></i>
+                  </a>
                   <a
                     [routerLink]="['/admin/produtos', product.id, 'editar']"
                     title="Editar"
@@ -69,9 +73,33 @@
                   </button>
                 </div>
               </td>
-            </tr>
+              </tr>
+            }
           </tbody>
         </table>
+    <div class="admin-product-cards show-sm">
+      <article class="admin-product-card" *ngFor="let product of products()">
+        <div class="admin-product-card-head">
+          <img [src]="product.img" [alt]="product.name" />
+          <div>
+            <strong>{{ product.name }}</strong>
+            <span>{{ product.categorySlug }} · {{ product.price | number }} Kz</span>
+            <span class="admin-badge" *ngIf="product.badge">{{ product.badge }}</span>
+          </div>
+        </div>
+        <div class="admin-row-actions">
+          <a [routerLink]="['/admin/produtos', product.id]" title="Ver">
+            <i class="fa-solid fa-eye"></i>
+          </a>
+          <a [routerLink]="['/admin/produtos', product.id, 'editar']" title="Editar">
+            <i class="fa-solid fa-pen"></i>
+          </a>
+          <button class="delete" (click)="delete(product)" [disabled]="deletingId() === product.id" title="Eliminar">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      </article>
+    </div>
         <div class="admin-empty" *ngIf="!loading() && !products().length">
           <i class="fa-solid fa-box-open"></i>
           <p>Nenhum produto encontrado.</p>

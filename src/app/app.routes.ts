@@ -11,9 +11,11 @@ import { AdminLoginComponent } from "./features/admin/admin-login.component";
 import { adminGuard } from "./core/admin.guard";
 import { AdminProductsComponent } from "./features/admin/admin-products.component";
 import { AdminProductFormComponent } from "./features/admin/admin-product-form.component";
+import { AdminProductDetailComponent } from "./features/admin/admin-product-detail/admin-product-detail.component";
 import { AdminCategoriesComponent } from "./features/admin/admin-categories.component";
 import { AdminCategoryFormComponent } from "./features/admin/admin-category-form.component";
 import { AdminShellComponent } from "./features/admin/shell/admin-shell.component";
+import { NotFoundComponent } from "./features/info/not-found/not-found.component";
 
 export const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "loja" },
@@ -34,6 +36,7 @@ export const routes: Routes = [
       { path: "", component: AdminPageComponent },
       { path: "produtos", component: AdminProductsComponent },
       { path: "produtos/novo", component: AdminProductFormComponent },
+      { path: "produtos/:id", component: AdminProductDetailComponent },
       { path: "produtos/:id/editar", component: AdminProductFormComponent },
       { path: "categorias", component: AdminCategoriesComponent },
       { path: "categorias/nova", component: AdminCategoryFormComponent },
@@ -72,5 +75,5 @@ export const routes: Routes = [
       text: "Consulta as condições de utilização da loja.",
     },
   },
-  { path: "**", redirectTo: "loja" },
+  { path: "**", component: NotFoundComponent },
 ];

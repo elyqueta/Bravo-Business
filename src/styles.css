@@ -1481,8 +1481,13 @@ footer {
   .hbg {
     display: flex;
   }
+}
+@media (max-width: 700px) {
   .hide-sm {
     display: none;
+  }
+  .show-sm {
+    display: block;
   }
 }
 @media (max-width: 520px) {

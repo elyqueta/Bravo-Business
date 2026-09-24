@@ -1,0 +1,17 @@
+.price {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  &.has-old {
+    color: var(--muted);
+  }
+  strong {
+    color: var(--text);
+  }
+  .old {
+    font-size: 11px;
+    text-decoration: line-through;
+    opacity: 0.8;
+  }
+}

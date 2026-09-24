@@ -1,6 +1,6 @@
 <main class="admin-auth">
   <section class="admin-auth-brand">
-    <img src="assets/images/logo.jpeg" alt="Bravo Business" /><span
+    <img src="assets/images/logo.png" alt="Bravo Business" /><span
       class="eyebrow"
       >Bravo Business · Backoffice</span
     >
@@ -24,7 +24,8 @@
           placeholder="admin@bravo.co.ao" /></label
       ><small *ngIf="form.controls.email.touched && form.controls.email.invalid"
         >Indica um email válido.</small
-      ><label
+      >
+      <label
         >Password<input
           type="password"
           formControlName="password"
@@ -33,9 +34,6 @@
         *ngIf="form.controls.password.touched && form.controls.password.invalid"
         >A password deve ter pelo menos 6 caracteres.</small
       >
-      <p class="admin-form-error" *ngIf="error()">
-        <i class="fa-solid fa-circle-exclamation"></i>{{ error() }}
-      </p>
       <button class="admin-submit" [disabled]="loading()">
         <i
           class="fa-solid"

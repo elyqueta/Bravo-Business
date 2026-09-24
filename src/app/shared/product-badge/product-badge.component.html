@@ -1,0 +1,5 @@
+@if (badge()) {
+  <span class="product-badge" [class.sale]="badge() === 'Sale'" [class.premium]="badge() === 'Premium'">
+    {{ badge() }}
+  </span>
+}

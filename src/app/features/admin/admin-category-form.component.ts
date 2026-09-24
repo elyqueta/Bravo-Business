@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { AdminApiService } from "../../core/admin-api.service";
 import { CategoryApi } from "../../core/api.models";
+import { ToastService } from "../../shared/toast/toast.service";
 
 @Component({
   selector: "app-admin-category-form",
@@ -14,12 +15,12 @@ import { CategoryApi } from "../../core/api.models";
 })
 export class AdminCategoryFormComponent implements OnInit {
   private readonly api = inject(AdminApiService);
+  private readonly toast = inject(ToastService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   readonly category = signal<CategoryApi | null>(null);
   readonly loading = signal(false);
-  readonly error = signal("");
   readonly iconPickerOpen = signal(false);
   editingId: string | null = null;
   readonly iconOptions = [
@@ -68,7 +69,7 @@ export class AdminCategoryFormComponent implements OnInit {
           });
         }
       },
-      error: () => (this.error.set("Não foi possível carregar a categoria.")),
+      error: () => this.toast.error("Não foi possível carregar a categoria."),
     });
   }
   selectIcon(icon: string): void {
@@ -88,9 +89,12 @@ export class AdminCategoryFormComponent implements OnInit {
       ? this.api.updateCategory(this.editingId, this.form.getRawValue())
       : this.api.createCategory(this.form.getRawValue());
     request.subscribe({
-      next: () => void this.router.navigateByUrl("/admin/categorias"),
+      next: () => {
+        this.toast.success(this.editingId ? "Categoria actualizada." : "Categoria criada.");
+        void this.router.navigateByUrl("/admin/categorias");
+      },
       error: () => {
-        this.error.set("Não foi possível guardar a categoria.");
+        this.toast.error("Não foi possível guardar a categoria.");
         this.loading.set(false);
       },
     });

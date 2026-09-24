@@ -9,9 +9,6 @@
         ><i class="fa-solid fa-plus"></i> Nova categoria</a
       >
     </header>
-    <div class="admin-error" *ngIf="error()">
-      <i class="fa-solid fa-circle-exclamation"></i> {{ error() }}
-    </div>
     <section class="admin-panel">
       <div class="admin-panel-head">
         <h2>Todas as categorias</h2>
@@ -20,23 +17,27 @@
         </button>
       </div>
       <div class="admin-category-list">
-        <article
-          class="admin-category-card"
-          *ngFor="let category of categories()"
-        >
-          <i class="fa-solid" [ngClass]="category.icon || 'fa-box'"></i
-          ><strong>{{ category.label }}</strong
-          ><span>{{ category.slug }} · Prefixo {{ category.prefix }}</span>
-          <div class="admin-row-actions category-actions">
-            <a
-              [routerLink]="['/admin/categorias', category.id, 'editar']"
-              title="Editar"
-              ><i class="fa-solid fa-pen"></i></a
-            ><button class="delete" (click)="delete(category)" [disabled]="deletingId() === category.id" title="Eliminar">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
-        </article>
+        @if (loading() && !categories().length) {
+          <app-skeleton-card [count]="6"></app-skeleton-card>
+        } @else {
+          <article
+            class="admin-category-card"
+            *ngFor="let category of categories()"
+          >
+            <i class="fa-solid" [ngClass]="category.icon || 'fa-box'"></i
+            ><strong>{{ category.label }}</strong
+            ><span>{{ category.slug }} · Prefixo {{ category.prefix }}</span>
+            <div class="admin-row-actions category-actions">
+              <a
+                [routerLink]="['/admin/categorias', category.id, 'editar']"
+                title="Editar"
+                ><i class="fa-solid fa-pen"></i></a
+              ><button class="delete" (click)="delete(category)" [disabled]="deletingId() === category.id" title="Eliminar">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </article>
+        }
       </div>
     </section>
   </section>

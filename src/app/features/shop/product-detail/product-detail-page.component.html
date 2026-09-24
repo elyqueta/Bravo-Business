@@ -46,15 +46,23 @@
         <div class="detail-divider"></div>
         <p class="detail-description">{{ description() }}</p>
         <div class="detail-features">
-          <div>
-            <i class="fa-solid fa-circle-check"></i>Qualidade seleccionada
-          </div>
-          <div>
-            <i class="fa-solid fa-truck-fast"></i>Entrega em Luanda e arredores
-          </div>
-          <div>
-            <i class="fa-solid fa-rotate-left"></i>Troca fácil até 7 dias
-          </div>
+          @if (item.features?.length) {
+            @for (feature of item.features; track $index) {
+              <div>
+                <i class="fa-solid fa-circle-check"></i>{{ feature }}
+              </div>
+            }
+          } @else {
+            <div>
+              <i class="fa-solid fa-circle-check"></i>Qualidade seleccionada
+            </div>
+            <div>
+              <i class="fa-solid fa-truck-fast"></i>Entrega em Luanda e arredores
+            </div>
+            <div>
+              <i class="fa-solid fa-rotate-left"></i>Troca fácil até 7 dias
+            </div>
+          }
         </div>
         <div class="detail-divider"></div>
         <div class="detail-price">

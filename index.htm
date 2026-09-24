@@ -1,295 +1,536 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt" data-theme="light">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bravo Business – Moda & Estilo</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bravo Business – Moda & Estilo</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+      <i class="fa-solid fa-circle-check"></i><span id="toastTxt"></span>
+    </div>
 
-<!-- TOAST -->
-<div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastTxt"></span></div>
-
-<!-- ═══════ PRODUCT MODAL ═══════ -->
-<div class="modal-ov" id="modalOv" onclick="handleModalOvClick(event)">
-  <div class="modal-box" id="modalBox">
-    <button class="modal-close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
-    <div class="modal-inner">
-      <div class="modal-imgs">
-        <div class="modal-main-img" id="modalMainImg">
-          <img src="" alt="" id="modalMainImgEl">
+    <!-- ═══════ PRODUCT MODAL ═══════ -->
+    <div class="modal-ov" id="modalOv" onclick="handleModalOvClick(event)">
+      <div class="modal-box" id="modalBox">
+        <button class="modal-close-btn" onclick="closeModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="modal-inner">
+          <div class="modal-imgs">
+            <div class="modal-main-img" id="modalMainImg">
+              <img src="" alt="" id="modalMainImgEl" />
+            </div>
+            <div class="modal-thumbs" id="modalThumbs"></div>
+          </div>
+          <div class="modal-info">
+            <p class="modal-info-code">
+              <i class="fa-solid fa-barcode"></i><span id="mCode"></span>
+            </p>
+            <span
+              class="modal-info-badge"
+              id="mBadge"
+              style="display: none"
+            ></span>
+            <h2 class="modal-info-name" id="mName"></h2>
+            <p class="modal-info-cat" id="mCat"></p>
+            <div class="modal-divider"></div>
+            <p class="modal-info-desc" id="mDesc"></p>
+            <div class="modal-info-features" id="mFeatures"></div>
+            <div class="modal-divider"></div>
+            <div class="modal-price-row">
+              <span
+                class="modal-old-price"
+                id="mOldPrice"
+                style="display: none"
+              ></span>
+              <span class="modal-price" id="mPrice"></span>
+            </div>
+            <div class="modal-actions">
+              <button class="modal-btn-cart" id="mBtnCart">
+                <i class="fa-solid fa-bag-shopping"></i> Adicionar ao Carrinho
+              </button>
+              <button class="modal-btn-wish" id="mBtnWish">
+                <i class="fa-regular fa-heart" id="mWishIco"></i>
+                <span id="mBtnWishTxt">Guardar nos Favoritos</span>
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="modal-thumbs" id="modalThumbs"></div>
       </div>
-      <div class="modal-info">
-        <p class="modal-info-code"><i class="fa-solid fa-barcode"></i><span id="mCode"></span></p>
-        <span class="modal-info-badge" id="mBadge" style="display:none"></span>
-        <h2 class="modal-info-name" id="mName"></h2>
-        <p class="modal-info-cat" id="mCat"></p>
-        <div class="modal-divider"></div>
-        <p class="modal-info-desc" id="mDesc"></p>
-        <div class="modal-info-features" id="mFeatures"></div>
-        <div class="modal-divider"></div>
-        <div class="modal-price-row">
-          <span class="modal-old-price" id="mOldPrice" style="display:none"></span>
-          <span class="modal-price" id="mPrice"></span>
+    </div>
+
+    <!-- ═══════ NAVBAR ═══════ -->
+    <nav id="navbar">
+      <a href="#" class="nav-logo">
+        <!-- 🔁 Substituir src pelo logotipo real -->
+        <img src="images/logo.png" alt="Bravo Business" class="logo-img" />
+      </a>
+
+      <ul class="nav-links">
+        <li>
+          <a href="#products"
+            ><i
+              class="fa-solid fa-store"
+              style="font-size: 10px; margin-right: 4px"
+            ></i
+            >Loja</a
+          >
+        </li>
+        <li><a href="#s-roupas">Roupas</a></li>
+        <li><a href="#s-calcados">Calçados</a></li>
+        <li><a href="#s-acessorios">Acessórios</a></li>
+        <li><a href="#footer">Contacto</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="icn" id="themeBtn" title="Tema">
+          <i class="fa-solid fa-moon" id="themeIco"></i>
+        </button>
+        <button class="icn" id="wishBtn" title="Favoritos">
+          <i class="fa-regular fa-heart"></i>
+          <span class="icn-badge red" id="wishBadge">0</span>
+        </button>
+        <button class="icn" id="cartBtn" title="Carrinho">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="icn-badge" id="cartBadge">0</span>
+        </button>
+        <button class="hbg" id="hbgBtn" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ═══════ MOBILE MENU ═══════ -->
+    <div class="mob-overlay" id="mobOv"></div>
+    <div class="mob-menu" id="mobMenu">
+      <div class="mob-head">
+        <div class="nav-logo">
+          <img src="images/logo.png" alt="logo" class="logo-img" />
+          <span class="logo-txt"
+            >BRAVO<em style="color: var(--accent)">BUSINESS</em></span
+          >
         </div>
-        <div class="modal-actions">
-          <button class="modal-btn-cart" id="mBtnCart">
-            <i class="fa-solid fa-bag-shopping"></i> Adicionar ao Carrinho
-          </button>
-          <button class="modal-btn-wish" id="mBtnWish">
-            <i class="fa-regular fa-heart" id="mWishIco"></i>
-            <span id="mBtnWishTxt">Guardar nos Favoritos</span>
-          </button>
+        <button class="mob-close" id="mobClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="mob-body">
+        <a href="#products" onclick="closeMob()"
+          ><i class="fa-solid fa-store"></i>Loja Completa</a
+        >
+        <a href="#s-roupas" onclick="closeMob()"
+          ><i class="fa-solid fa-shirt"></i>Roupas</a
+        >
+        <a href="#s-calcados" onclick="closeMob()"
+          ><i class="fa-solid fa-shoe-prints"></i>Calçados</a
+        >
+        <a href="#s-acessorios" onclick="closeMob()"
+          ><i class="fa-solid fa-gem"></i>Acessórios</a
+        >
+        <a href="#footer" onclick="closeMob()"
+          ><i class="fa-solid fa-location-dot"></i>Localização</a
+        >
+        <a
+          href="#"
+          onclick="
+            openWish();
+            closeMob();
+          "
+          ><i class="fa-regular fa-heart" style="color: var(--danger)"></i
+          >Favoritos</a
+        >
+        <a
+          href="#"
+          onclick="
+            openCart();
+            closeMob();
+          "
+          ><i class="fa-solid fa-bag-shopping"></i>Carrinho</a
+        >
+        <a
+          href="https://wa.me/244957103656"
+          target="_blank"
+          class="wa-link"
+          onclick="closeMob()"
+        >
+          <i class="fa-brands fa-whatsapp"></i>WhatsApp
+        </a>
+      </div>
+      <div class="mob-foot">
+        <div class="theme-row">
+          <span
+            ><i
+              class="fa-solid fa-circle-half-stroke"
+              style="margin-right: 8px; color: var(--accent)"
+            ></i
+            >Tema Escuro</span
+          >
+          <div class="tog" id="mobTog" onclick="toggleTheme()">
+            <div class="tog-knob"></div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- ═══════ NAVBAR ═══════ -->
-<nav id="navbar">
-  <a href="#" class="nav-logo">
-    <!-- 🔁 Substituir src pelo logotipo real -->
-    <img src="images/logo.jpeg" alt="Bravo Business" class="logo-img">
-  </a>
+    <!-- ═══════ HERO ═══════ -->
+    <section class="hero" id="home">
+      <div class="slide on">
+        <div
+          class="slide-bg"
+          style="
+            background-image: url(&quot;https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80&quot;);
+          "
+        ></div>
+        <div class="slide-ov"></div>
+        <div class="slide-cnt">
+          <span class="slide-tag"
+            ><i class="fa-solid fa-bolt"></i> Nova Coleção 2026</span
+          >
+          <h1 class="slide-title">VISTA-SE<br />COM ESTILO</h1>
+          <p class="slide-sub">
+            Moda urbana de qualidade premium para quem não abdica do estilo no
+            dia a dia.
+          </p>
+          <div class="slide-btns">
+            <a href="#products" class="btn-prim"
+              ><i class="fa-solid fa-arrow-down"></i> Explorar</a
+            >
+            <a
+              href="https://wa.me/244957103656"
+              target="_blank"
+              class="btn-ghost"
+              ><i class="fa-brands fa-whatsapp"></i> Falar Connosco</a
+            >
+          </div>
+        </div>
+      </div>
+      <div class="slide">
+        <div
+          class="slide-bg"
+          style="
+            background-image: url(&quot;https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1600&q=80&quot;);
+          "
+        ></div>
+        <div class="slide-ov"></div>
+        <div class="slide-cnt">
+          <span class="slide-tag"
+            ><i class="fa-solid fa-star"></i> Calçados em Destaque</span
+          >
+          <h1 class="slide-title">PISA<br />COM FORÇA</h1>
+          <p class="slide-sub">
+            Os modelos mais exclusivos para quem não passa despercebido.
+            Conforto e atitude em cada passo.
+          </p>
+          <div class="slide-btns">
+            <a href="#s-calcados" class="btn-prim"
+              ><i class="fa-solid fa-shoe-prints"></i> Ver Calçados</a
+            >
+          </div>
+        </div>
+      </div>
+      <div class="slide">
+        <div
+          class="slide-bg"
+          style="
+            background-image: url(&quot;https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1600&q=80&quot;);
+          "
+        ></div>
+        <div class="slide-ov"></div>
+        <div class="slide-cnt">
+          <span class="slide-tag"
+            ><i class="fa-solid fa-gem"></i> Acessórios Premium</span
+          >
+          <h1 class="slide-title">DETALHES<br />QUE FAZEM<br />A DIFERENÇA</h1>
+          <p class="slide-sub">
+            Completa o teu look com os acessórios certos. Elegância nos pequenos
+            detalhes.
+          </p>
+          <div class="slide-btns">
+            <a href="#s-acessorios" class="btn-prim"
+              ><i class="fa-solid fa-gem"></i> Ver Acessórios</a
+            >
+          </div>
+        </div>
+      </div>
+      <div class="hero-dots" id="heroDots">
+        <button class="hdot on" onclick="goSlide(0)"></button>
+        <button class="hdot" onclick="goSlide(1)"></button>
+        <button class="hdot" onclick="goSlide(2)"></button>
+      </div>
+    </section>
 
-  <ul class="nav-links">
-    <li><a href="#products"><i class="fa-solid fa-store" style="font-size:10px;margin-right:4px"></i>Loja</a></li>
-    <li><a href="#s-roupas">Roupas</a></li>
-    <li><a href="#s-calcados">Calçados</a></li>
-    <li><a href="#s-acessorios">Acessórios</a></li>
-    <li><a href="#footer">Contacto</a></li>
-  </ul>
-
-  <div class="nav-actions">
-    <button class="icn" id="themeBtn" title="Tema">
-      <i class="fa-solid fa-moon" id="themeIco"></i>
-    </button>
-    <button class="icn" id="wishBtn" title="Favoritos">
-      <i class="fa-regular fa-heart"></i>
-      <span class="icn-badge red" id="wishBadge">0</span>
-    </button>
-    <button class="icn" id="cartBtn" title="Carrinho">
-      <i class="fa-solid fa-bag-shopping"></i>
-      <span class="icn-badge" id="cartBadge">0</span>
-    </button>
-    <button class="hbg" id="hbgBtn" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</nav>
-
-<!-- ═══════ MOBILE MENU ═══════ -->
-<div class="mob-overlay" id="mobOv"></div>
-<div class="mob-menu" id="mobMenu">
-  <div class="mob-head">
-    <div class="nav-logo">
-      <img src="images/logo.jpeg" alt="logo" class="logo-img">
-      <span class="logo-txt">BRAVO<em style="color:var(--accent)">BUSINESS</em></span>
-    </div>
-    <button class="mob-close" id="mobClose"><i class="fa-solid fa-xmark"></i></button>
-  </div>
-  <div class="mob-body">
-    <a href="#products"   onclick="closeMob()"><i class="fa-solid fa-store"></i>Loja Completa</a>
-    <a href="#s-roupas"   onclick="closeMob()"><i class="fa-solid fa-shirt"></i>Roupas</a>
-    <a href="#s-calcados"    onclick="closeMob()"><i class="fa-solid fa-shoe-prints"></i>Calçados</a>
-    <a href="#s-acessorios" onclick="closeMob()"><i class="fa-solid fa-gem"></i>Acessórios</a>
-    <a href="#footer"     onclick="closeMob()"><i class="fa-solid fa-location-dot"></i>Localização</a>
-    <a href="#" onclick="openWish();closeMob()"><i class="fa-regular fa-heart" style="color:var(--danger)"></i>Favoritos</a>
-    <a href="#" onclick="openCart();closeMob()"><i class="fa-solid fa-bag-shopping"></i>Carrinho</a>
-    <a href="https://wa.me/244957103656" target="_blank" class="wa-link" onclick="closeMob()">
-      <i class="fa-brands fa-whatsapp"></i>WhatsApp
-    </a>
-  </div>
-  <div class="mob-foot">
-    <div class="theme-row">
-      <span><i class="fa-solid fa-circle-half-stroke" style="margin-right:8px;color:var(--accent)"></i>Tema Escuro</span>
-      <div class="tog" id="mobTog" onclick="toggleTheme()"><div class="tog-knob"></div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════ HERO ═══════ -->
-<section class="hero" id="home">
-  <div class="slide on">
-    <div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80')"></div>
-    <div class="slide-ov"></div>
-    <div class="slide-cnt">
-      <span class="slide-tag"><i class="fa-solid fa-bolt"></i> Nova Coleção 2026</span>
-      <h1 class="slide-title">VISTA-SE<br>COM ESTILO</h1>
-      <p class="slide-sub">Moda urbana de qualidade premium para quem não abdica do estilo no dia a dia.</p>
-      <div class="slide-btns">
-        <a href="#products" class="btn-prim"><i class="fa-solid fa-arrow-down"></i> Explorar</a>
-        <a href="https://wa.me/244957103656" target="_blank" class="btn-ghost"><i class="fa-brands fa-whatsapp"></i> Falar Connosco</a>
+    <!-- FEATURES -->
+    <div class="features rv">
+      <div class="feat">
+        <div class="feat-ico"><i class="fa-solid fa-truck-fast"></i></div>
+        <div>
+          <p class="feat-lbl">Entrega Rápida</p>
+          <p class="feat-dsc">Luanda e arredores</p>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-ico"><i class="fa-solid fa-shield-halved"></i></div>
+        <div>
+          <p class="feat-lbl">Qualidade Garantida</p>
+          <p class="feat-dsc">Produtos seleccionados</p>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-ico"><i class="fa-solid fa-rotate-left"></i></div>
+        <div>
+          <p class="feat-lbl">Troca Fácil</p>
+          <p class="feat-dsc">Até 7 dias após compra</p>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-ico"><i class="fa-brands fa-whatsapp"></i></div>
+        <div>
+          <p class="feat-lbl">Suporte WhatsApp</p>
+          <p class="feat-dsc">Resposta em minutos</p>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="slide">
-    <div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1600&q=80')"></div>
-    <div class="slide-ov"></div>
-    <div class="slide-cnt">
-      <span class="slide-tag"><i class="fa-solid fa-star"></i> Calçados em Destaque</span>
-      <h1 class="slide-title">PISA<br>COM FORÇA</h1>
-      <p class="slide-sub">Os modelos mais exclusivos para quem não passa despercebido. Conforto e atitude em cada passo.</p>
-      <div class="slide-btns">
-        <a href="#s-calcados" class="btn-prim"><i class="fa-solid fa-shoe-prints"></i> Ver Calçados</a>
+
+    <!-- ═══════ CAT NAV ═══════ -->
+    <div class="cat-nav" id="products">
+      <div class="cat-inner" id="catNav">
+        <button class="cat-pill on" data-cat="all">
+          <i class="fa-solid fa-store"></i> Todos
+        </button>
+        <button class="cat-pill" data-cat="roupas">
+          <i class="fa-solid fa-shirt"></i> Roupas
+        </button>
+        <button class="cat-pill" data-cat="tenis">
+          <i class="fa-solid fa-shoe-prints"></i> Calçados
+        </button>
+        <button class="cat-pill" data-cat="acessorios">
+          <i class="fa-solid fa-gem"></i> Acessórios
+        </button>
       </div>
     </div>
-  </div>
-  <div class="slide">
-    <div class="slide-bg" style="background-image:url('https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1600&q=80')"></div>
-    <div class="slide-ov"></div>
-    <div class="slide-cnt">
-      <span class="slide-tag"><i class="fa-solid fa-gem"></i> Acessórios Premium</span>
-      <h1 class="slide-title">DETALHES<br>QUE FAZEM<br>A DIFERENÇA</h1>
-      <p class="slide-sub">Completa o teu look com os acessórios certos. Elegância nos pequenos detalhes.</p>
-      <div class="slide-btns">
-        <a href="#s-acessorios" class="btn-prim"><i class="fa-solid fa-gem"></i> Ver Acessórios</a>
+
+    <!-- ═══════ PRODUCT SECTIONS ═══════ -->
+    <div id="pSections"></div>
+
+    <!-- PROMO -->
+    <div class="promo rv">
+      <div>
+        <h2>ATÉ <em>20% de desconto no off</em><br />NA NOVA COLEÇÃO</h2>
+        <p>
+          Aproveite descontos exclusivos por tempo limitado. Não perca esta
+          oportunidade única.
+        </p>
+      </div>
+      <a href="#products" class="btn-white"
+        ><i class="fa-solid fa-tags"></i> Ver Promoções</a
+      >
+    </div>
+
+    <!-- ═══════ FOOTER ═══════ -->
+    <footer id="footer">
+      <div class="footer-g">
+        <div class="foot-brand rv">
+          <img src="images/logo.png" alt="logo" class="foot-logo-img" />
+          <span class="logo-txt"
+            >BRAVO<em style="color: var(--accent)">BUSINESS</em></span
+          >
+          <p>
+            A tua loja de referência em Luanda para moda, Calçados e acessórios
+            premium. Estilo é uma atitude, e a Bravo Business veste essa atitude
+            contigo.
+          </p>
+          <div class="foot-socials">
+            <a
+              href="https://wa.me/244957103656"
+              target="_blank"
+              class="soc wa"
+              title="WhatsApp"
+              ><i class="fa-brands fa-whatsapp"></i
+            ></a>
+            <a
+              href="https://www.instagram.com/bravobusiness30?igsh=MXkxaDh6aGRqeGs4aQ=="
+              target="_blank"
+              class="soc ig"
+              title="Instagram"
+              ><i class="fa-brands fa-instagram"></i
+            ></a>
+            <a
+              href="https://www.tiktok.com/@brav0.business?_r=1&_t=ZS-95vYGfsmyHv"
+              target="_blank"
+              class="soc tt"
+              title="TikTok"
+              ><i class="fa-brands fa-tiktok"></i
+            ></a>
+            <a
+              href="https://www.facebook.com/profile.php?id=61587544407696"
+              target="_blank"
+              class="soc fb"
+              title="Facebook"
+              ><i class="fa-brands fa-facebook-f"></i
+            ></a>
+          </div>
+        </div>
+        <div class="foot-col rv">
+          <h4>Navegação</h4>
+          <ul>
+            <li>
+              <a href="#home"><i class="fa-solid fa-house"></i>Início</a>
+            </li>
+            <li>
+              <a href="#s-roupas"><i class="fa-solid fa-shirt"></i>Roupas</a>
+            </li>
+            <li>
+              <a href="#s-calcados"
+                ><i class="fa-solid fa-shoe-prints"></i>Calçados</a
+              >
+            </li>
+            <li>
+              <a href="#s-acessorios"
+                ><i class="fa-solid fa-gem"></i>Acessórios</a
+              >
+            </li>
+            <li>
+              <a href="#"><i class="fa-solid fa-tags"></i>Promoções</a>
+            </li>
+          </ul>
+        </div>
+        <div class="foot-col rv">
+          <h4>Informações</h4>
+          <ul>
+            <li>
+              <a href="#"><i class="fa-solid fa-circle-info"></i>Sobre Nós</a>
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fa-solid fa-rotate-left"></i>Política de Trocas</a
+              >
+            </li>
+            <li>
+              <a href="#"><i class="fa-solid fa-lock"></i>Privacidade</a>
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fa-solid fa-file-lines"></i>Termos & Condições</a
+              >
+            </li>
+            <li>
+              <a href="https://wa.me/244957103656" target="_blank"
+                ><i class="fa-solid fa-headset"></i>Suporte</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="foot-col rv">
+          <h4>Contacto</h4>
+          <ul>
+            <li>
+              <a href="https://wa.me/244957103656"
+                ><i class="fa-brands fa-whatsapp"></i>+244 957 10 36 56</a
+              >
+            </li>
+            <li>
+              <a href="mailto:bravobusiness@email.com"
+                ><i class="fa-solid fa-envelope"></i>bravobusiness@email.com</a
+              >
+            </li>
+          </ul>
+          <div class="foot-loc" style="margin-top: 18px">
+            <div class="loc-ico"><i class="fa-solid fa-location-dot"></i></div>
+            <p>Bairro Militar<br />Talatona<br />Luanda, Angola</p>
+          </div>
+        </div>
+      </div>
+      <div class="location">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31533.273719369525!2d13.190357634765643!3d-8.911238999999993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1a51f5030ddbbab5%3A0xb41a7bf4964788bb!2sLuanda%20Sul%2C%20Luanda!5e0!3m2!1sen!2sao!4v1777502296125!5m2!1sen!2sao"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+      <div class="foot-bot">
+        <p>© 2026 Bravo Business. Todos os direitos reservados.</p>
+        <p>Feito por INS Inovações, em Luanda, Angola</p>
+      </div>
+    </footer>
+
+    <!-- ═══════ CART DRAWER ═══════ -->
+    <div class="drw-overlay" id="cartOv"></div>
+    <div class="drw" id="cartDrw">
+      <div class="drw-hd">
+        <span class="drw-title"
+          ><i class="fa-solid fa-bag-shopping"></i> Carrinho</span
+        >
+        <button class="drw-close" id="cartClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="drw-body" id="cartBody">
+        <div class="drw-empty" id="cartEmpty">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <p>O teu carrinho está vazio.<br />Adiciona produtos para começar!</p>
+        </div>
+        <div id="cartItems"></div>
+      </div>
+      <div class="drw-ft" id="cartFt" style="display: none">
+        <div class="drw-total">
+          <span class="lbl">Total</span>
+          <span class="val" id="cartTotal">0 Kz</span>
+        </div>
+        <p class="drw-note">
+          <i
+            class="fa-solid fa-circle-info"
+            style="color: var(--accent); margin-right: 4px"
+          ></i
+          >O pedido é confirmado via WhatsApp. Um agente validará
+          disponibilidade e entrega.
+        </p>
+        <button class="btn-wa" id="waBtn">
+          <i class="fa-brands fa-whatsapp"></i>Finalizar via WhatsApp
+        </button>
       </div>
     </div>
-  </div>
-  <div class="hero-dots" id="heroDots">
-    <button class="hdot on" onclick="goSlide(0)"></button>
-    <button class="hdot"    onclick="goSlide(1)"></button>
-    <button class="hdot"    onclick="goSlide(2)"></button>
-  </div>
-</section>
 
-<!-- FEATURES -->
-<div class="features rv">
-  <div class="feat"><div class="feat-ico"><i class="fa-solid fa-truck-fast"></i></div><div><p class="feat-lbl">Entrega Rápida</p><p class="feat-dsc">Luanda e arredores</p></div></div>
-  <div class="feat"><div class="feat-ico"><i class="fa-solid fa-shield-halved"></i></div><div><p class="feat-lbl">Qualidade Garantida</p><p class="feat-dsc">Produtos seleccionados</p></div></div>
-  <div class="feat"><div class="feat-ico"><i class="fa-solid fa-rotate-left"></i></div><div><p class="feat-lbl">Troca Fácil</p><p class="feat-dsc">Até 7 dias após compra</p></div></div>
-  <div class="feat"><div class="feat-ico"><i class="fa-brands fa-whatsapp"></i></div><div><p class="feat-lbl">Suporte WhatsApp</p><p class="feat-dsc">Resposta em minutos</p></div></div>
-</div>
-
-<!-- ═══════ CAT NAV ═══════ -->
-<div class="cat-nav" id="products">
-  <div class="cat-inner" id="catNav">
-    <button class="cat-pill on" data-cat="all"><i class="fa-solid fa-store"></i> Todos</button>
-    <button class="cat-pill" data-cat="roupas"><i class="fa-solid fa-shirt"></i> Roupas</button>
-    <button class="cat-pill" data-cat="tenis"><i class="fa-solid fa-shoe-prints"></i> Calçados</button>
-    <button class="cat-pill" data-cat="acessorios"><i class="fa-solid fa-gem"></i> Acessórios</button>
-  </div>
-</div>
-
-<!-- ═══════ PRODUCT SECTIONS ═══════ -->
-<div id="pSections"></div>
-
-<!-- PROMO -->
-<div class="promo rv">
-  <div>
-    <h2>ATÉ <em>20% de desconto no off</em><br>NA NOVA COLEÇÃO</h2>
-    <p>Aproveite descontos exclusivos por tempo limitado. Não perca esta oportunidade única.</p>
-  </div>
-  <a href="#products" class="btn-white"><i class="fa-solid fa-tags"></i> Ver Promoções</a>
-</div>
-
-<!-- ═══════ FOOTER ═══════ -->
-<footer id="footer">
-  <div class="footer-g">
-    <div class="foot-brand rv">
-      <img src="images/logo.jpeg" alt="logo" class="foot-logo-img">
-      <span class="logo-txt">BRAVO<em style="color:var(--accent)">BUSINESS</em></span>
-      <p>A tua loja de referência em Luanda para moda, Calçados e acessórios premium. Estilo é uma atitude, e a Bravo Business veste essa atitude contigo.</p>
-      <div class="foot-socials">
-        <a href="https://wa.me/244957103656" target="_blank" class="soc wa" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-        <a href="https://www.instagram.com/bravobusiness30?igsh=MXkxaDh6aGRqeGs4aQ==" target="_blank" class="soc ig" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="https://www.tiktok.com/@brav0.business?_r=1&_t=ZS-95vYGfsmyHv" target="_blank" class="soc tt" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-        <a href="https://www.facebook.com/profile.php?id=61587544407696" target="_blank" class="soc fb" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+    <!-- ═══════ WISHLIST DRAWER ═══════ -->
+    <div class="drw-overlay" id="wishOv"></div>
+    <div class="drw" id="wishDrw">
+      <div class="drw-hd">
+        <span class="drw-title"
+          ><i class="fa-solid fa-heart"></i> Favoritos</span
+        >
+        <button class="drw-close" id="wishClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="drw-body" id="wishBody">
+        <div class="drw-empty" id="wishEmpty">
+          <i class="fa-regular fa-heart"></i>
+          <p>
+            Nenhum favorito ainda.<br />Clica em
+            <i class="fa-solid fa-heart" style="color: var(--danger)"></i> nos
+            produtos para guardar!
+          </p>
+        </div>
+        <div id="wishItems"></div>
+      </div>
+      <div class="drw-ft" id="wishFt" style="display: none">
+        <button class="btn-wa" id="wishWaBtn" style="background: var(--accent)">
+          <i class="fa-brands fa-whatsapp"></i>Pedir Favoritos via WhatsApp
+        </button>
       </div>
     </div>
-    <div class="foot-col rv">
-      <h4>Navegação</h4>
-      <ul>
-        <li><a href="#home"><i class="fa-solid fa-house"></i>Início</a></li>
-        <li><a href="#s-roupas"><i class="fa-solid fa-shirt"></i>Roupas</a></li>
-        <li><a href="#s-calcados"><i class="fa-solid fa-shoe-prints"></i>Calçados</a></li>
-        <li><a href="#s-acessorios"><i class="fa-solid fa-gem"></i>Acessórios</a></li>
-        <li><a href="#"><i class="fa-solid fa-tags"></i>Promoções</a></li>
-      </ul>
-    </div>
-    <div class="foot-col rv">
-      <h4>Informações</h4>
-      <ul>
-        <li><a href="#"><i class="fa-solid fa-circle-info"></i>Sobre Nós</a></li>
-        <li><a href="#"><i class="fa-solid fa-rotate-left"></i>Política de Trocas</a></li>
-        <li><a href="#"><i class="fa-solid fa-lock"></i>Privacidade</a></li>
-        <li><a href="#"><i class="fa-solid fa-file-lines"></i>Termos & Condições</a></li>
-        <li><a href="https://wa.me/244957103656" target="_blank"><i class="fa-solid fa-headset"></i>Suporte</a></li>
-      </ul>
-    </div>
-    <div class="foot-col rv">
-      <h4>Contacto</h4>
-      <ul>
-        <li><a href="https://wa.me/244957103656"><i class="fa-brands fa-whatsapp"></i>+244 957 10 36 56</a></li>
-        <li><a href="mailto:bravobusiness@email.com"><i class="fa-solid fa-envelope"></i>bravobusiness@email.com</a></li>
-      </ul>
-      <div class="foot-loc" style="margin-top:18px">
-        <div class="loc-ico"><i class="fa-solid fa-location-dot"></i></div>
-        <p>Bairro Militar<br>Talatona<br>Luanda, Angola</p>
-      </div>
-    </div>
-  </div>
-   <div class="location">
-      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31533.273719369525!2d13.190357634765643!3d-8.911238999999993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1a51f5030ddbbab5%3A0xb41a7bf4964788bb!2sLuanda%20Sul%2C%20Luanda!5e0!3m2!1sen!2sao!4v1777502296125!5m2!1sen!2sao" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-  </div>
-  <div class="foot-bot">
-    <p>© 2026 Bravo Business. Todos os direitos reservados.</p>
-    <p>Feito por INS Inovações, em Luanda, Angola</p>
-  </div>
-</footer>
 
-<!-- ═══════ CART DRAWER ═══════ -->
-<div class="drw-overlay" id="cartOv"></div>
-<div class="drw" id="cartDrw">
-  <div class="drw-hd">
-    <span class="drw-title"><i class="fa-solid fa-bag-shopping"></i> Carrinho</span>
-    <button class="drw-close" id="cartClose"><i class="fa-solid fa-xmark"></i></button>
-  </div>
-  <div class="drw-body" id="cartBody">
-    <div class="drw-empty" id="cartEmpty">
-      <i class="fa-solid fa-bag-shopping"></i>
-      <p>O teu carrinho está vazio.<br>Adiciona produtos para começar!</p>
-    </div>
-    <div id="cartItems"></div>
-  </div>
-  <div class="drw-ft" id="cartFt" style="display:none">
-    <div class="drw-total">
-      <span class="lbl">Total</span>
-      <span class="val" id="cartTotal">0 Kz</span>
-    </div>
-    <p class="drw-note"><i class="fa-solid fa-circle-info" style="color:var(--accent);margin-right:4px"></i>O pedido é confirmado via WhatsApp. Um agente validará disponibilidade e entrega.</p>
-    <button class="btn-wa" id="waBtn"><i class="fa-brands fa-whatsapp"></i>Finalizar via WhatsApp</button>
-  </div>
-</div>
-
-<!-- ═══════ WISHLIST DRAWER ═══════ -->
-<div class="drw-overlay" id="wishOv"></div>
-<div class="drw" id="wishDrw">
-  <div class="drw-hd">
-    <span class="drw-title"><i class="fa-solid fa-heart"></i> Favoritos</span>
-    <button class="drw-close" id="wishClose"><i class="fa-solid fa-xmark"></i></button>
-  </div>
-  <div class="drw-body" id="wishBody">
-    <div class="drw-empty" id="wishEmpty">
-      <i class="fa-regular fa-heart"></i>
-      <p>Nenhum favorito ainda.<br>Clica em <i class="fa-solid fa-heart" style="color:var(--danger)"></i> nos produtos para guardar!</p>
-    </div>
-    <div id="wishItems"></div>
-  </div>
-  <div class="drw-ft" id="wishFt" style="display:none">
-    <button class="btn-wa" id="wishWaBtn" style="background:var(--accent)">
-      <i class="fa-brands fa-whatsapp"></i>Pedir Favoritos via WhatsApp
-    </button>
-  </div>
-</div>
-
-<script src="global.js"></script>
-</body>
+    <script src="global.js"></script>
+  </body>
 </html>

@@ -28,7 +28,11 @@
         >{{ store.formatPrice(product.price) }}
       </div>
       <button class="btn-add" (click)="$event.stopPropagation(); add()">
-        <i class="fa-solid fa-bag-shopping"></i> Adicionar
+        @if (store.addedToCart() === product.id) {
+          <i class="fa-solid fa-circle-check"></i> Adicionado
+        } @else {
+          <i class="fa-solid fa-bag-shopping"></i> Adicionar
+        }
       </button>
     </div>
   </div>

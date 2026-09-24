@@ -1,6 +1,6 @@
 <nav id="navbar">
   <a routerLink="/loja" class="nav-logo" (click)="closeMobile()"
-    ><img src="assets/images/logo.jpeg" alt="Bravo Business" class="logo-img"
+    ><img src="assets/images/logo.png" alt="Bravo Business" class="logo-img"
   /></a>
   <ul class="nav-links">
     <li>
@@ -57,7 +57,7 @@
 <div class="mob-menu" [class.on]="mobileOpen">
   <div class="mob-head">
     <div class="nav-logo">
-      <img src="assets/images/logo.jpeg" alt="logo" class="logo-img" /><span
+      <img src="assets/images/logo.png" alt="logo" class="logo-img" /><span
         class="logo-txt"
         >BRAVO<em>BUSINESS</em></span
       >
@@ -94,7 +94,11 @@
         <div class="tog-knob"></div>
       </div>
     </div>
-    <button class="logout-btn" *ngIf="auth.isAuthenticated()" (click)="logout()">
+    <button
+      class="logout-btn"
+      *ngIf="auth.isAuthenticated()"
+      (click)="logout()"
+    >
       Terminar sessão
     </button>
   </div>

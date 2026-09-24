@@ -4,11 +4,12 @@ import { Component, OnInit, effect, inject } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { Product, Category, StoreService } from "../../../core/store.service";
 import { ProductCardComponent } from "../../../shared/product-card/product-card.component";
+import { SkeletonCardComponent } from "../../../shared/skeleton/skeleton-card.component";
 
 @Component({
   selector: "app-catalog-page",
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, ProductCardComponent],
+  imports: [CommonModule, FormsModule, RouterLink, ProductCardComponent, SkeletonCardComponent],
   templateUrl: "./catalog-page.component.html",
   styleUrls: ["./catalog-page.component.scss"],
 })
@@ -23,6 +24,7 @@ export class CatalogPageComponent implements OnInit {
   search = "";
   maxPrice = 100000;
   sort = "featured";
+  private loadTimeout: ReturnType<typeof setTimeout> | undefined;
   constructor() {
     effect(() => {
       this.store.catalogVersion();
@@ -39,6 +41,20 @@ export class CatalogPageComponent implements OnInit {
       this.category = value ? this.store.categoryFromRoute(value) : undefined;
       this.apply();
     });
+  }
+  onSearchChange(value: string): void {
+    this.search = value;
+    clearTimeout(this.loadTimeout);
+    this.loadTimeout = setTimeout(() => this.apply(), 300);
+  }
+  onMaxPriceChange(value: number): void {
+    this.maxPrice = value;
+    clearTimeout(this.loadTimeout);
+    this.loadTimeout = setTimeout(() => this.apply(), 300);
+  }
+  onSortChange(value: string): void {
+    this.sort = value;
+    this.apply();
   }
   apply(): void {
     if (!this.store.catalogReady()) {

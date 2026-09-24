@@ -11,7 +11,7 @@
       ><i class="fa-solid fa-magnifying-glass"></i
       ><input
         [(ngModel)]="search"
-        (ngModelChange)="apply()"
+        (ngModelChange)="onSearchChange($event)"
         placeholder="Pesquisar produtos" /></label
     ><label
       ><span>Preço máximo</span
@@ -20,12 +20,12 @@
         min="0"
         max="100000"
         step="5000"
-        [(ngModel)]="maxPrice"
-        (ngModelChange)="apply()"
+        [ngModel]="maxPrice"
+        (ngModelChange)="onMaxPriceChange($event)"
       /><strong>{{ store.formatPrice(maxPrice) }}</strong></label
     ><label
       ><span>Ordenar</span
-      ><select [(ngModel)]="sort" (ngModelChange)="apply()">
+      ><select [ngModel]="sort" (ngModelChange)="onSortChange($event)">
         <option value="featured">Destaques</option>
         <option value="price-low">Preço mais baixo</option>
         <option value="price-high">Preço mais alto</option>
@@ -49,11 +49,17 @@
       [product]="product"
     ></app-product-card>
   </div>
-  <ng-template #empty
-    ><div class="empty-state">
-      <i class="fa-solid fa-box-open"></i>
-      <h2>Nenhum produto encontrado</h2>
-      <p>Ajusta os filtros para encontrar o que procuras.</p>
-    </div></ng-template
-  >
+  <ng-template #empty>
+    @if (!store.catalogReady()) {
+      <div class="pgrid">
+        <app-skeleton-card [count]="8"></app-skeleton-card>
+      </div>
+    } @else {
+      <div class="empty-state">
+        <i class="fa-solid fa-box-open"></i>
+        <h2>Nenhum produto encontrado</h2>
+        <p>Ajusta os filtros para encontrar o que procuras.</p>
+      </div>
+    }
+  </ng-template>
 </main>

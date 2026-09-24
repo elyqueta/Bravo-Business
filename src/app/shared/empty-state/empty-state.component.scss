@@ -1,0 +1,42 @@
+.empty-state {
+  text-align: center;
+  padding: 45px;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  i {
+    display: block;
+    color: var(--accent);
+    font-size: 30px;
+    margin-bottom: 6px;
+  }
+  h2 {
+    margin: 0;
+    font-size: 16px;
+    color: var(--text);
+  }
+  p {
+    margin: 0;
+    font-size: 13px;
+    max-width: 320px;
+  }
+  .empty-cta {
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+  }
+  .empty-cta:hover {
+    background: var(--text);
+    color: var(--bg);
+  }
+}

@@ -1,0 +1,106 @@
+@if (loading()) {
+  <main class="admin-detail-loading">
+    <i class="fa-solid fa-spinner"></i>
+    <p>A carregar produto...</p>
+  </main>
+} @else if (product()) {
+  <section class="admin-content">
+    <header class="admin-topbar">
+      <div>
+        <span class="eyebrow">Bravo Business · Catálogo</span>
+        <h1>{{ product()!.name }}</h1>
+        <p>Código: {{ product()!.id }}</p>
+      </div>
+      <div class="admin-topbar-actions">
+        <a [routerLink]="['/admin/produtos', product()!.id, 'editar']" class="admin-secondary">
+          <i class="fa-solid fa-pen"></i> Editar
+        </a>
+        <button class="admin-danger" type="button" (click)="delete()">
+          <i class="fa-solid fa-trash"></i> Eliminar
+        </button>
+      </div>
+    </header>
+    <section class="admin-detail-layout">
+      <section class="admin-detail-gallery" aria-label="Galeria do produto">
+        <div class="admin-detail-main-image">
+          <img [src]="images()[selectedImage()]" [alt]="product()!.name" />
+          @if (product()!.badge) {
+            <span class="admin-badge">{{ product()!.badge }}</span>
+          }
+        </div>
+        @if (images().length > 1) {
+          <div class="admin-detail-thumbs">
+            @for (image of images(); track $index) {
+              <button
+                type="button"
+                class="admin-detail-thumb"
+                [class.active]="selectedImage() === $index"
+                (click)="selectImage($index)"
+              >
+                <img [src]="image" [alt]="product()!.name + ' imagem ' + ($index + 1)" />
+              </button>
+            }
+          </div>
+        }
+      </section>
+      <section class="admin-detail-info">
+        <div class="admin-detail-section">
+          <h3>Informação</h3>
+          <div class="admin-detail-grid">
+            <div>
+              <span>Categoria</span>
+              <strong>{{ product()!.categorySlug }}</strong>
+            </div>
+            <div>
+              <span>Preço</span>
+              <strong>{{ product()!.price | number }} Kz</strong>
+            </div>
+            @if (product()!.oldPrice) {
+              <div>
+                <span>Preço anterior</span>
+                <strong class="old">{{ product()!.oldPrice | number }} Kz</strong>
+              </div>
+            }
+          </div>
+        </div>
+        <div class="admin-detail-section">
+          <h3>Descrição</h3>
+          <p>{{ product()!.description || 'Sem descrição.' }}</p>
+        </div>
+        @if (product()!.features?.length) {
+          <div class="admin-detail-section">
+            <h3>Detalhes</h3>
+            <div class="admin-detail-features">
+              @for (feature of product()!.features!; track $index) {
+                <span class="feat-chip">{{ feature }}</span>
+              }
+            </div>
+          </div>
+        }
+        <div class="admin-detail-section">
+          <h3>Metadados</h3>
+          <div class="admin-detail-grid">
+            @if (product()!.createdAt) {
+              <div>
+                <span>Criado em</span>
+                <strong>{{ product()!.createdAt | date:'dd/MM/yyyy HH:mm' }}</strong>
+              </div>
+            }
+            @if (product()!.updatedAt) {
+              <div>
+                <span>Última actualização</span>
+                <strong>{{ product()!.updatedAt | date:'dd/MM/yyyy HH:mm' }}</strong>
+              </div>
+            }
+          </div>
+        </div>
+      </section>
+    </section>
+  </section>
+} @else {
+  <main class="admin-detail-loading">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <p>Produto não encontrado.</p>
+    <a routerLink="/admin/produtos" class="admin-secondary">Voltar</a>
+  </main>
+}

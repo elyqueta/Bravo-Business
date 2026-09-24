@@ -1,0 +1,23 @@
+.page-hero {
+  padding: 28px 0;
+  div {
+    max-width: 720px;
+  }
+  .eyebrow {
+    display: block;
+    margin-bottom: 8px;
+  }
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 56px);
+    line-height: 1;
+    letter-spacing: 0.04em;
+    margin: 0 0 10px;
+  }
+  p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0;
+  }
+}

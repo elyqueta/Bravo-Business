@@ -100,12 +100,18 @@
       >Ver todos <i class="fa-solid fa-arrow-right"></i
     ></a>
   </div>
-  <div class="pgrid">
-    <app-product-card
-      *ngFor="let product of productsFor(category)"
-      [product]="product"
-    ></app-product-card>
-  </div>
+  @if (store.catalogReady()) {
+    <div class="pgrid">
+      <app-product-card
+        *ngFor="let product of productsFor(category)"
+        [product]="product"
+      ></app-product-card>
+    </div>
+  } @else {
+    <div class="pgrid">
+      <app-skeleton-card [count]="4"></app-skeleton-card>
+    </div>
+  }
 </section>
 <div class="promo rv vis">
   <div>

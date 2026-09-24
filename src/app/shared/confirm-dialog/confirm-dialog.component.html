@@ -1,0 +1,21 @@
+@if (options()) {
+  <div class="confirm-overlay" (click)="onCancel()">
+    <div class="confirm-dialog" (click)="$event.stopPropagation()">
+      <h3>{{ options()!.title }}</h3>
+      <p>{{ options()!.message }}</p>
+      <div class="confirm-actions">
+        <button class="confirm-cancel" type="button" (click)="onCancel()">
+          {{ options()!.cancelLabel || 'Cancelar' }}
+        </button>
+        <button
+          class="confirm-button"
+          type="button"
+          [class.danger]="options()!.danger"
+          (click)="onConfirm()"
+        >
+          {{ options()!.confirmLabel || 'Confirmar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

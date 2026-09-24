@@ -9,9 +9,6 @@
         ><i class="fa-solid fa-arrow-left"></i> Voltar</a
       >
     </header>
-    <div class="admin-error" *ngIf="error()">
-      <i class="fa-solid fa-circle-exclamation"></i> {{ error() }}
-    </div>
     <form
       class="admin-form admin-form-page category-form-page"
       [formGroup]="form"
@@ -37,8 +34,8 @@
       /></label>
       <div class="admin-form-actions wide">
         <button class="admin-primary" type="submit" [disabled]="loading()">
-          <i class="fa-solid fa-floppy-disk"></i
-          >{{ editingId ? "Guardar alterações" : "Criar categoria" }}
+          <i class="fa-solid" [class.fa-floppy-disk]="!loading()" [class.fa-spinner]="loading()" [class.fa-spin]="loading()"></i
+          >{{ loading() ? "A guardar..." : (editingId ? "Guardar alterações" : "Criar categoria") }}
         </button>
       </div>
     </form>

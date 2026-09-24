@@ -291,6 +291,8 @@ export class StoreService {
   isWishlisted(id: string): boolean {
     return this.wishlist().includes(id);
   }
+  readonly addedToCart = signal<string | null>(null);
+  private addTimeout: ReturnType<typeof setTimeout> | undefined;
   addCart(product: Product): void {
     const items = [...this.cart()];
     const item = items.find((entry) => entry.id === product.id);
@@ -298,6 +300,9 @@ export class StoreService {
     else items.push({ ...product, qty: 1 });
     this.cart.set(items);
     this.persistCart(items);
+    this.addedToCart.set(product.id);
+    clearTimeout(this.addTimeout);
+    this.addTimeout = setTimeout(() => this.addedToCart.set(null), 1200);
   }
   changeQuantity(id: string, change: number): void {
     const items = this.cart()

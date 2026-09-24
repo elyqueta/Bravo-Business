@@ -1,0 +1,14 @@
+<div class="toast-container">
+  @for (toast of toasts(); track trackById($index, toast)) {
+    <div
+      class="toast"
+      [class.success]="toast.type === 'success'"
+      [class.error]="toast.type === 'error'"
+      [class.info]="toast.type === 'info'"
+      (click)="dismiss(toast)"
+    >
+      <i [ngClass]="iconFor(toast.type)"></i>
+      <span>{{ toast.message }}</span>
+    </div>
+  }
+</div>

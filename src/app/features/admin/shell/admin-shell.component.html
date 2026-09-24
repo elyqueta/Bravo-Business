@@ -1,7 +1,26 @@
 <main class="admin-shell">
-  <aside class="admin-sidebar">
+  <div class="admin-mob-topbar">
+    <div class="admin-mob-brand">
+      <img src="assets/images/logo.png" alt="Bravo Business" />
+      <strong>BRAVO<em>BUSINESS</em></strong>
+    </div>
+    <button
+      class="hbg"
+      [class.on]="mobileOpen()"
+      (click)="toggleMobile()"
+      aria-label="Menu"
+    >
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div
+    class="admin-mob-overlay"
+    [class.on]="mobileOpen()"
+    (click)="closeMobile()"
+  ></div>
+  <aside class="admin-sidebar" [class.mob-open]="mobileOpen()">
     <div class="admin-sidebar-brand">
-      <img src="assets/images/logo.jpeg" alt="Bravo Business" /><strong
+      <img src="assets/images/logo.png" alt="Bravo Business" /><strong
         >BRAVO<em>BUSINESS</em></strong
       >
     </div>
@@ -10,24 +29,34 @@
         routerLink="/admin"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeMobile()"
         ><i class="fa-solid fa-chart-line"></i>Visão geral</a
       >
-      <a routerLink="/admin/produtos" routerLinkActive="active"
+      <a
+        routerLink="/admin/produtos"
+        routerLinkActive="active"
+        (click)="closeMobile()"
         ><i class="fa-solid fa-boxes-stacked"></i>Produtos</a
       >
-      <a routerLink="/admin/categorias" routerLinkActive="active"
+      <a
+        routerLink="/admin/categorias"
+        routerLinkActive="active"
+        (click)="closeMobile()"
         ><i class="fa-solid fa-layer-group"></i>Categorias</a
       >
+      <a routerLink="/loja" class="admin-nav-store" (click)="closeMobile()"
+        ><i class="fa-solid fa-store"></i>Ver loja</a
+      >
+      <button
+        class="admin-nav-link admin-nav-danger"
+        type="button"
+        (click)="logout(); closeMobile()"
+      >
+        <i class="fa-solid fa-right-from-bracket"></i>Terminar sessão
+      </button>
     </nav>
     <div class="admin-sidebar-foot">
       <p>{{ auth.user()?.fullName || "Administrador" }}</p>
-      <button (click)="logout()">
-        <i class="fa-solid fa-right-from-bracket"></i>
-        <span class="admin-logout-label">Terminar sessão</span>
-      </button>
-      <a routerLink="/loja" class="admin-sidebar-store"
-        ><i class="fa-solid fa-store"></i> Ver loja</a
-      >
     </div>
   </aside>
   <section class="admin-content">

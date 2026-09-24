@@ -2,12 +2,13 @@ import { CommonModule } from "@angular/common";
 import { Component, OnDestroy, OnInit, inject } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { ProductCardComponent } from "../../../shared/product-card/product-card.component";
+import { SkeletonCardComponent } from "../../../shared/skeleton/skeleton-card.component";
 import { Category, StoreService } from "../../../core/store.service";
 
 @Component({
   selector: "app-home-page",
   standalone: true,
-  imports: [CommonModule, RouterLink, ProductCardComponent],
+  imports: [CommonModule, RouterLink, ProductCardComponent, SkeletonCardComponent],
   templateUrl: "./home-page.component.html",
 })
 export class HomePageComponent implements OnInit, OnDestroy {

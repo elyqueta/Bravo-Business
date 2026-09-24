@@ -1,179 +1,44 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnInit, inject, signal } from "@angular/core";
-import {
-  FormBuilder,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from "@angular/forms";
+import { ReactiveFormsModule } from "@angular/forms";
 import { AdminApiService } from "../../core/admin-api.service";
-import {
-  CategoryApi,
-  CreateProductInput,
-  ProductApi,
-  ProductBadge,
-} from "../../core/api.models";
+import { CategoryApi, ProductApi } from "../../core/api.models";
+import { ToastService } from "../../shared/toast/toast.service";
 
 @Component({
   selector: "app-admin-page",
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
   ],
   templateUrl: "./admin-page.component.html",
   styleUrls: ["./admin-page.component.scss"],
 })
 export class AdminPageComponent implements OnInit {
+  private readonly toast = inject(ToastService);
   readonly api = inject(AdminApiService);
-  private readonly formBuilder = inject(FormBuilder);
   readonly products = signal<ProductApi[]>([]);
   readonly categories = signal<CategoryApi[]>([]);
   readonly loading = signal(false);
-  readonly error = signal("");
-  readonly success = signal("");
-  editingId: string | null = null;
-  search = "";
-  readonly productForm = this.formBuilder.nonNullable.group({
-    categorySlug: ["roupas", Validators.required],
-    name: ["", [Validators.required, Validators.maxLength(200)]],
-    description: [""],
-    price: [0, [Validators.required, Validators.min(0)]],
-    oldPrice: [0],
-    img: ["", Validators.required],
-    badge: ["" as ProductBadge | ""],
-    gallery: [""],
-  });
-  readonly categoryForm = this.formBuilder.nonNullable.group({
-    label: ["", [Validators.required, Validators.maxLength(100)]],
-    icon: ["fa-box"],
-    prefix: ["", [Validators.required, Validators.maxLength(1)]],
-    anchor: ["", [Validators.required, Validators.maxLength(50)]],
-  });
   ngOnInit(): void {
     this.loadAll();
   }
   loadAll(): void {
     this.loading.set(true);
-    this.error.set("");
-    this.api.products(this.search).subscribe({
+    this.api.products("").subscribe({
       next: (response) => {
         this.products.set(response.data);
         this.loading.set(false);
       },
       error: () => {
-        this.error.set(
-          "Não foi possível carregar os produtos. Confirma se a API está activa."
-        );
+        this.toast.error("Não foi possível carregar os produtos. Confirma se a API está activa.");
         this.loading.set(false);
       },
     });
     this.api.categories().subscribe({
       next: (response) => this.categories.set(response.data),
-      error: () => (this.error.set("Não foi possível carregar as categorias.")),
-    });
-  }
-  filterProducts(): void {
-    this.api.products(this.search).subscribe({
-      next: (response) => this.products.set(response.data),
-      error: () => (this.error.set("Não foi possível pesquisar produtos.")),
-    });
-  }
-  startEdit(product: ProductApi): void {
-    this.editingId = product.id;
-    this.productForm.patchValue({
-      categorySlug: product.categorySlug,
-      name: product.name,
-      description: product.description || "",
-      price: product.price,
-      oldPrice: product.oldPrice || 0,
-      img: product.img,
-      badge: product.badge || "",
-      gallery: (product.gallery || []).join("\n"),
-    });
-  }
-  cancelEdit(): void {
-    this.editingId = null;
-    this.productForm.reset({
-      categorySlug: "roupas",
-      name: "",
-      description: "",
-      price: 0,
-      oldPrice: 0,
-      img: "",
-      badge: "",
-      gallery: "",
-    });
-  }
-  saveProduct(): void {
-    if (this.productForm.invalid) {
-      this.productForm.markAllAsTouched();
-      return;
-    }
-    const value = this.productForm.getRawValue();
-    const input: CreateProductInput = {
-      ...value,
-      badge: value.badge || null,
-      oldPrice: value.oldPrice || null,
-      gallery: value.gallery
-        .split("\n")
-        .map((item) => item.trim())
-        .filter(Boolean),
-    };
-    this.loading.set(true);
-    const request = this.editingId
-      ? this.api.updateProduct(this.editingId, input)
-      : this.api.createProduct(input);
-    request.subscribe({
-      next: () => {
-        this.success.set(this.editingId ? "Produto actualizado." : "Produto criado.");
-        this.cancelEdit();
-        this.loadAll();
-      },
-      error: () => {
-        this.error.set("Não foi possível guardar o produto.");
-        this.loading.set(false);
-      },
-    });
-  }
-  deleteProduct(product: ProductApi): void {
-    if (!window.confirm(`Remover ${product.name}?`)) return;
-    this.api.deleteProduct(product.id).subscribe({
-      next: () => {
-        this.success.set("Produto removido.");
-        this.loadAll();
-      },
-      error: () => (this.error.set("Não foi possível remover o produto.")),
-    });
-  }
-  saveCategory(): void {
-    if (this.categoryForm.invalid) {
-      this.categoryForm.markAllAsTouched();
-      return;
-    }
-    this.api.createCategory(this.categoryForm.getRawValue()).subscribe({
-      next: () => {
-        this.success.set("Categoria criada.");
-        this.categoryForm.reset({
-          label: "",
-          icon: "fa-box",
-          prefix: "",
-          anchor: "",
-        });
-        this.loadAll();
-      },
-      error: () => (this.error.set("Não foi possível criar a categoria.")),
-    });
-  }
-  deleteCategory(category: CategoryApi): void {
-    if (!window.confirm(`Remover ${category.label}?`)) return;
-    this.api.deleteCategory(category.id).subscribe({
-      next: () => {
-        this.success.set("Categoria removida.");
-        this.loadAll();
-      },
-      error: () => (this.error.set("Não foi possível remover a categoria.")),
+      error: () => this.toast.error("Não foi possível carregar as categorias."),
     });
   }
 }

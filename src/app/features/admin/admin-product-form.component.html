@@ -9,9 +9,6 @@
         ><i class="fa-solid fa-arrow-left"></i> Voltar</a
       >
     </header>
-    <div class="admin-error" *ngIf="error()">
-      <i class="fa-solid fa-circle-exclamation"></i> {{ error() }}
-    </div>
     <form
       class="admin-form admin-form-page"
       [formGroup]="form"
@@ -58,29 +55,68 @@
           rows="5"
         ></textarea></label
       ><label class="wide"
-        >Galeria por URL <small>Opcional · uma URL por linha</small
-        ><textarea formControlName="gallery" rows="3"></textarea>
+        >Detalhes do produto
+        <small>Ex: Material: 100% algodão · Tamanhos: S, M, L, XL</small>
+        <div class="admin-feature-input">
+          <input
+            type="text"
+            [ngModel]="featureText()"
+            (ngModelChange)="featureText.set($event)"
+            placeholder="Adicionar detalhe..."
+            (keydown.enter)="$event.preventDefault(); addFeature()"
+          />
+          <button type="button" class="admin-secondary" (click)="addFeature()">Adicionar</button>
+        </div>
+        <div class="admin-feature-list" *ngIf="features().length">
+          <span class="feat-chip" *ngFor="let feature of features(); let index = index">
+            {{ feature }}
+            <button type="button" (click)="removeFeature(index)">×</button>
+          </span>
+        </div>
       </label>
-      <label class="wide"
-        >Adicionar imagens da galeria
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          (change)="onGallerySelected($event)"
-        /><small>Selecciona várias imagens · cada uma até 5 MB.</small></label
-      >
-      <div class="admin-gallery-preview wide" *ngIf="galleryPreviews().length">
-        <img
-          *ngFor="let preview of galleryPreviews()"
-          [src]="preview"
-          alt="Pré-visualização da galeria"
-        />
-      </div>
+      <label class="wide">
+        Galeria
+        <div class="admin-gallery-zone" (click)="$event.stopPropagation()">
+          <label class="admin-dropzone">
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              (change)="onGallerySelected($event)"
+            />
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>Arrasta imagens ou clica para escolher</span>
+            <small>PNG, JPG ou WEBP · máx. 5 MB por imagem</small>
+          </label>
+          <div class="admin-gallery-preview" *ngIf="galleryPreviews().length || (editingId && product()?.gallery?.length)">
+            @for (preview of galleryPreviews(); track $index) {
+              <div class="admin-gallery-thumb">
+                <img [src]="preview" alt="Pré-visualização" />
+                <button type="button" class="admin-gallery-remove" (click)="removeGalleryPreview($index)">×</button>
+              </div>
+            }
+            @if (editingId && product()?.gallery?.length && !galleryFiles.length) {
+              @for (url of product()!.gallery!; track url) {
+                <div class="admin-gallery-thumb">
+                  <img [src]="url" alt="Galeria existente" />
+                </div>
+              }
+            }
+          </div>
+        </div>
+      </label>
+      @if (editingId && product()?.createdAt) {
+        <p class="admin-meta">
+          <span>Criado em: {{ product()!.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          @if (product()!.updatedAt) {
+            <span>Última actualização: {{ product()!.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          }
+        </p>
+      }
       <div class="admin-form-actions wide">
         <button type="submit" class="admin-primary" [disabled]="loading()">
-          <i class="fa-solid fa-floppy-disk"></i
-          >{{ editingId ? "Guardar alterações" : "Criar produto" }}
+          <i class="fa-solid" [class.fa-floppy-disk]="!loading()" [class.fa-spinner]="loading()" [class.fa-spin]="loading()"></i
+          >{{ loading() ? "A guardar..." : (editingId ? "Guardar alterações" : "Criar produto") }}
         </button>
       </div>
     </form>

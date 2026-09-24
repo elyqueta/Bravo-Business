@@ -1,28 +1,31 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnInit, inject, signal } from "@angular/core";
-import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { AdminApiService } from "../../core/admin-api.service";
 import { CategoryApi, ProductApi, ProductBadge } from "../../core/api.models";
+import { ToastService } from "../../shared/toast/toast.service";
 
 @Component({
   selector: "app-admin-product-form",
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
   templateUrl: "./admin-product-form.component.html",
   styleUrls: ["./admin-page.component.scss"],
 })
 export class AdminProductFormComponent implements OnInit {
   private readonly api = inject(AdminApiService);
+  private readonly toast = inject(ToastService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   readonly categories = signal<CategoryApi[]>([]);
   readonly product = signal<ProductApi | null>(null);
   readonly loading = signal(false);
-  readonly error = signal("");
   readonly imagePreview = signal("");
   readonly galleryPreviews = signal<string[]>([]);
+  readonly features = signal<string[]>([]);
+  readonly featureText = signal("");
   editingId: string | null = null;
   imageFile: File | null = null;
   galleryFiles: File[] = [];
@@ -48,7 +51,7 @@ export class AdminProductFormComponent implements OnInit {
           this.form.patchValue({ categorySlug: this.categories()[0]?.slug || "" });
         }
       },
-      error: () => (this.error.set("Não foi possível carregar categorias.")),
+      error: () => this.toast.error("Não foi possível carregar categorias."),
     });
     if (id) {
       this.api.products(id).subscribe({
@@ -66,9 +69,10 @@ export class AdminProductFormComponent implements OnInit {
               badge: this.product()!.badge || "",
               gallery: (this.product()!.gallery || []).join("\n"),
             });
+            this.features.set(this.product()!.features || []);
           }
         },
-        error: () => (this.error.set("Não foi possível carregar o produto.")),
+        error: () => this.toast.error("Não foi possível carregar o produto."),
       });
     }
   }
@@ -78,12 +82,25 @@ export class AdminProductFormComponent implements OnInit {
   private trackObjectUrl(url: string): void {
     this.objectUrls.push(url);
   }
+  addFeature(): void {
+    const text = this.featureText().trim();
+    if (!text) return;
+    if (this.features().includes(text)) {
+      this.toast.error("Essa característica já foi adicionada.");
+      return;
+    }
+    this.features.update((items) => [...items, text]);
+    this.featureText.set("");
+  }
+  removeFeature(index: number): void {
+    this.features.update((items) => items.filter((_, i) => i !== index));
+  }
   onImageSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0] || null;
     if (!file) return;
     if (!file.type.startsWith("image/") || file.size > 5 * 1024 * 1024) {
-      this.error.set("Escolhe uma imagem válida até 5 MB.");
+      this.toast.error("Escolhe uma imagem válida até 5 MB.");
       input.value = "";
       return;
     }
@@ -91,7 +108,6 @@ export class AdminProductFormComponent implements OnInit {
     const url = URL.createObjectURL(file);
     this.trackObjectUrl(url);
     this.imagePreview.set(url);
-    this.error.set("");
   }
   onGallerySelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -100,7 +116,7 @@ export class AdminProductFormComponent implements OnInit {
       (file) => !file.type.startsWith("image/") || file.size > 5 * 1024 * 1024,
     );
     if (invalid) {
-      this.error.set("Todas as imagens devem ser válidas e ter no máximo 5 MB.");
+      this.toast.error("Todas as imagens devem ser válidas e ter no máximo 5 MB.");
       input.value = "";
       return;
     }
@@ -108,7 +124,10 @@ export class AdminProductFormComponent implements OnInit {
     const urls = files.map((file) => URL.createObjectURL(file));
     urls.forEach((url) => this.trackObjectUrl(url));
     this.galleryPreviews.set(urls);
-    this.error.set("");
+  }
+  removeGalleryPreview(index: number): void {
+    this.galleryPreviews.update((items) => items.filter((_, i) => i !== index));
+    this.galleryFiles = this.galleryFiles.filter((_, i) => i !== index);
   }
   save(): void {
     if (this.form.invalid) {
@@ -116,7 +135,7 @@ export class AdminProductFormComponent implements OnInit {
       return;
     }
     if (!this.editingId && !this.imageFile) {
-      this.error.set("Selecciona uma imagem principal para o produto.");
+      this.toast.error("Selecciona uma imagem principal para o produto.");
       return;
     }
     const value = this.form.getRawValue();
@@ -135,11 +154,12 @@ export class AdminProductFormComponent implements OnInit {
     payload.append("price", String(Number.isNaN(price) ? 0 : price));
     payload.append("oldPrice", String(Number.isNaN(oldPrice) ? 0 : oldPrice));
     if (value.badge) payload.append("badge", value.badge);
+    payload.append("features", JSON.stringify(this.features()));
     const gallery = value.gallery
       .split("\n")
       .map((item) => item.trim())
       .filter(Boolean);
-    if (gallery.length) payload.append("galleryUrls", JSON.stringify(gallery));
+    if (gallery.length) payload.append("gallery", JSON.stringify(gallery));
     if (this.imageFile)
       payload.append("img", this.imageFile, this.imageFile.name);
     this.galleryFiles.forEach((file) =>
@@ -150,10 +170,13 @@ export class AdminProductFormComponent implements OnInit {
       ? this.api.updateProduct(this.editingId, payload)
       : this.api.createProduct(payload);
     request.subscribe({
-      next: () => void this.router.navigateByUrl("/admin/produtos"),
+      next: () => {
+        this.toast.success(this.editingId ? "Produto actualizado." : "Produto criado.");
+        void this.router.navigateByUrl("/admin/produtos");
+      },
       error: (response: { error?: { message?: string; details?: Array<{ field?: string; message?: string }> } }) => {
         const details = response.error?.details?.map((detail) => `${detail.field || "campo"}: ${detail.message || "valor inválido"}`).join(" ");
-        this.error.set(details || response.error?.message || "Não foi possível guardar o produto.");
+        this.toast.error(details || response.error?.message || "Não foi possível guardar o produto.");
         this.loading.set(false);
       },
     });

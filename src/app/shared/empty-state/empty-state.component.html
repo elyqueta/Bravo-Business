@@ -1,0 +1,10 @@
+<div class="empty-state">
+  <i [ngClass]="icon()"></i>
+  <h2>{{ title() }}</h2>
+  @if (text()) {
+    <p>{{ text() }}</p>
+  }
+  @if (ctaLink() && ctaLabel()) {
+    <a [routerLink]="ctaLink()" class="empty-cta">{{ ctaLabel() }}</a>
+  }
+</div>
