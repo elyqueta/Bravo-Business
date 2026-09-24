@@ -154,12 +154,12 @@ export class AdminProductFormComponent implements OnInit {
     payload.append("price", String(Number.isNaN(price) ? 0 : price));
     payload.append("oldPrice", String(Number.isNaN(oldPrice) ? 0 : oldPrice));
     if (value.badge) payload.append("badge", value.badge);
-    payload.append("features", JSON.stringify(this.features()));
+    this.features().forEach((feature) => payload.append("features[]", feature));
     const gallery = value.gallery
       .split("\n")
       .map((item) => item.trim())
       .filter(Boolean);
-    if (gallery.length) payload.append("gallery", JSON.stringify(gallery));
+    gallery.forEach((url) => payload.append("gallery[]", url));
     if (this.imageFile)
       payload.append("img", this.imageFile, this.imageFile.name);
     this.galleryFiles.forEach((file) =>
