@@ -62,23 +62,6 @@
   background: var(--accent-lt);
   color: var(--text);
 }
-.admin-nav-logout-mobile {
-  display: none;
-  width: 34px;
-  height: 34px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  color: var(--muted);
-  cursor: pointer;
-  margin-left: auto;
-  background: none;
-  border: none;
-}
-.admin-nav-logout-mobile:hover {
-  background: var(--accent-lt);
-  color: var(--danger);
-}
 .admin-sidebar-foot {
   margin-top: auto;
   border-top: 1px solid var(--border);
@@ -107,6 +90,9 @@
 }
 .admin-sidebar-foot button:hover {
   text-decoration: underline;
+}
+.admin-logout-label {
+  white-space: nowrap;
 }
 .admin-sidebar-store {
   display: inline-flex;
@@ -149,8 +135,8 @@
   .admin-nav a {
     white-space: nowrap;
   }
-  .admin-nav-logout-mobile {
-    display: flex;
+  .admin-logout-label {
+    display: none;
   }
   .admin-sidebar-foot {
     border-top: 0;

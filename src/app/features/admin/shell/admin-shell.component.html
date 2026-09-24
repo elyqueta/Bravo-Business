@@ -18,14 +18,12 @@
       <a routerLink="/admin/categorias" routerLinkActive="active"
         ><i class="fa-solid fa-layer-group"></i>Categorias</a
       >
-      <a class="admin-nav-logout-mobile" (click)="logout()" title="Terminar sessão"
-        ><i class="fa-solid fa-right-from-bracket"></i
-      ></a>
     </nav>
     <div class="admin-sidebar-foot">
       <p>{{ auth.user()?.fullName || "Administrador" }}</p>
       <button (click)="logout()">
-        <i class="fa-solid fa-right-from-bracket"></i> Terminar sessão
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span class="admin-logout-label">Terminar sessão</span>
       </button>
       <a routerLink="/loja" class="admin-sidebar-store"
         ><i class="fa-solid fa-store"></i> Ver loja</a
