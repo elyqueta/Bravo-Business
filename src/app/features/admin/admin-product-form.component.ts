@@ -212,7 +212,11 @@ export class AdminProductFormComponent implements OnInit {
     }
     if (value.badge) payload.append("badge", value.badge);
     const features = this.features();
-    payload.append("features", JSON.stringify(features));
+    if (features.length) {
+      payload.append("features", JSON.stringify(features));
+    } else {
+      payload.append("features", "[]");
+    }
     const gallery = this.existingGallery();
     payload.append("galleryUrls", JSON.stringify(gallery));
     if (this.imageFile)
