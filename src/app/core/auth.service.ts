@@ -87,6 +87,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
+    this.refreshService.clear();
     this.user.set(null);
     void this.router.navigateByUrl("/admin/login");
   }
