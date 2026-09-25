@@ -1,10 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnInit, inject, signal } from "@angular/core";
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormsModule,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -55,8 +57,14 @@ export class AdminProductFormComponent implements OnInit {
     categorySlug: ["", Validators.required],
     name: ["", [Validators.required, Validators.maxLength(200)]],
     description: [""],
-    price: [this.money.format(0), Validators.required],
-    oldPrice: [""],
+    price: [this.money.format(0), {
+      validators: [Validators.required, this.moneyValidator.bind(this)],
+      updateOn: 'change'
+    }],
+    oldPrice: ["", {
+      validators: [this.moneyValidator.bind(this)],
+      updateOn: 'change'
+    }],
     badge: ["" as ProductBadge | ""],
     gallery: [""],
   });
@@ -142,6 +150,88 @@ export class AdminProductFormComponent implements OnInit {
   removeFeature(index: number): void {
     this.features.update((items) => items.filter((_, i) => i !== index));
   }
+  private moneyValidator(control: AbstractControl<string | null, string | null>): ValidationErrors | null {
+    const value = control.value;
+    if (!value || value.trim() === "") {
+      return { required: true };
+    }
+    const parsed = this.money.parse(value);
+    return parsed === null ? { invalidMoney: true } : null;
+  }
+  private formatCurrencyInput(value: string, cursorPos: number): { formatted: string; cursorPos: number } {
+    const digits = value.replace(/\D/g, "");
+    if (!digits) {
+      return { formatted: "0", cursorPos: 1 };
+    }
+    const num = parseInt(digits, 10);
+    const formatted = this.money.format(num);
+    const digitsBeforeCursor = value.substring(0, cursorPos).replace(/\D/g, "").length;
+    let newCursorPos = 0;
+    let digitCount = 0;
+    for (let i = 0; i < formatted.length && digitCount < digitsBeforeCursor; i++) {
+      if (/\d/.test(formatted[i])) {
+        digitCount++;
+      }
+      newCursorPos = i + 1;
+    }
+    return { formatted, cursorPos: newCursorPos };
+  }
+  onPriceInput(controlName: "price" | "oldPrice", event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const cursorStart = input.selectionStart ?? 0;
+    const cursorEnd = input.selectionEnd ?? 0;
+    const value = input.value;
+    let hasLetters = /[a-zA-Z]/.test(value.substring(0, cursorStart));
+    if (!hasLetters) {
+      hasLetters = /[a-zA-Z]/.test(value.substring(cursorStart, cursorEnd));
+    }
+    if (hasLetters) {
+      input.value = value.replace(/[^0-9,.]/g, "");
+      return;
+    }
+    let currentValue = value;
+    if (controlName === "price") {
+      const digits = value.replace(/[^\d]/g, "");
+      if (digits) {
+        const num = parseInt(digits, 10);
+        currentValue = this.money.format(num);
+      } else {
+        currentValue = "0";
+      }
+    } else {
+      currentValue = value.replace(/[^\d]/g, "");
+      if (currentValue) {
+        const num = parseInt(currentValue, 10);
+        currentValue = this.money.format(num);
+      } else {
+        currentValue = "";
+      }
+    }
+    const { formatted, cursorPos } = this.formatCurrencyInput(value, cursorStart);
+    this.form.get(controlName)?.setValue(formatted, { emitEvent: false });
+    requestAnimationFrame(() => {
+      input.setSelectionRange(cursorPos, cursorPos);
+    });
+  }
+  onPriceBlur(controlName: "price" | "oldPrice"): void {
+    const value = this.form.get(controlName)?.value;
+    if (value === null || value === undefined || value.trim() === "") {
+      this.form.get(controlName)?.setValue(controlName === "price" ? this.money.format(0) : "");
+      return;
+    }
+    const parsed = this.money.parse(value);
+    if (parsed === null) {
+      const numbers = value.replace(/[^0-9]/g, "");
+      if (numbers) {
+        const num = parseInt(numbers, 10);
+        this.form.get(controlName)?.setValue(this.money.format(num));
+      } else {
+        this.form.get(controlName)?.setValue(controlName === "price" ? this.money.format(0) : "");
+      }
+    } else {
+      this.form.get(controlName)?.setValue(this.money.format(parsed));
+    }
+  }
   private sanitizeFeatures(features: string[]): string[] {
     return [...new Set(features.map((f) => f.trim()).filter((f) => f.length > 0))];
   }
@@ -202,7 +292,10 @@ export class AdminProductFormComponent implements OnInit {
     const price = this.money.parse(value.price);
     const oldPrice = this.money.parse(value.oldPrice);
     if (price === null) {
+      this.form.get("price")?.setErrors({ ...this.form.get("price")?.errors, invalidMoney: true });
+      this.form.get("price")?.markAsTouched();
       this.toast.error("Introduz um preço válido.");
+      this.loading.set(false);
       return;
     }
     const payload = new FormData();

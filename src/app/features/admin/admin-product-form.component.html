@@ -36,15 +36,33 @@
           </option>
         </select></label
       ><label
-        >Preço<input
+        >Preço
+        <input
           type="text"
           inputmode="decimal"
-          formControlName="price" /></label
+          formControlName="price"
+          (input)="onPriceInput('price', $event)"
+          (blur)="onPriceBlur('price')"
+        />
+      </label
+      ><small
+        *ngIf="form.controls.price.touched && form.controls.price.invalid"
+        class="admin-field-error"
+        >Introduz um preço válido.</small
       ><label
-        >Preço anterior<input
+        >Preço anterior
+        <input
           type="text"
           inputmode="decimal"
-          formControlName="oldPrice" /></label
+          formControlName="oldPrice"
+          (input)="onPriceInput('oldPrice', $event)"
+          (blur)="onPriceBlur('oldPrice')"
+        />
+      </label
+      ><small
+        *ngIf="form.controls.oldPrice.touched && form.controls.oldPrice.invalid"
+        class="admin-field-error"
+        >Introduz um preço válido.</small
       ><label
         >Badge<select formControlName="badge">
           <option value="">Sem badge</option>

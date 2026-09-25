@@ -49243,7 +49243,7 @@ function AdminProductFormComponent_Conditional_12_Template(rf, ctx) {
 }
 function AdminProductFormComponent_Conditional_13_option_7_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 39);
+    \u0275\u0275elementStart(0, "option", 40);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -49254,10 +49254,24 @@ function AdminProductFormComponent_Conditional_13_option_7_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" ", category_r3.label, " ");
   }
 }
-function AdminProductFormComponent_Conditional_13_div_30_Template(rf, ctx) {
+function AdminProductFormComponent_Conditional_13_small_11_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 40);
-    \u0275\u0275element(1, "img", 41);
+    \u0275\u0275elementStart(0, "small", 41);
+    \u0275\u0275text(1, "Introduz um pre\xE7o v\xE1lido.");
+    \u0275\u0275elementEnd();
+  }
+}
+function AdminProductFormComponent_Conditional_13_small_15_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "small", 41);
+    \u0275\u0275text(1, "Introduz um pre\xE7o v\xE1lido.");
+    \u0275\u0275elementEnd();
+  }
+}
+function AdminProductFormComponent_Conditional_13_div_32_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 42);
+    \u0275\u0275element(1, "img", 43);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -49266,13 +49280,13 @@ function AdminProductFormComponent_Conditional_13_div_30_Template(rf, ctx) {
     \u0275\u0275property("src", ctx_r1.imagePreview() || ctx_r1.product()?.img, \u0275\u0275sanitizeUrl);
   }
 }
-function AdminProductFormComponent_Conditional_13_div_42_span_1_Template(rf, ctx) {
+function AdminProductFormComponent_Conditional_13_div_44_span_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r4 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "span", 44);
+    \u0275\u0275elementStart(0, "span", 46);
     \u0275\u0275text(1);
-    \u0275\u0275elementStart(2, "button", 45);
-    \u0275\u0275listener("click", function AdminProductFormComponent_Conditional_13_div_42_span_1_Template_button_click_2_listener() {
+    \u0275\u0275elementStart(2, "button", 47);
+    \u0275\u0275listener("click", function AdminProductFormComponent_Conditional_13_div_44_span_1_Template_button_click_2_listener() {
       const index_r5 = \u0275\u0275restoreView(_r4).index;
       const ctx_r1 = \u0275\u0275nextContext(3);
       return \u0275\u0275resetView(ctx_r1.removeFeature(index_r5));
@@ -49286,10 +49300,10 @@ function AdminProductFormComponent_Conditional_13_div_42_span_1_Template(rf, ctx
     \u0275\u0275textInterpolate1(" ", feature_r6, " ");
   }
 }
-function AdminProductFormComponent_Conditional_13_div_42_Template(rf, ctx) {
+function AdminProductFormComponent_Conditional_13_div_44_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 42);
-    \u0275\u0275template(1, AdminProductFormComponent_Conditional_13_div_42_span_1_Template, 4, 1, "span", 43);
+    \u0275\u0275elementStart(0, "div", 44);
+    \u0275\u0275template(1, AdminProductFormComponent_Conditional_13_div_44_span_1_Template, 4, 1, "span", 45);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -49298,13 +49312,13 @@ function AdminProductFormComponent_Conditional_13_div_42_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.features());
   }
 }
-function AdminProductFormComponent_Conditional_13_div_53_For_2_Template(rf, ctx) {
+function AdminProductFormComponent_Conditional_13_div_55_For_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r7 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 47);
-    \u0275\u0275element(1, "img", 48);
-    \u0275\u0275elementStart(2, "button", 49);
-    \u0275\u0275listener("click", function AdminProductFormComponent_Conditional_13_div_53_For_2_Template_button_click_2_listener() {
+    \u0275\u0275elementStart(0, "div", 49);
+    \u0275\u0275element(1, "img", 50);
+    \u0275\u0275elementStart(2, "button", 51);
+    \u0275\u0275listener("click", function AdminProductFormComponent_Conditional_13_div_55_For_2_Template_button_click_2_listener() {
       const $index_r8 = \u0275\u0275restoreView(_r7).$index;
       const ctx_r1 = \u0275\u0275nextContext(3);
       return \u0275\u0275resetView(ctx_r1.removeGalleryPreview($index_r8));
@@ -49318,13 +49332,13 @@ function AdminProductFormComponent_Conditional_13_div_53_For_2_Template(rf, ctx)
     \u0275\u0275property("src", preview_r9, \u0275\u0275sanitizeUrl);
   }
 }
-function AdminProductFormComponent_Conditional_13_div_53_For_4_Template(rf, ctx) {
+function AdminProductFormComponent_Conditional_13_div_55_For_4_Template(rf, ctx) {
   if (rf & 1) {
     const _r10 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 47);
-    \u0275\u0275element(1, "img", 50);
-    \u0275\u0275elementStart(2, "button", 51);
-    \u0275\u0275listener("click", function AdminProductFormComponent_Conditional_13_div_53_For_4_Template_button_click_2_listener() {
+    \u0275\u0275elementStart(0, "div", 49);
+    \u0275\u0275element(1, "img", 52);
+    \u0275\u0275elementStart(2, "button", 53);
+    \u0275\u0275listener("click", function AdminProductFormComponent_Conditional_13_div_55_For_4_Template_button_click_2_listener() {
       const $index_r11 = \u0275\u0275restoreView(_r10).$index;
       const ctx_r1 = \u0275\u0275nextContext(3);
       return \u0275\u0275resetView(ctx_r1.removeExistingGallery($index_r11));
@@ -49338,11 +49352,11 @@ function AdminProductFormComponent_Conditional_13_div_53_For_4_Template(rf, ctx)
     \u0275\u0275property("src", url_r12, \u0275\u0275sanitizeUrl);
   }
 }
-function AdminProductFormComponent_Conditional_13_div_53_Template(rf, ctx) {
+function AdminProductFormComponent_Conditional_13_div_55_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 46);
-    \u0275\u0275repeaterCreate(1, AdminProductFormComponent_Conditional_13_div_53_For_2_Template, 4, 1, "div", 47, \u0275\u0275repeaterTrackByIndex);
-    \u0275\u0275repeaterCreate(3, AdminProductFormComponent_Conditional_13_div_53_For_4_Template, 4, 1, "div", 47, \u0275\u0275repeaterTrackByIdentity);
+    \u0275\u0275elementStart(0, "div", 48);
+    \u0275\u0275repeaterCreate(1, AdminProductFormComponent_Conditional_13_div_55_For_2_Template, 4, 1, "div", 49, \u0275\u0275repeaterTrackByIndex);
+    \u0275\u0275repeaterCreate(3, AdminProductFormComponent_Conditional_13_div_55_For_4_Template, 4, 1, "div", 49, \u0275\u0275repeaterTrackByIdentity);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -49353,7 +49367,7 @@ function AdminProductFormComponent_Conditional_13_div_53_Template(rf, ctx) {
     \u0275\u0275repeater(ctx_r1.existingGallery());
   }
 }
-function AdminProductFormComponent_Conditional_13_Conditional_54_Conditional_4_Template(rf, ctx) {
+function AdminProductFormComponent_Conditional_13_Conditional_56_Conditional_4_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "span");
     \u0275\u0275text(1);
@@ -49366,13 +49380,13 @@ function AdminProductFormComponent_Conditional_13_Conditional_54_Conditional_4_T
     \u0275\u0275textInterpolate1("\xDAltima actualiza\xE7\xE3o: ", \u0275\u0275pipeBind2(2, 1, ctx_r1.product().updatedAt, "dd/MM/yyyy HH:mm"));
   }
 }
-function AdminProductFormComponent_Conditional_13_Conditional_54_Template(rf, ctx) {
+function AdminProductFormComponent_Conditional_13_Conditional_56_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "p", 35)(1, "span");
+    \u0275\u0275elementStart(0, "p", 36)(1, "span");
     \u0275\u0275text(2);
     \u0275\u0275pipe(3, "date");
     \u0275\u0275elementEnd();
-    \u0275\u0275conditionalCreate(4, AdminProductFormComponent_Conditional_13_Conditional_54_Conditional_4_Template, 3, 4, "span");
+    \u0275\u0275conditionalCreate(4, AdminProductFormComponent_Conditional_13_Conditional_56_Conditional_4_Template, 3, 4, "span");
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -49405,56 +49419,78 @@ function AdminProductFormComponent_Conditional_13_Template(rf, ctx) {
     \u0275\u0275controlCreate();
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(8, "label");
-    \u0275\u0275text(9, "Pre\xE7o");
-    \u0275\u0275element(10, "input", 15);
+    \u0275\u0275text(9, "Pre\xE7o ");
+    \u0275\u0275elementStart(10, "input", 15);
+    \u0275\u0275listener("input", function AdminProductFormComponent_Conditional_13_Template_input_input_10_listener($event) {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.onPriceInput("price", $event));
+    })("blur", function AdminProductFormComponent_Conditional_13_Template_input_blur_10_listener() {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.onPriceBlur("price"));
+    });
+    \u0275\u0275elementEnd();
     \u0275\u0275controlCreate();
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(11, "label");
-    \u0275\u0275text(12, "Pre\xE7o anterior");
-    \u0275\u0275element(13, "input", 16);
+    \u0275\u0275template(11, AdminProductFormComponent_Conditional_13_small_11_Template, 2, 0, "small", 16);
+    \u0275\u0275elementStart(12, "label");
+    \u0275\u0275text(13, "Pre\xE7o anterior ");
+    \u0275\u0275elementStart(14, "input", 17);
+    \u0275\u0275listener("input", function AdminProductFormComponent_Conditional_13_Template_input_input_14_listener($event) {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.onPriceInput("oldPrice", $event));
+    })("blur", function AdminProductFormComponent_Conditional_13_Template_input_blur_14_listener() {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.onPriceBlur("oldPrice"));
+    });
+    \u0275\u0275elementEnd();
     \u0275\u0275controlCreate();
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(14, "label");
-    \u0275\u0275text(15, "Badge");
-    \u0275\u0275elementStart(16, "select", 17)(17, "option", 18);
-    \u0275\u0275text(18, "Sem badge");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(19, "option", 19);
-    \u0275\u0275text(20, "Novo");
+    \u0275\u0275template(15, AdminProductFormComponent_Conditional_13_small_15_Template, 2, 0, "small", 16);
+    \u0275\u0275elementStart(16, "label");
+    \u0275\u0275text(17, "Badge");
+    \u0275\u0275elementStart(18, "select", 18)(19, "option", 19);
+    \u0275\u0275text(20, "Sem badge");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(21, "option", 20);
-    \u0275\u0275text(22, "Sale");
+    \u0275\u0275text(22, "Novo");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(23, "option", 21);
-    \u0275\u0275text(24, "Premium");
+    \u0275\u0275text(24, "Sale");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(25, "option", 22);
+    \u0275\u0275text(26, "Premium");
     \u0275\u0275elementEnd()();
     \u0275\u0275controlCreate();
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(25, "label");
-    \u0275\u0275text(26, "Imagem principal");
-    \u0275\u0275elementStart(27, "input", 22);
-    \u0275\u0275listener("change", function AdminProductFormComponent_Conditional_13_Template_input_change_27_listener($event) {
+    \u0275\u0275elementStart(27, "label");
+    \u0275\u0275text(28, "Imagem principal");
+    \u0275\u0275elementStart(29, "input", 23);
+    \u0275\u0275listener("change", function AdminProductFormComponent_Conditional_13_Template_input_change_29_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.onImageSelected($event));
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(28, "small");
-    \u0275\u0275text(29);
+    \u0275\u0275elementStart(30, "small");
+    \u0275\u0275text(31);
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(30, AdminProductFormComponent_Conditional_13_div_30_Template, 2, 1, "div", 23);
-    \u0275\u0275elementStart(31, "label", 24);
-    \u0275\u0275text(32, "Descri\xE7\xE3o");
-    \u0275\u0275element(33, "textarea", 25);
+    \u0275\u0275template(32, AdminProductFormComponent_Conditional_13_div_32_Template, 2, 1, "div", 24);
+    \u0275\u0275elementStart(33, "label", 25);
+    \u0275\u0275text(34, "Descri\xE7\xE3o");
+    \u0275\u0275element(35, "textarea", 26);
     \u0275\u0275controlCreate();
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(34, "label", 24);
-    \u0275\u0275text(35, "Detalhes do produto ");
-    \u0275\u0275elementStart(36, "small");
-    \u0275\u0275text(37, "Ex: Material: 100% algod\xE3o \xB7 Tamanhos: S, M, L, XL");
+    \u0275\u0275elementStart(36, "label", 25);
+    \u0275\u0275text(37, "Detalhes do produto ");
+    \u0275\u0275elementStart(38, "small");
+    \u0275\u0275text(39, "Ex: Material: 100% algod\xE3o \xB7 Tamanhos: S, M, L, XL");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(38, "div", 26)(39, "input", 27);
-    \u0275\u0275listener("keydown.enter", function AdminProductFormComponent_Conditional_13_Template_input_keydown_enter_39_listener($event) {
+    \u0275\u0275elementStart(40, "div", 27)(41, "input", 28);
+    \u0275\u0275listener("keydown.enter", function AdminProductFormComponent_Conditional_13_Template_input_keydown_enter_41_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       $event.preventDefault();
@@ -49462,42 +49498,42 @@ function AdminProductFormComponent_Conditional_13_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd();
     \u0275\u0275controlCreate();
-    \u0275\u0275elementStart(40, "button", 28);
-    \u0275\u0275listener("click", function AdminProductFormComponent_Conditional_13_Template_button_click_40_listener() {
+    \u0275\u0275elementStart(42, "button", 29);
+    \u0275\u0275listener("click", function AdminProductFormComponent_Conditional_13_Template_button_click_42_listener() {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.addFeature());
     });
-    \u0275\u0275text(41, " Adicionar ");
+    \u0275\u0275text(43, " Adicionar ");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(42, AdminProductFormComponent_Conditional_13_div_42_Template, 2, 1, "div", 29);
+    \u0275\u0275template(44, AdminProductFormComponent_Conditional_13_div_44_Template, 2, 1, "div", 30);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(43, "label", 24);
-    \u0275\u0275text(44, " Galeria ");
-    \u0275\u0275elementStart(45, "div", 30);
-    \u0275\u0275listener("click", function AdminProductFormComponent_Conditional_13_Template_div_click_45_listener($event) {
+    \u0275\u0275elementStart(45, "label", 25);
+    \u0275\u0275text(46, " Galeria ");
+    \u0275\u0275elementStart(47, "div", 31);
+    \u0275\u0275listener("click", function AdminProductFormComponent_Conditional_13_Template_div_click_47_listener($event) {
       return $event.stopPropagation();
     });
-    \u0275\u0275elementStart(46, "label", 31)(47, "input", 32);
-    \u0275\u0275listener("change", function AdminProductFormComponent_Conditional_13_Template_input_change_47_listener($event) {
+    \u0275\u0275elementStart(48, "label", 32)(49, "input", 33);
+    \u0275\u0275listener("change", function AdminProductFormComponent_Conditional_13_Template_input_change_49_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.onGallerySelected($event));
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275element(48, "i", 33);
-    \u0275\u0275elementStart(49, "span");
-    \u0275\u0275text(50, "Arrasta imagens ou clica para escolher");
+    \u0275\u0275element(50, "i", 34);
+    \u0275\u0275elementStart(51, "span");
+    \u0275\u0275text(52, "Arrasta imagens ou clica para escolher");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(51, "small");
-    \u0275\u0275text(52, "PNG, JPG ou WEBP \xB7 m\xE1x. 5 MB por imagem");
+    \u0275\u0275elementStart(53, "small");
+    \u0275\u0275text(54, "PNG, JPG ou WEBP \xB7 m\xE1x. 5 MB por imagem");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(53, AdminProductFormComponent_Conditional_13_div_53_Template, 5, 0, "div", 34);
+    \u0275\u0275template(55, AdminProductFormComponent_Conditional_13_div_55_Template, 5, 0, "div", 35);
     \u0275\u0275elementEnd()();
-    \u0275\u0275conditionalCreate(54, AdminProductFormComponent_Conditional_13_Conditional_54_Template, 5, 5, "p", 35);
-    \u0275\u0275elementStart(55, "div", 36)(56, "button", 37);
-    \u0275\u0275element(57, "i", 38);
-    \u0275\u0275text(58);
+    \u0275\u0275conditionalCreate(56, AdminProductFormComponent_Conditional_13_Conditional_56_Template, 5, 5, "p", 36);
+    \u0275\u0275elementStart(57, "div", 37)(58, "button", 38);
+    \u0275\u0275element(59, "i", 39);
+    \u0275\u0275text(60);
     \u0275\u0275elementEnd()()();
   }
   if (rf & 2) {
@@ -49511,8 +49547,12 @@ function AdminProductFormComponent_Conditional_13_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.categories());
     \u0275\u0275advance(3);
     \u0275\u0275control();
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r1.form.controls.price.touched && ctx_r1.form.controls.price.invalid);
     \u0275\u0275advance(3);
     \u0275\u0275control();
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r1.form.controls.oldPrice.touched && ctx_r1.form.controls.oldPrice.invalid);
     \u0275\u0275advance(3);
     \u0275\u0275control();
     \u0275\u0275advance(13);
@@ -49529,7 +49569,7 @@ function AdminProductFormComponent_Conditional_13_Template(rf, ctx) {
     \u0275\u0275advance(11);
     \u0275\u0275property("ngIf", ctx_r1.galleryPreviews().length || ctx_r1.existingGallery().length);
     \u0275\u0275advance();
-    \u0275\u0275conditional(ctx_r1.editingId && ctx_r1.product()?.createdAt ? 54 : -1);
+    \u0275\u0275conditional(ctx_r1.editingId && ctx_r1.product()?.createdAt ? 56 : -1);
     \u0275\u0275advance(2);
     \u0275\u0275property("disabled", ctx_r1.loading());
     \u0275\u0275advance();
@@ -49605,8 +49645,14 @@ var AdminProductFormComponent = class _AdminProductFormComponent {
       categorySlug: ["", Validators.required],
       name: ["", [Validators.required, Validators.maxLength(200)]],
       description: [""],
-      price: [this.money.format(0), Validators.required],
-      oldPrice: [""],
+      price: [this.money.format(0), {
+        validators: [Validators.required, this.moneyValidator.bind(this)],
+        updateOn: "change"
+      }],
+      oldPrice: ["", {
+        validators: [this.moneyValidator.bind(this)],
+        updateOn: "change"
+      }],
       badge: [""],
       gallery: [""]
     });
@@ -49688,6 +49734,88 @@ var AdminProductFormComponent = class _AdminProductFormComponent {
   removeFeature(index) {
     this.features.update((items) => items.filter((_, i) => i !== index));
   }
+  moneyValidator(control) {
+    const value = control.value;
+    if (!value || value.trim() === "") {
+      return { required: true };
+    }
+    const parsed = this.money.parse(value);
+    return parsed === null ? { invalidMoney: true } : null;
+  }
+  formatCurrencyInput(value, cursorPos) {
+    const digits = value.replace(/\D/g, "");
+    if (!digits) {
+      return { formatted: "0", cursorPos: 1 };
+    }
+    const num = parseInt(digits, 10);
+    const formatted = this.money.format(num);
+    const digitsBeforeCursor = value.substring(0, cursorPos).replace(/\D/g, "").length;
+    let newCursorPos = 0;
+    let digitCount = 0;
+    for (let i = 0; i < formatted.length && digitCount < digitsBeforeCursor; i++) {
+      if (/\d/.test(formatted[i])) {
+        digitCount++;
+      }
+      newCursorPos = i + 1;
+    }
+    return { formatted, cursorPos: newCursorPos };
+  }
+  onPriceInput(controlName, event) {
+    const input2 = event.target;
+    const cursorStart = input2.selectionStart ?? 0;
+    const cursorEnd = input2.selectionEnd ?? 0;
+    const value = input2.value;
+    let hasLetters = /[a-zA-Z]/.test(value.substring(0, cursorStart));
+    if (!hasLetters) {
+      hasLetters = /[a-zA-Z]/.test(value.substring(cursorStart, cursorEnd));
+    }
+    if (hasLetters) {
+      input2.value = value.replace(/[^0-9,.]/g, "");
+      return;
+    }
+    let currentValue = value;
+    if (controlName === "price") {
+      const digits = value.replace(/[^\d]/g, "");
+      if (digits) {
+        const num = parseInt(digits, 10);
+        currentValue = this.money.format(num);
+      } else {
+        currentValue = "0";
+      }
+    } else {
+      currentValue = value.replace(/[^\d]/g, "");
+      if (currentValue) {
+        const num = parseInt(currentValue, 10);
+        currentValue = this.money.format(num);
+      } else {
+        currentValue = "";
+      }
+    }
+    const { formatted, cursorPos } = this.formatCurrencyInput(value, cursorStart);
+    this.form.get(controlName)?.setValue(formatted, { emitEvent: false });
+    requestAnimationFrame(() => {
+      input2.setSelectionRange(cursorPos, cursorPos);
+    });
+  }
+  onPriceBlur(controlName) {
+    const value = this.form.get(controlName)?.value;
+    if (value === null || value === void 0 || value.trim() === "") {
+      this.form.get(controlName)?.setValue(controlName === "price" ? this.money.format(0) : "");
+      return;
+    }
+    const parsed = this.money.parse(value);
+    if (parsed === null) {
+      const numbers = value.replace(/[^0-9]/g, "");
+      if (numbers) {
+        const num = parseInt(numbers, 10);
+        this.form.get(controlName)?.setValue(this.money.format(num));
+      } else {
+        this.form.get(controlName)?.setValue(controlName === "price" ? this.money.format(0) : "");
+      }
+    } else {
+      this.form.get(controlName)?.setValue(this.money.format(parsed));
+    }
+  }
   sanitizeFeatures(features) {
     return [...new Set(features.map((f) => f.trim()).filter((f) => f.length > 0))];
   }
@@ -49745,7 +49873,10 @@ var AdminProductFormComponent = class _AdminProductFormComponent {
     const price = this.money.parse(value.price);
     const oldPrice = this.money.parse(value.oldPrice);
     if (price === null) {
+      this.form.get("price")?.setErrors(__spreadProps(__spreadValues({}, this.form.get("price")?.errors), { invalidMoney: true }));
+      this.form.get("price")?.markAsTouched();
       this.toast.error("Introduz um pre\xE7o v\xE1lido.");
+      this.loading.set(false);
       return;
     }
     const payload = new FormData();
@@ -49819,7 +49950,7 @@ var AdminProductFormComponent = class _AdminProductFormComponent {
     };
   }
   static {
-    this.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _AdminProductFormComponent, selectors: [["app-admin-product-form"]], decls: 14, vars: 2, consts: [[1, "admin-content"], [1, "admin-topbar"], [1, "eyebrow"], ["routerLink", "/admin/produtos", 1, "admin-secondary"], [1, "fa-solid", "fa-arrow-left"], [1, "admin-form-loading"], [1, "admin-form", "admin-form-page", 3, "formGroup"], [1, "admin-form-loading-inner"], [1, "skel-line", "skel-short", 2, "width", "40%"], [1, "skel-line", 2, "margin-top", "12px"], [1, "skel-line", "skel-short", 2, "margin-top", "12px"], [1, "admin-form", "admin-form-page", 3, "ngSubmit", "formGroup"], ["formControlName", "name"], ["formControlName", "categorySlug"], [3, "value", 4, "ngFor", "ngForOf"], ["type", "text", "inputmode", "decimal", "formControlName", "price"], ["type", "text", "inputmode", "decimal", "formControlName", "oldPrice"], ["formControlName", "badge"], ["value", ""], ["value", "Novo"], ["value", "Sale"], ["value", "Premium"], ["type", "file", "accept", "image/*", 3, "change"], ["class", "admin-image-preview", 4, "ngIf"], [1, "wide"], ["formControlName", "description", "rows", "5"], [1, "admin-feature-input"], ["type", "text", "placeholder", "Adicionar detalhe...", 3, "keydown.enter", "formControl"], ["type", "button", 1, "admin-secondary", 3, "click"], ["class", "admin-feature-list", 4, "ngIf"], [1, "admin-gallery-zone", 3, "click"], [1, "admin-dropzone"], ["type", "file", "accept", "image/*", "multiple", "", 3, "change"], [1, "fa-solid", "fa-cloud-arrow-up"], ["class", "admin-gallery-preview", 4, "ngIf"], [1, "admin-meta"], [1, "admin-form-actions", "wide"], ["type", "submit", 1, "admin-primary", 3, "disabled"], [1, "fa-solid"], [3, "value"], [1, "admin-image-preview"], ["alt", "Pr\xE9-visualiza\xE7\xE3o do produto", 3, "src"], [1, "admin-feature-list"], ["class", "feat-chip", 4, "ngFor", "ngForOf"], [1, "feat-chip"], ["type", "button", 3, "click"], [1, "admin-gallery-preview"], [1, "admin-gallery-thumb"], ["alt", "Pr\xE9-visualiza\xE7\xE3o", 3, "src"], ["type", "button", 1, "admin-gallery-remove", 3, "click"], ["alt", "Galeria existente", 3, "src"], ["type", "button", "aria-label", "Remover imagem da galeria", 1, "admin-gallery-remove", 3, "click"]], template: function AdminProductFormComponent_Template(rf, ctx) {
+    this.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _AdminProductFormComponent, selectors: [["app-admin-product-form"]], decls: 14, vars: 2, consts: [[1, "admin-content"], [1, "admin-topbar"], [1, "eyebrow"], ["routerLink", "/admin/produtos", 1, "admin-secondary"], [1, "fa-solid", "fa-arrow-left"], [1, "admin-form-loading"], [1, "admin-form", "admin-form-page", 3, "formGroup"], [1, "admin-form-loading-inner"], [1, "skel-line", "skel-short", 2, "width", "40%"], [1, "skel-line", 2, "margin-top", "12px"], [1, "skel-line", "skel-short", 2, "margin-top", "12px"], [1, "admin-form", "admin-form-page", 3, "ngSubmit", "formGroup"], ["formControlName", "name"], ["formControlName", "categorySlug"], [3, "value", 4, "ngFor", "ngForOf"], ["type", "text", "inputmode", "decimal", "formControlName", "price", 3, "input", "blur"], ["class", "admin-field-error", 4, "ngIf"], ["type", "text", "inputmode", "decimal", "formControlName", "oldPrice", 3, "input", "blur"], ["formControlName", "badge"], ["value", ""], ["value", "Novo"], ["value", "Sale"], ["value", "Premium"], ["type", "file", "accept", "image/*", 3, "change"], ["class", "admin-image-preview", 4, "ngIf"], [1, "wide"], ["formControlName", "description", "rows", "5"], [1, "admin-feature-input"], ["type", "text", "placeholder", "Adicionar detalhe...", 3, "keydown.enter", "formControl"], ["type", "button", 1, "admin-secondary", 3, "click"], ["class", "admin-feature-list", 4, "ngIf"], [1, "admin-gallery-zone", 3, "click"], [1, "admin-dropzone"], ["type", "file", "accept", "image/*", "multiple", "", 3, "change"], [1, "fa-solid", "fa-cloud-arrow-up"], ["class", "admin-gallery-preview", 4, "ngIf"], [1, "admin-meta"], [1, "admin-form-actions", "wide"], ["type", "submit", 1, "admin-primary", 3, "disabled"], [1, "fa-solid"], [3, "value"], [1, "admin-field-error"], [1, "admin-image-preview"], ["alt", "Pr\xE9-visualiza\xE7\xE3o do produto", 3, "src"], [1, "admin-feature-list"], ["class", "feat-chip", 4, "ngFor", "ngForOf"], [1, "feat-chip"], ["type", "button", 3, "click"], [1, "admin-gallery-preview"], [1, "admin-gallery-thumb"], ["alt", "Pr\xE9-visualiza\xE7\xE3o", 3, "src"], ["type", "button", 1, "admin-gallery-remove", 3, "click"], ["alt", "Galeria existente", 3, "src"], ["type", "button", "aria-label", "Remover imagem da galeria", 1, "admin-gallery-remove", 3, "click"]], template: function AdminProductFormComponent_Template(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "section", 0)(1, "header", 1)(2, "div")(3, "span", 2);
         \u0275\u0275text(4, "Bravo Business \xB7 Cat\xE1logo");
@@ -49834,7 +49965,7 @@ var AdminProductFormComponent = class _AdminProductFormComponent {
         \u0275\u0275element(10, "i", 4);
         \u0275\u0275text(11, " Voltar");
         \u0275\u0275elementEnd()();
-        \u0275\u0275conditionalCreate(12, AdminProductFormComponent_Conditional_12_Template, 10, 0, "div", 5)(13, AdminProductFormComponent_Conditional_13_Template, 59, 16, "form", 6);
+        \u0275\u0275conditionalCreate(12, AdminProductFormComponent_Conditional_12_Template, 10, 0, "div", 5)(13, AdminProductFormComponent_Conditional_13_Template, 61, 18, "form", 6);
         \u0275\u0275elementEnd();
       }
       if (rf & 2) {
@@ -49849,11 +49980,210 @@ var AdminProductFormComponent = class _AdminProductFormComponent {
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(AdminProductFormComponent, [{
     type: Component,
-    args: [{ selector: "app-admin-product-form", standalone: true, imports: [CommonModule, FormsModule, ReactiveFormsModule], template: '<section class="admin-content">\n  <header class="admin-topbar">\n    <div>\n      <span class="eyebrow">Bravo Business \xB7 Cat\xE1logo</span>\n      <h1>{{ editingId ? "Editar produto" : "Novo produto" }}</h1>\n      <p>Preenche os dados que aparecem na loja.</p>\n    </div>\n    <a routerLink="/admin/produtos" class="admin-secondary"\n      ><i class="fa-solid fa-arrow-left"></i> Voltar</a\n    >\n  </header>\n  @if (loading() && editingId) {\n    <div class="admin-form-loading">\n      <div class="admin-form-loading-inner">\n        <div class="skel-line skel-short" style="width: 40%"></div>\n        <div class="skel-line" style="margin-top: 12px"></div>\n        <div class="skel-line skel-short" style="margin-top: 12px"></div>\n        <div class="skel-line" style="margin-top: 12px"></div>\n        <div class="skel-line" style="margin-top: 12px"></div>\n        <div class="skel-line skel-short" style="margin-top: 12px"></div>\n        <div class="skel-line" style="margin-top: 12px"></div>\n        <div class="skel-line skel-short" style="margin-top: 12px"></div>\n      </div>\n    </div>\n  } @else {\n    <form\n      class="admin-form admin-form-page"\n      [formGroup]="form"\n      (ngSubmit)="save()"\n    >\n      <label>Nome<input formControlName="name" /></label\n      ><label\n        >Categoria<select formControlName="categorySlug">\n          <option *ngFor="let category of categories()" [value]="category.slug">\n            {{ category.label }}\n          </option>\n        </select></label\n      ><label\n        >Pre\xE7o<input\n          type="text"\n          inputmode="decimal"\n          formControlName="price" /></label\n      ><label\n        >Pre\xE7o anterior<input\n          type="text"\n          inputmode="decimal"\n          formControlName="oldPrice" /></label\n      ><label\n        >Badge<select formControlName="badge">\n          <option value="">Sem badge</option>\n          <option value="Novo">Novo</option>\n          <option value="Sale">Sale</option>\n          <option value="Premium">Premium</option>\n        </select></label\n      ><label\n        >Imagem principal<input\n          type="file"\n          accept="image/*"\n          (change)="onImageSelected($event)"\n        />\n        <small>{{\n          editingId\n            ? "Escolhe uma nova imagem apenas se quiseres substituir a actual."\n            : "PNG, JPG ou WEBP at\xE9 5 MB."\n        }}</small>\n      </label>\n      <div class="admin-image-preview" *ngIf="imagePreview() || product()?.img">\n        <img\n          [src]="imagePreview() || product()?.img"\n          alt="Pr\xE9-visualiza\xE7\xE3o do produto"\n        />\n      </div>\n      <label class="wide"\n        >Descri\xE7\xE3o<textarea\n          formControlName="description"\n          rows="5"\n        ></textarea></label\n      ><label class="wide"\n        >Detalhes do produto\n        <small>Ex: Material: 100% algod\xE3o \xB7 Tamanhos: S, M, L, XL</small>\n        <div class="admin-feature-input">\n          <input\n            type="text"\n            [formControl]="featureCtrl"\n            placeholder="Adicionar detalhe..."\n            (keydown.enter)="$event.preventDefault(); addFeature()"\n          />\n          <button type="button" class="admin-secondary" (click)="addFeature()">\n            Adicionar\n          </button>\n        </div>\n        <div class="admin-feature-list" *ngIf="features().length">\n          <span\n            class="feat-chip"\n            *ngFor="let feature of features(); let index = index"\n          >\n            {{ feature }}\n            <button type="button" (click)="removeFeature(index)">\xD7</button>\n          </span>\n        </div>\n      </label>\n      <label class="wide">\n        Galeria\n        <div class="admin-gallery-zone" (click)="$event.stopPropagation()">\n          <label class="admin-dropzone">\n            <input\n              type="file"\n              accept="image/*"\n              multiple\n              (change)="onGallerySelected($event)"\n            />\n            <i class="fa-solid fa-cloud-arrow-up"></i>\n            <span>Arrasta imagens ou clica para escolher</span>\n            <small>PNG, JPG ou WEBP \xB7 m\xE1x. 5 MB por imagem</small>\n          </label>\n          <div\n            class="admin-gallery-preview"\n            *ngIf="galleryPreviews().length || existingGallery().length"\n          >\n            @for (preview of galleryPreviews(); track $index) {\n              <div class="admin-gallery-thumb">\n                <img [src]="preview" alt="Pr\xE9-visualiza\xE7\xE3o" />\n                <button\n                  type="button"\n                  class="admin-gallery-remove"\n                  (click)="removeGalleryPreview($index)"\n                >\n                  \xD7\n                </button>\n              </div>\n            }\n            @for (url of existingGallery(); track url) {\n              <div class="admin-gallery-thumb">\n                <img [src]="url" alt="Galeria existente" />\n                <button\n                  type="button"\n                  class="admin-gallery-remove"\n                  (click)="removeExistingGallery($index)"\n                  aria-label="Remover imagem da galeria"\n                >\n                  \xD7\n                </button>\n              </div>\n            }\n          </div>\n        </div>\n      </label>\n      @if (editingId && product()?.createdAt) {\n        <p class="admin-meta">\n          <span\n            >Criado em:\n            {{ product()!.createdAt | date: "dd/MM/yyyy HH:mm" }}</span\n          >\n          @if (product()!.updatedAt) {\n            <span\n              >\xDAltima actualiza\xE7\xE3o:\n              {{ product()!.updatedAt | date: "dd/MM/yyyy HH:mm" }}</span\n            >\n          }\n        </p>\n      }\n      <div class="admin-form-actions wide">\n        <button type="submit" class="admin-primary" [disabled]="loading()">\n          <i\n            class="fa-solid"\n            [class.fa-floppy-disk]="!loading()"\n            [class.fa-spinner]="loading()"\n            [class.fa-spin]="loading()"\n          ></i\n          >{{\n            loading()\n              ? "A guardar..."\n              : editingId\n                ? "Guardar altera\xE7\xF5es"\n                : "Criar produto"\n          }}\n        </button>\n      </div>\n    </form>\n  }\n</section>\n', styles: ['/* src/app/features/admin/admin-page.component.scss */\n.admin-content {\n  padding: 40px clamp(20px, 4vw, 60px);\n  min-width: 0;\n  width: 100%;\n}\n.admin-topbar {\n  display: flex;\n  justify-content: space-between;\n  align-items: end;\n  gap: 20px;\n  margin-bottom: 30px;\n}\n.admin-topbar h1 {\n  font-family: "Bebas Neue", sans-serif;\n  font-size: clamp(42px, 5vw, 64px);\n  line-height: 0.9;\n  margin-top: 10px;\n}\n.admin-topbar p {\n  color: var(--muted);\n  font-size: 13px;\n}\n.admin-refresh {\n  border: 1px solid var(--border);\n  background: var(--surface);\n  color: var(--text);\n  padding: 10px 14px;\n  border-radius: 8px;\n  font-size: 11px;\n  font-weight: 700;\n}\n.admin-refresh:hover {\n  border-color: var(--accent);\n  color: var(--accent);\n}\n.admin-stats {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 14px;\n  margin-bottom: 28px;\n}\n.admin-stat {\n  background: var(--surface);\n  border: 1px solid var(--border);\n  border-radius: var(--r);\n  padding: 22px;\n}\n.admin-stat i {\n  color: var(--accent);\n  font-size: 18px;\n}\n.admin-stat strong {\n  display: block;\n  font-family: "Bebas Neue", sans-serif;\n  font-size: 42px;\n  margin-top: 12px;\n}\n.admin-stat span {\n  color: var(--muted);\n  font-size: 12px;\n}\n.admin-panel {\n  background: var(--surface);\n  border: 1px solid var(--border);\n  border-radius: var(--r);\n  overflow: hidden;\n}\n.admin-panel-head {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  gap: 15px;\n  padding: 20px 22px;\n  border-bottom: 1px solid var(--border);\n}\n.admin-panel-head h2 {\n  font-family: "Bebas Neue", sans-serif;\n  font-size: 28px;\n}\n.admin-link-button {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  padding: 8px 14px;\n  border-radius: 8px;\n  border: 1px solid var(--border);\n  background: var(--surface);\n  color: var(--text);\n  font-size: 12px;\n  font-weight: 700;\n  cursor: pointer;\n  text-decoration: none;\n}\n.admin-link-button:hover {\n  border-color: var(--accent);\n  color: var(--accent);\n}\n.admin-search {\n  height: 36px;\n  border: 1px solid var(--border);\n  background: var(--surface2);\n  color: var(--text);\n  border-radius: 7px;\n  padding: 0 10px;\n  font: inherit;\n  font-size: 12px;\n}\n.admin-table {\n  width: 100%;\n  border-collapse: collapse;\n}\n.admin-table th,\n.admin-table td {\n  text-align: left;\n  padding: 14px 18px;\n  border-bottom: 1px solid var(--border);\n  font-size: 12px;\n}\n.admin-table th {\n  color: var(--muted);\n  font-size: 10px;\n  letter-spacing: 0.1em;\n  text-transform: uppercase;\n}\n.admin-table td {\n  color: var(--text);\n}\n.admin-product-cell {\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  font-weight: 700;\n}\n.admin-product-cell img {\n  width: 40px;\n  height: 40px;\n  object-fit: cover;\n  border-radius: 6px;\n  background: var(--surface2);\n}\n.admin-badge {\n  padding: 4px 7px;\n  border-radius: 4px;\n  background: var(--accent-lt);\n  color: var(--accent);\n  font-size: 9px;\n  font-weight: 800;\n  text-transform: uppercase;\n}\n.admin-row-actions {\n  display: flex;\n  gap: 6px;\n}\n.admin-row-actions button {\n  width: 30px;\n  height: 30px;\n  border: 1px solid var(--border);\n  border-radius: 6px;\n  color: var(--muted);\n  background: none;\n}\n.admin-row-actions button:hover {\n  color: var(--accent);\n  border-color: var(--accent);\n}\n.admin-row-actions button.delete:hover {\n  color: var(--danger);\n  border-color: var(--danger);\n}\n.admin-row-actions a {\n  width: 30px;\n  height: 30px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border: 1px solid var(--border);\n  border-radius: 6px;\n  color: var(--muted);\n  text-decoration: none;\n}\n.admin-row-actions a:hover {\n  color: var(--accent);\n  border-color: var(--accent);\n}\n.category-actions {\n  margin-top: 16px;\n}\n.admin-panel-actions {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.admin-results-count {\n  font-size: 11px;\n  color: var(--muted);\n  font-weight: 700;\n  text-transform: uppercase;\n  letter-spacing: 0.08em;\n}\n.admin-empty {\n  text-align: center;\n  padding: 45px;\n  color: var(--muted);\n}\n.admin-empty i {\n  display: block;\n  color: var(--accent);\n  font-size: 30px;\n  margin-bottom: 10px;\n}\n.admin-product-cards {\n  display: none;\n  gap: 12px;\n}\n.admin-product-card {\n  border: 1px solid var(--border);\n  border-radius: 9px;\n  padding: 14px;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 12px;\n}\n.admin-product-card-head {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n  flex: 1;\n  min-width: 0;\n}\n.admin-product-card img {\n  width: 44px;\n  height: 44px;\n  object-fit: cover;\n  border-radius: 6px;\n  background: var(--surface2);\n  flex-shrink: 0;\n}\n.admin-product-card strong {\n  display: block;\n  font-size: 12px;\n  margin-bottom: 2px;\n}\n.admin-product-card span {\n  display: block;\n  color: var(--muted);\n  font-size: 11px;\n}\n.admin-form-page {\n  max-width: 900px;\n  border: 1px solid var(--border);\n  border-radius: var(--r);\n  background: var(--surface);\n  margin: 0 !important;\n}\n.admin-secondary {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  border: 1px solid var(--border);\n  border-radius: 7px;\n  padding: 11px 15px;\n  color: var(--muted);\n  font-size: 11px;\n  font-weight: 800;\n  text-transform: uppercase;\n  text-decoration: none;\n}\n.admin-secondary:hover {\n  border-color: var(--accent);\n  color: var(--accent);\n}\n.admin-category-list {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 12px;\n  padding: 20px;\n}\n.admin-category-card {\n  border: 1px solid var(--border);\n  border-radius: 9px;\n  padding: 17px;\n}\n.admin-category-card i {\n  color: var(--accent);\n  font-size: 18px;\n}\n.admin-category-card strong {\n  display: block;\n  margin: 13px 0 4px;\n}\n.admin-category-card span {\n  display: block;\n  color: var(--muted);\n  font-size: 11px;\n}\n.admin-image-preview {\n  grid-column: span 1;\n  align-self: end;\n  width: 120px;\n  height: 120px;\n  border: 1px solid var(--border);\n  border-radius: 9px;\n  overflow: hidden;\n  background: var(--surface2);\n}\n.admin-image-preview img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.admin-gallery-preview {\n  display: flex;\n  gap: 10px;\n  flex-wrap: wrap;\n}\n.admin-gallery-preview img {\n  width: 86px;\n  height: 86px;\n  object-fit: cover;\n  border-radius: 7px;\n  border: 1px solid var(--border);\n  background: var(--surface2);\n}\n.icon-picker-trigger {\n  height: 42px;\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  padding: 0 12px;\n  border: 1px solid var(--border);\n  border-radius: 7px;\n  background: var(--surface2);\n  color: var(--text);\n  text-align: left;\n}\n.icon-picker-trigger span {\n  flex: 1;\n  font-size: 12px;\n}\n.icon-picker-trigger > i:first-child {\n  color: var(--accent);\n  font-size: 18px;\n}\n.icon-picker-overlay {\n  position: fixed;\n  inset: 0;\n  z-index: 5000;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 24px;\n  background: rgba(0, 0, 0, 0.52);\n  -webkit-backdrop-filter: blur(8px);\n  backdrop-filter: blur(8px);\n}\n.icon-picker-modal {\n  width: min(680px, 100%);\n  max-height: min(680px, 90vh);\n  overflow: auto;\n  background: var(--surface);\n  border: 1px solid var(--border);\n  border-radius: var(--r);\n  box-shadow: var(--sh-lg);\n  padding: 24px;\n}\n.icon-picker-modal header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  margin-bottom: 22px;\n}\n.icon-picker-modal h2 {\n  font-family: "Bebas Neue", sans-serif;\n  font-size: 34px;\n  margin-top: 7px;\n}\n.icon-picker-modal header button {\n  width: 34px;\n  height: 34px;\n  border-radius: 50%;\n  background: var(--surface2);\n  color: var(--muted);\n}\n.icon-picker-grid {\n  display: grid;\n  grid-template-columns: repeat(5, 1fr);\n  gap: 8px;\n}\n.icon-picker-grid button {\n  display: grid;\n  gap: 9px;\n  justify-items: center;\n  padding: 15px 8px;\n  border: 1px solid var(--border);\n  border-radius: 8px;\n  background: var(--surface2);\n  color: var(--muted);\n  font-size: 10px;\n}\n.icon-picker-grid button i {\n  font-size: 22px;\n  color: var(--accent);\n}\n.icon-picker-grid button:hover,\n.icon-picker-grid button.selected {\n  border-color: var(--accent);\n  background: var(--accent-lt);\n  color: var(--text);\n}\n.admin-error {\n  padding: 14px 18px;\n  color: var(--danger);\n  background: rgba(224, 85, 85, 0.08);\n  font-size: 12px;\n}\n.admin-success {\n  padding: 14px 18px;\n  color: #4caf50;\n  background: rgba(76, 175, 80, 0.08);\n  font-size: 12px;\n  margin-top: 12px;\n}\n.admin-primary {\n  display: inline-flex;\n  align-items: center;\n  gap: 7px;\n  border: none;\n  border-radius: 8px;\n  padding: 11px 17px;\n  background: var(--accent);\n  color: #fff;\n  font-size: 12px;\n  font-weight: 800;\n  text-decoration: none;\n}\n.admin-primary:hover {\n  background: var(--text);\n  color: var(--bg);\n}\n.admin-primary:disabled {\n  opacity: 0.55;\n  cursor: wait;\n}\n.admin-form-actions {\n  display: flex;\n  justify-content: flex-end;\n  gap: 10px;\n  margin-top: 22px;\n}\n.admin-form-actions.wide {\n  justify-content: stretch;\n}\n.admin-form-actions .admin-primary {\n  flex: 1;\n  justify-content: center;\n}\n.admin-table-wrap {\n  overflow-x: auto;\n}\n@media (max-width: 850px) {\n  .admin-content {\n    padding: 28px 18px;\n  }\n  .admin-stats,\n  .admin-category-list {\n    grid-template-columns: 1fr;\n  }\n  .admin-panel {\n    overflow-x: auto;\n  }\n  .admin-table {\n    min-width: 650px;\n  }\n  .admin-topbar {\n    align-items: flex-start;\n    flex-direction: column;\n  }\n  .icon-picker-grid {\n    grid-template-columns: repeat(4, 1fr);\n  }\n  .admin-form-page {\n    margin: 0 !important;\n  }\n}\n.admin-feature-input {\n  display: flex;\n  gap: 8px;\n  margin-top: 8px;\n}\n.admin-feature-input input {\n  flex: 1;\n  height: 42px;\n  border: 1px solid var(--border);\n  border-radius: 8px;\n  background: var(--surface);\n  color: var(--text);\n  padding: 0 12px;\n  font: inherit;\n}\n.admin-feature-list {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 8px;\n  margin-top: 10px;\n}\n.feat-chip {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  padding: 6px 10px;\n  background: var(--accent-lt);\n  color: var(--accent);\n  border-radius: 6px;\n  font-size: 11px;\n  font-weight: 700;\n}\n.feat-chip button {\n  background: none;\n  border: none;\n  color: inherit;\n  font-size: 14px;\n  cursor: pointer;\n  line-height: 1;\n}\n.admin-gallery-zone {\n  margin-top: 8px;\n}\n.admin-dropzone {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 8px;\n  padding: 22px;\n  border: 2px dashed var(--border);\n  border-radius: 10px;\n  background: var(--surface2);\n  color: var(--muted);\n  cursor: pointer;\n  text-align: center;\n  transition: all 0.2s;\n}\n.admin-dropzone:hover {\n  border-color: var(--accent);\n  color: var(--text);\n}\n.admin-dropzone input {\n  display: none;\n}\n.admin-dropzone i {\n  font-size: 22px;\n  color: var(--accent);\n}\n.admin-dropzone span {\n  font-size: 12px;\n  font-weight: 700;\n}\n.admin-dropzone small {\n  font-size: 11px;\n  color: var(--muted);\n}\n.admin-gallery-preview {\n  display: flex;\n  gap: 10px;\n  flex-wrap: wrap;\n  margin-top: 12px;\n}\n.admin-gallery-thumb {\n  position: relative;\n  width: 86px;\n  height: 86px;\n  border-radius: 7px;\n  border: 1px solid var(--border);\n  background: var(--surface2);\n  overflow: hidden;\n}\n.admin-gallery-thumb img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.admin-gallery-remove {\n  position: absolute;\n  top: 4px;\n  right: 4px;\n  width: 20px;\n  height: 20px;\n  border-radius: 50%;\n  border: 1px solid var(--border);\n  background: var(--surface);\n  color: var(--danger);\n  font-size: 12px;\n  font-weight: 700;\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.admin-meta {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 10px;\n  font-size: 11px;\n  color: var(--muted);\n  margin-top: 12px;\n}\n.admin-products-page {\n  padding: 40px clamp(28px, 5vw, 80px);\n}\n.skel-line {\n  height: 12px;\n  border-radius: 6px;\n  background:\n    linear-gradient(\n      90deg,\n      var(--surface2) 25%,\n      var(--surface3) 50%,\n      var(--surface2) 75%);\n  background-size: 200% 100%;\n  animation: shimmer 1.5s infinite;\n}\n.skel-short {\n  width: 60%;\n}\n.admin-form-loading {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 40px 20px;\n}\n.admin-form-loading-inner {\n  width: 100%;\n  max-width: 720px;\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.admin-field-error {\n  color: var(--danger);\n  font-size: 11px;\n  margin-top: 6px;\n  display: block;\n}\n@keyframes shimmer {\n  0% {\n    background-position: 200% 0;\n  }\n  100% {\n    background-position: -200% 0;\n  }\n}\n@media (max-width: 850px) {\n  .admin-table-wrap {\n    overflow-x: visible;\n  }\n  .admin-table {\n    display: none;\n  }\n  .admin-product-cards {\n    display: grid;\n  }\n  .admin-empty {\n    display: block;\n  }\n}\n/*# sourceMappingURL=admin-page.component.css.map */\n'] }]
+    args: [{ selector: "app-admin-product-form", standalone: true, imports: [CommonModule, FormsModule, ReactiveFormsModule], template: `<section class="admin-content">
+  <header class="admin-topbar">
+    <div>
+      <span class="eyebrow">Bravo Business \xB7 Cat\xE1logo</span>
+      <h1>{{ editingId ? "Editar produto" : "Novo produto" }}</h1>
+      <p>Preenche os dados que aparecem na loja.</p>
+    </div>
+    <a routerLink="/admin/produtos" class="admin-secondary"
+      ><i class="fa-solid fa-arrow-left"></i> Voltar</a
+    >
+  </header>
+  @if (loading() && editingId) {
+    <div class="admin-form-loading">
+      <div class="admin-form-loading-inner">
+        <div class="skel-line skel-short" style="width: 40%"></div>
+        <div class="skel-line" style="margin-top: 12px"></div>
+        <div class="skel-line skel-short" style="margin-top: 12px"></div>
+        <div class="skel-line" style="margin-top: 12px"></div>
+        <div class="skel-line" style="margin-top: 12px"></div>
+        <div class="skel-line skel-short" style="margin-top: 12px"></div>
+        <div class="skel-line" style="margin-top: 12px"></div>
+        <div class="skel-line skel-short" style="margin-top: 12px"></div>
+      </div>
+    </div>
+  } @else {
+    <form
+      class="admin-form admin-form-page"
+      [formGroup]="form"
+      (ngSubmit)="save()"
+    >
+      <label>Nome<input formControlName="name" /></label
+      ><label
+        >Categoria<select formControlName="categorySlug">
+          <option *ngFor="let category of categories()" [value]="category.slug">
+            {{ category.label }}
+          </option>
+        </select></label
+      ><label
+        >Pre\xE7o
+        <input
+          type="text"
+          inputmode="decimal"
+          formControlName="price"
+          (input)="onPriceInput('price', $event)"
+          (blur)="onPriceBlur('price')"
+        />
+      </label
+      ><small
+        *ngIf="form.controls.price.touched && form.controls.price.invalid"
+        class="admin-field-error"
+        >Introduz um pre\xE7o v\xE1lido.</small
+      ><label
+        >Pre\xE7o anterior
+        <input
+          type="text"
+          inputmode="decimal"
+          formControlName="oldPrice"
+          (input)="onPriceInput('oldPrice', $event)"
+          (blur)="onPriceBlur('oldPrice')"
+        />
+      </label
+      ><small
+        *ngIf="form.controls.oldPrice.touched && form.controls.oldPrice.invalid"
+        class="admin-field-error"
+        >Introduz um pre\xE7o v\xE1lido.</small
+      ><label
+        >Badge<select formControlName="badge">
+          <option value="">Sem badge</option>
+          <option value="Novo">Novo</option>
+          <option value="Sale">Sale</option>
+          <option value="Premium">Premium</option>
+        </select></label
+      ><label
+        >Imagem principal<input
+          type="file"
+          accept="image/*"
+          (change)="onImageSelected($event)"
+        />
+        <small>{{
+          editingId
+            ? "Escolhe uma nova imagem apenas se quiseres substituir a actual."
+            : "PNG, JPG ou WEBP at\xE9 5 MB."
+        }}</small>
+      </label>
+      <div class="admin-image-preview" *ngIf="imagePreview() || product()?.img">
+        <img
+          [src]="imagePreview() || product()?.img"
+          alt="Pr\xE9-visualiza\xE7\xE3o do produto"
+        />
+      </div>
+      <label class="wide"
+        >Descri\xE7\xE3o<textarea
+          formControlName="description"
+          rows="5"
+        ></textarea></label
+      ><label class="wide"
+        >Detalhes do produto
+        <small>Ex: Material: 100% algod\xE3o \xB7 Tamanhos: S, M, L, XL</small>
+        <div class="admin-feature-input">
+          <input
+            type="text"
+            [formControl]="featureCtrl"
+            placeholder="Adicionar detalhe..."
+            (keydown.enter)="$event.preventDefault(); addFeature()"
+          />
+          <button type="button" class="admin-secondary" (click)="addFeature()">
+            Adicionar
+          </button>
+        </div>
+        <div class="admin-feature-list" *ngIf="features().length">
+          <span
+            class="feat-chip"
+            *ngFor="let feature of features(); let index = index"
+          >
+            {{ feature }}
+            <button type="button" (click)="removeFeature(index)">\xD7</button>
+          </span>
+        </div>
+      </label>
+      <label class="wide">
+        Galeria
+        <div class="admin-gallery-zone" (click)="$event.stopPropagation()">
+          <label class="admin-dropzone">
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              (change)="onGallerySelected($event)"
+            />
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>Arrasta imagens ou clica para escolher</span>
+            <small>PNG, JPG ou WEBP \xB7 m\xE1x. 5 MB por imagem</small>
+          </label>
+          <div
+            class="admin-gallery-preview"
+            *ngIf="galleryPreviews().length || existingGallery().length"
+          >
+            @for (preview of galleryPreviews(); track $index) {
+              <div class="admin-gallery-thumb">
+                <img [src]="preview" alt="Pr\xE9-visualiza\xE7\xE3o" />
+                <button
+                  type="button"
+                  class="admin-gallery-remove"
+                  (click)="removeGalleryPreview($index)"
+                >
+                  \xD7
+                </button>
+              </div>
+            }
+            @for (url of existingGallery(); track url) {
+              <div class="admin-gallery-thumb">
+                <img [src]="url" alt="Galeria existente" />
+                <button
+                  type="button"
+                  class="admin-gallery-remove"
+                  (click)="removeExistingGallery($index)"
+                  aria-label="Remover imagem da galeria"
+                >
+                  \xD7
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      </label>
+      @if (editingId && product()?.createdAt) {
+        <p class="admin-meta">
+          <span
+            >Criado em:
+            {{ product()!.createdAt | date: "dd/MM/yyyy HH:mm" }}</span
+          >
+          @if (product()!.updatedAt) {
+            <span
+              >\xDAltima actualiza\xE7\xE3o:
+              {{ product()!.updatedAt | date: "dd/MM/yyyy HH:mm" }}</span
+            >
+          }
+        </p>
+      }
+      <div class="admin-form-actions wide">
+        <button type="submit" class="admin-primary" [disabled]="loading()">
+          <i
+            class="fa-solid"
+            [class.fa-floppy-disk]="!loading()"
+            [class.fa-spinner]="loading()"
+            [class.fa-spin]="loading()"
+          ></i
+          >{{
+            loading()
+              ? "A guardar..."
+              : editingId
+                ? "Guardar altera\xE7\xF5es"
+                : "Criar produto"
+          }}
+        </button>
+      </div>
+    </form>
+  }
+</section>
+`, styles: ['/* src/app/features/admin/admin-page.component.scss */\n.admin-content {\n  padding: 40px clamp(20px, 4vw, 60px);\n  min-width: 0;\n  width: 100%;\n}\n.admin-topbar {\n  display: flex;\n  justify-content: space-between;\n  align-items: end;\n  gap: 20px;\n  margin-bottom: 30px;\n}\n.admin-topbar h1 {\n  font-family: "Bebas Neue", sans-serif;\n  font-size: clamp(42px, 5vw, 64px);\n  line-height: 0.9;\n  margin-top: 10px;\n}\n.admin-topbar p {\n  color: var(--muted);\n  font-size: 13px;\n}\n.admin-refresh {\n  border: 1px solid var(--border);\n  background: var(--surface);\n  color: var(--text);\n  padding: 10px 14px;\n  border-radius: 8px;\n  font-size: 11px;\n  font-weight: 700;\n}\n.admin-refresh:hover {\n  border-color: var(--accent);\n  color: var(--accent);\n}\n.admin-stats {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 14px;\n  margin-bottom: 28px;\n}\n.admin-stat {\n  background: var(--surface);\n  border: 1px solid var(--border);\n  border-radius: var(--r);\n  padding: 22px;\n}\n.admin-stat i {\n  color: var(--accent);\n  font-size: 18px;\n}\n.admin-stat strong {\n  display: block;\n  font-family: "Bebas Neue", sans-serif;\n  font-size: 42px;\n  margin-top: 12px;\n}\n.admin-stat span {\n  color: var(--muted);\n  font-size: 12px;\n}\n.admin-panel {\n  background: var(--surface);\n  border: 1px solid var(--border);\n  border-radius: var(--r);\n  overflow: hidden;\n}\n.admin-panel-head {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  gap: 15px;\n  padding: 20px 22px;\n  border-bottom: 1px solid var(--border);\n}\n.admin-panel-head h2 {\n  font-family: "Bebas Neue", sans-serif;\n  font-size: 28px;\n}\n.admin-link-button {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  padding: 8px 14px;\n  border-radius: 8px;\n  border: 1px solid var(--border);\n  background: var(--surface);\n  color: var(--text);\n  font-size: 12px;\n  font-weight: 700;\n  cursor: pointer;\n  text-decoration: none;\n}\n.admin-link-button:hover {\n  border-color: var(--accent);\n  color: var(--accent);\n}\n.admin-search {\n  height: 36px;\n  border: 1px solid var(--border);\n  background: var(--surface2);\n  color: var(--text);\n  border-radius: 7px;\n  padding: 0 10px;\n  font: inherit;\n  font-size: 12px;\n}\n.admin-table {\n  width: 100%;\n  border-collapse: collapse;\n}\n.admin-table th,\n.admin-table td {\n  text-align: left;\n  padding: 14px 18px;\n  border-bottom: 1px solid var(--border);\n  font-size: 12px;\n}\n.admin-table th {\n  color: var(--muted);\n  font-size: 10px;\n  letter-spacing: 0.1em;\n  text-transform: uppercase;\n}\n.admin-table td {\n  color: var(--text);\n}\n.admin-product-cell {\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  font-weight: 700;\n}\n.admin-product-cell img {\n  width: 40px;\n  height: 40px;\n  object-fit: cover;\n  border-radius: 6px;\n  background: var(--surface2);\n}\n.admin-badge {\n  padding: 4px 7px;\n  border-radius: 4px;\n  background: var(--accent-lt);\n  color: var(--accent);\n  font-size: 9px;\n  font-weight: 800;\n  text-transform: uppercase;\n}\n.admin-row-actions {\n  display: flex;\n  gap: 6px;\n}\n.admin-row-actions button {\n  width: 30px;\n  height: 30px;\n  border: 1px solid var(--border);\n  border-radius: 6px;\n  color: var(--muted);\n  background: none;\n}\n.admin-row-actions button:hover {\n  color: var(--accent);\n  border-color: var(--accent);\n}\n.admin-row-actions button.delete:hover {\n  color: var(--danger);\n  border-color: var(--danger);\n}\n.admin-row-actions a {\n  width: 30px;\n  height: 30px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border: 1px solid var(--border);\n  border-radius: 6px;\n  color: var(--muted);\n  text-decoration: none;\n}\n.admin-row-actions a:hover {\n  color: var(--accent);\n  border-color: var(--accent);\n}\n.category-actions {\n  margin-top: 16px;\n}\n.admin-panel-actions {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.admin-results-count {\n  font-size: 11px;\n  color: var(--muted);\n  font-weight: 700;\n  text-transform: uppercase;\n  letter-spacing: 0.08em;\n}\n.admin-empty {\n  text-align: center;\n  padding: 45px;\n  color: var(--muted);\n}\n.admin-empty i {\n  display: block;\n  color: var(--accent);\n  font-size: 30px;\n  margin-bottom: 10px;\n}\n.admin-product-cards {\n  display: none;\n  gap: 12px;\n}\n.admin-product-card {\n  border: 1px solid var(--border);\n  border-radius: 9px;\n  padding: 14px;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 12px;\n}\n.admin-product-card-head {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n  flex: 1;\n  min-width: 0;\n}\n.admin-product-card img {\n  width: 44px;\n  height: 44px;\n  object-fit: cover;\n  border-radius: 6px;\n  background: var(--surface2);\n  flex-shrink: 0;\n}\n.admin-product-card strong {\n  display: block;\n  font-size: 12px;\n  margin-bottom: 2px;\n}\n.admin-product-card span {\n  display: block;\n  color: var(--muted);\n  font-size: 11px;\n}\n.admin-form-page {\n  max-width: 900px;\n  border: 1px solid var(--border);\n  border-radius: var(--r);\n  background: var(--surface);\n  margin: 0 !important;\n}\n.admin-secondary {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  border: 1px solid var(--border);\n  border-radius: 7px;\n  padding: 11px 15px;\n  color: var(--muted);\n  font-size: 11px;\n  font-weight: 800;\n  text-transform: uppercase;\n  text-decoration: none;\n}\n.admin-secondary:hover {\n  border-color: var(--accent);\n  color: var(--accent);\n}\n.admin-category-list {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 12px;\n  padding: 20px;\n}\n.admin-category-card {\n  border: 1px solid var(--border);\n  border-radius: 9px;\n  padding: 17px;\n}\n.admin-category-card i {\n  color: var(--accent);\n  font-size: 18px;\n}\n.admin-category-card strong {\n  display: block;\n  margin: 13px 0 4px;\n}\n.admin-category-card span {\n  display: block;\n  color: var(--muted);\n  font-size: 11px;\n}\n.admin-image-preview {\n  grid-column: span 1;\n  align-self: end;\n  width: 120px;\n  height: 120px;\n  border: 1px solid var(--border);\n  border-radius: 9px;\n  overflow: hidden;\n  background: var(--surface2);\n}\n.admin-image-preview img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.admin-gallery-preview {\n  display: flex;\n  gap: 10px;\n  flex-wrap: wrap;\n}\n.admin-gallery-preview img {\n  width: 86px;\n  height: 86px;\n  object-fit: cover;\n  border-radius: 7px;\n  border: 1px solid var(--border);\n  background: var(--surface2);\n}\n.icon-picker-trigger {\n  height: 42px;\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  padding: 0 12px;\n  border: 1px solid var(--border);\n  border-radius: 7px;\n  background: var(--surface2);\n  color: var(--text);\n  text-align: left;\n}\n.icon-picker-trigger span {\n  flex: 1;\n  font-size: 12px;\n}\n.icon-picker-trigger > i:first-child {\n  color: var(--accent);\n  font-size: 18px;\n}\n.icon-picker-overlay {\n  position: fixed;\n  inset: 0;\n  z-index: 5000;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 24px;\n  background: rgba(0, 0, 0, 0.52);\n  -webkit-backdrop-filter: blur(8px);\n  backdrop-filter: blur(8px);\n}\n.icon-picker-modal {\n  width: min(680px, 100%);\n  max-height: min(680px, 90vh);\n  overflow: auto;\n  background: var(--surface);\n  border: 1px solid var(--border);\n  border-radius: var(--r);\n  box-shadow: var(--sh-lg);\n  padding: 24px;\n}\n.icon-picker-modal header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  margin-bottom: 22px;\n}\n.icon-picker-modal h2 {\n  font-family: "Bebas Neue", sans-serif;\n  font-size: 34px;\n  margin-top: 7px;\n}\n.icon-picker-modal header button {\n  width: 34px;\n  height: 34px;\n  border-radius: 50%;\n  background: var(--surface2);\n  color: var(--muted);\n}\n.icon-picker-grid {\n  display: grid;\n  grid-template-columns: repeat(5, 1fr);\n  gap: 8px;\n}\n.icon-picker-grid button {\n  display: grid;\n  gap: 9px;\n  justify-items: center;\n  padding: 15px 8px;\n  border: 1px solid var(--border);\n  border-radius: 8px;\n  background: var(--surface2);\n  color: var(--muted);\n  font-size: 10px;\n}\n.icon-picker-grid button i {\n  font-size: 22px;\n  color: var(--accent);\n}\n.icon-picker-grid button:hover,\n.icon-picker-grid button.selected {\n  border-color: var(--accent);\n  background: var(--accent-lt);\n  color: var(--text);\n}\n.admin-error {\n  padding: 14px 18px;\n  color: var(--danger);\n  background: rgba(224, 85, 85, 0.08);\n  font-size: 12px;\n}\n.admin-success {\n  padding: 14px 18px;\n  color: #4caf50;\n  background: rgba(76, 175, 80, 0.08);\n  font-size: 12px;\n  margin-top: 12px;\n}\n.admin-primary {\n  display: inline-flex;\n  align-items: center;\n  gap: 7px;\n  border: none;\n  border-radius: 8px;\n  padding: 11px 17px;\n  background: var(--accent);\n  color: #fff;\n  font-size: 12px;\n  font-weight: 800;\n  text-decoration: none;\n}\n.admin-primary:hover {\n  background: var(--text);\n  color: var(--bg);\n}\n.admin-primary:disabled {\n  opacity: 0.55;\n  cursor: wait;\n}\n.admin-form-actions {\n  display: flex;\n  justify-content: flex-end;\n  gap: 10px;\n  margin-top: 22px;\n}\n.admin-form-actions.wide {\n  justify-content: stretch;\n}\n.admin-form-actions .admin-primary {\n  flex: 1;\n  justify-content: center;\n}\n.admin-table-wrap {\n  overflow-x: auto;\n}\n@media (max-width: 850px) {\n  .admin-content {\n    padding: 28px 18px;\n  }\n  .admin-stats,\n  .admin-category-list {\n    grid-template-columns: 1fr;\n  }\n  .admin-panel {\n    overflow-x: auto;\n  }\n  .admin-table {\n    min-width: 650px;\n  }\n  .admin-topbar {\n    align-items: flex-start;\n    flex-direction: column;\n  }\n  .icon-picker-grid {\n    grid-template-columns: repeat(4, 1fr);\n  }\n  .admin-form-page {\n    margin: 0 !important;\n  }\n}\n.admin-feature-input {\n  display: flex;\n  gap: 8px;\n  margin-top: 8px;\n}\n.admin-feature-input input {\n  flex: 1;\n  height: 42px;\n  border: 1px solid var(--border);\n  border-radius: 8px;\n  background: var(--surface);\n  color: var(--text);\n  padding: 0 12px;\n  font: inherit;\n}\n.admin-feature-list {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 8px;\n  margin-top: 10px;\n}\n.feat-chip {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  padding: 6px 10px;\n  background: var(--accent-lt);\n  color: var(--accent);\n  border-radius: 6px;\n  font-size: 11px;\n  font-weight: 700;\n}\n.feat-chip button {\n  background: none;\n  border: none;\n  color: inherit;\n  font-size: 14px;\n  cursor: pointer;\n  line-height: 1;\n}\n.admin-gallery-zone {\n  margin-top: 8px;\n}\n.admin-dropzone {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 8px;\n  padding: 22px;\n  border: 2px dashed var(--border);\n  border-radius: 10px;\n  background: var(--surface2);\n  color: var(--muted);\n  cursor: pointer;\n  text-align: center;\n  transition: all 0.2s;\n}\n.admin-dropzone:hover {\n  border-color: var(--accent);\n  color: var(--text);\n}\n.admin-dropzone input {\n  display: none;\n}\n.admin-dropzone i {\n  font-size: 22px;\n  color: var(--accent);\n}\n.admin-dropzone span {\n  font-size: 12px;\n  font-weight: 700;\n}\n.admin-dropzone small {\n  font-size: 11px;\n  color: var(--muted);\n}\n.admin-gallery-preview {\n  display: flex;\n  gap: 10px;\n  flex-wrap: wrap;\n  margin-top: 12px;\n}\n.admin-gallery-thumb {\n  position: relative;\n  width: 86px;\n  height: 86px;\n  border-radius: 7px;\n  border: 1px solid var(--border);\n  background: var(--surface2);\n  overflow: hidden;\n}\n.admin-gallery-thumb img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.admin-gallery-remove {\n  position: absolute;\n  top: 4px;\n  right: 4px;\n  width: 20px;\n  height: 20px;\n  border-radius: 50%;\n  border: 1px solid var(--border);\n  background: var(--surface);\n  color: var(--danger);\n  font-size: 12px;\n  font-weight: 700;\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.admin-meta {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 10px;\n  font-size: 11px;\n  color: var(--muted);\n  margin-top: 12px;\n}\n.admin-products-page {\n  padding: 40px clamp(28px, 5vw, 80px);\n}\n.skel-line {\n  height: 12px;\n  border-radius: 6px;\n  background:\n    linear-gradient(\n      90deg,\n      var(--surface2) 25%,\n      var(--surface3) 50%,\n      var(--surface2) 75%);\n  background-size: 200% 100%;\n  animation: shimmer 1.5s infinite;\n}\n.skel-short {\n  width: 60%;\n}\n.admin-form-loading {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 40px 20px;\n}\n.admin-form-loading-inner {\n  width: 100%;\n  max-width: 720px;\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.admin-field-error {\n  color: var(--danger);\n  font-size: 11px;\n  margin-top: 6px;\n  display: block;\n}\n@keyframes shimmer {\n  0% {\n    background-position: 200% 0;\n  }\n  100% {\n    background-position: -200% 0;\n  }\n}\n@media (max-width: 850px) {\n  .admin-table-wrap {\n    overflow-x: visible;\n  }\n  .admin-table {\n    display: none;\n  }\n  .admin-product-cards {\n    display: grid;\n  }\n  .admin-empty {\n    display: block;\n  }\n}\n/*# sourceMappingURL=admin-page.component.css.map */\n'] }]
   }], null, null);
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(AdminProductFormComponent, { className: "AdminProductFormComponent", filePath: "app/features/admin/admin-product-form.component.ts", lineNumber: 23 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(AdminProductFormComponent, { className: "AdminProductFormComponent", filePath: "app/features/admin/admin-product-form.component.ts", lineNumber: 25 });
 })();
 
 // src/app/features/admin/admin-product-detail/admin-product-detail.component.ts
