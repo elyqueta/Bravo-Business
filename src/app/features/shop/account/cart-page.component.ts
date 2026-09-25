@@ -11,6 +11,9 @@ import { StoreService } from "../../../core/store.service";
 })
 export class CartPageComponent {
   readonly store = inject(StoreService);
+  clearCart(): void {
+    this.store.clearCart();
+  }
   checkout(): void {
     const lines = this.store
       .cart()

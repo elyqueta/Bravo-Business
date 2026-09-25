@@ -49,6 +49,7 @@ export const routes: Routes = [
     data: {
       title: "Sobre Nós",
       text: "Conhece a história e a visão da Bravo Business.",
+      page: "about",
     },
   },
   {
@@ -57,6 +58,7 @@ export const routes: Routes = [
     data: {
       title: "Política de Trocas",
       text: "Trocas simples e transparentes até 7 dias após a compra.",
+      page: "exchanges",
     },
   },
   {
@@ -65,6 +67,7 @@ export const routes: Routes = [
     data: {
       title: "Privacidade",
       text: "A tua privacidade é importante para nós.",
+      page: "privacy",
     },
   },
   {
@@ -73,6 +76,7 @@ export const routes: Routes = [
     data: {
       title: "Termos & Condições",
       text: "Consulta as condições de utilização da loja.",
+      page: "terms",
     },
   },
   { path: "**", component: NotFoundComponent },

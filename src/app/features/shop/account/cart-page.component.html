@@ -13,6 +13,15 @@
     <a routerLink="/loja/produtos" class="btn-prim">Explorar produtos</a>
   </div>
   <div class="account-list" *ngIf="store.cart().length">
+    <div class="account-list-head">
+      <span
+        >{{ store.cart().length }}
+        {{ store.cart().length === 1 ? "produto" : "produtos" }}</span
+      >
+      <button class="btn-clear" type="button" (click)="clearCart()">
+        <i class="fa-solid fa-trash-can"></i> Limpar carrinho
+      </button>
+    </div>
     <div class="ditem" *ngFor="let item of store.cart()">
       <div class="ditem-img"><img [src]="item.img" [alt]="item.name" /></div>
       <div class="ditem-info">
@@ -26,6 +35,13 @@
             +
           </button>
         </div>
+        <button
+          class="btn-rm"
+          type="button"
+          (click)="store.removeCart(item.id)"
+        >
+          <i class="fa-solid fa-trash-can"></i> Remover
+        </button>
       </div>
       <strong class="ditem-price">{{
         store.formatPrice(item.price * item.qty)

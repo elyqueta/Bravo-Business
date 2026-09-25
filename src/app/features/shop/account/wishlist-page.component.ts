@@ -19,4 +19,10 @@ export class WishlistPageComponent {
       .map((id) => this.store.products.find((product) => product.id === id))
       .filter((product) => !!product);
   }
+  remove(id: string): void {
+    this.store.removeWish(id);
+  }
+  clear(): void {
+    this.store.clearWishlist();
+  }
 }

@@ -222,6 +222,15 @@ export class StoreService {
     this.cart.set(items);
     this.persistCart(items);
   }
+  removeCart(id: string): void {
+    const items = this.cart().filter((item) => item.id !== id);
+    this.cart.set(items);
+    this.persistCart(items);
+  }
+  clearCart(): void {
+    this.cart.set([]);
+    this.persistCart([]);
+  }
   toggleWish(product: Product): void {
     const ids = this.wishlist();
     const updatedIds = ids.includes(product.id)
@@ -229,6 +238,15 @@ export class StoreService {
       : [...ids, product.id];
     this.wishlist.set(updatedIds);
     this.persistWishlist(updatedIds);
+  }
+  removeWish(id: string): void {
+    const ids = this.wishlist().filter((itemId) => itemId !== id);
+    this.wishlist.set(ids);
+    this.persistWishlist(ids);
+  }
+  clearWishlist(): void {
+    this.wishlist.set([]);
+    this.persistWishlist([]);
   }
 
   private restoreCart(): void {
