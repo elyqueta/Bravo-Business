@@ -1,0 +1,23 @@
+.catalog-page {
+  width: min(100%, 1440px);
+  margin: 0 auto;
+  padding: clamp(32px, 5vw, 64px) clamp(18px, 5vw, 72px) 88px;
+}
+
+.pgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+@media (max-width: 520px) {
+  .catalog-page {
+    padding: 28px 18px 64px;
+  }
+
+  .pgrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 11px;
+  }
+}

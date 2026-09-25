@@ -9,6 +9,7 @@ import { StoreService } from "../../../core/store.service";
   standalone: true,
   imports: [CommonModule, RouterLink, ProductCardComponent],
   templateUrl: "./wishlist-page.component.html",
+  styleUrls: ["./wishlist-page.component.scss"],
 })
 export class WishlistPageComponent {
   readonly store = inject(StoreService);
