@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/shared/skeleton/skeleton-row.component.scss"],
+  "sourcesContent": [".skel-row td {\n  padding: 14px 18px;\n  border-bottom: 1px solid var(--border);\n}\n\n.skel-line {\n  height: 12px;\n  border-radius: 6px;\n  background: linear-gradient(90deg, var(--surface2) 25%, var(--surface3) 50%, var(--surface2) 75%);\n  background-size: 200% 100%;\n  animation: shimmer 1.5s infinite;\n}\n\n.skel-short {\n  width: 60%;\n}\n\n.skel-price {\n  width: 45%;\n}\n\n@keyframes shimmer {\n  0% {\n    background-position: 200% 0;\n  }\n  100% {\n    background-position: -200% 0;\n  }\n}\n"],
+  "mappings": ";AAAA,CAAA,SAAA;AACE,WAAA,KAAA;AACA,iBAAA,IAAA,MAAA,IAAA;;AAGF,CAAA;AACE,UAAA;AACA,iBAAA;AACA;IAAA;MAAA,KAAA;MAAA,IAAA,YAAA,GAAA;MAAA,IAAA,YAAA,GAAA;MAAA,IAAA,YAAA;AACA,mBAAA,KAAA;AACA,aAAA,QAAA,KAAA;;AAGF,CAAA;AACE,SAAA;;AAGF,CAAA;AACE,SAAA;;AAGF,WAXE;AAYA;AACE,yBAAA,KAAA;;AAEF;AACE,yBAAA,MAAA;;;",
+  "names": []
+}

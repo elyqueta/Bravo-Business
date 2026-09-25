@@ -30,14 +30,16 @@ export interface ProductApi {
 export function normalizeStringArray(
   value: string[] | string | null | undefined,
 ): string[] | null | undefined {
-  if (Array.isArray(value)) return value.filter(Boolean);
+  const clean = (item: unknown) => typeof item === "string" ? item.trim() : "";
+  if (Array.isArray(value))
+    return value.map(clean).filter((item): item is string => item.length > 0);
   if (value === null || value === undefined) return value;
   if (value === "") return [];
   try {
     const parsed: unknown = JSON.parse(value);
     return Array.isArray(parsed)
-      ? parsed.filter(
-          (item): item is string => typeof item === "string" && !!item,
+      ? parsed.map(clean).filter(
+          (item): item is string => item.length > 0,
         )
       : [];
   } catch {

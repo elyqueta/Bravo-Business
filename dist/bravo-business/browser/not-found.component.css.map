@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/features/info/not-found/not-found.component.scss"],
+  "sourcesContent": [".not-found {\n  min-height: 100vh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 40px;\n  div {\n    text-align: center;\n    max-width: 420px;\n  }\n  h1 {\n    font-family: 'Bebas Neue', sans-serif;\n    font-size: clamp(72px, 14vw, 120px);\n    line-height: 1;\n    letter-spacing: 0.04em;\n    margin: 10px 0 12px;\n  }\n  p {\n    color: var(--muted);\n    font-size: 13px;\n    line-height: 1.6;\n    margin: 0 0 18px;\n  }\n  a {\n    display: inline-flex;\n    align-items: center;\n    gap: 8px;\n    padding: 12px 18px;\n    border-radius: 8px;\n    background: var(--accent);\n    color: #fff;\n    font-size: 12px;\n    font-weight: 800;\n    text-decoration: none;\n  }\n  a:hover {\n    background: var(--text);\n    color: var(--bg);\n  }\n}\n"],
+  "mappings": ";AAAA,CAAA;AACE,cAAA;AACA,WAAA;AACA,eAAA;AACA,mBAAA;AACA,WAAA;;AACA,CANF,UAME;AACE,cAAA;AACA,aAAA;;AAEF,CAVF,UAUE;AACE,eAAA,YAAA,EAAA;AACA,aAAA,MAAA,IAAA,EAAA,IAAA,EAAA;AACA,eAAA;AACA,kBAAA;AACA,UAAA,KAAA,EAAA;;AAEF,CAjBF,UAiBE;AACE,SAAA,IAAA;AACA,aAAA;AACA,eAAA;AACA,UAAA,EAAA,EAAA;;AAEF,CAvBF,UAuBE;AACE,WAAA;AACA,eAAA;AACA,OAAA;AACA,WAAA,KAAA;AACA,iBAAA;AACA,cAAA,IAAA;AACA,SAAA;AACA,aAAA;AACA,eAAA;AACA,mBAAA;;AAEF,CAnCF,UAmCE,CAAA;AACE,cAAA,IAAA;AACA,SAAA,IAAA;;",
+  "names": []
+}

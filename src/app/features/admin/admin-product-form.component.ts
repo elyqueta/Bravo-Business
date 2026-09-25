@@ -55,7 +55,7 @@ export class AdminProductFormComponent implements OnInit {
     categorySlug: ["", Validators.required],
     name: ["", [Validators.required, Validators.maxLength(200)]],
     description: [""],
-    price: ["", Validators.required],
+    price: [this.money.format(0), Validators.required],
     oldPrice: [""],
     badge: ["" as ProductBadge | ""],
     gallery: [""],
@@ -96,7 +96,7 @@ export class AdminProductFormComponent implements OnInit {
               badge: product.badge || "",
               gallery: galleryText,
             });
-            this.features.set(product.features || []);
+            this.features.set(this.sanitizeFeatures(product.features || []));
             this.existingGallery.set(product.gallery || []);
             this.initialState = {
               categorySlug: product.categorySlug,
@@ -109,7 +109,7 @@ export class AdminProductFormComponent implements OnInit {
                   : "",
               badge: product.badge || "",
               gallery: galleryText,
-              features: product.features ? [...product.features] : [],
+              features: this.sanitizeFeatures(product.features || []),
               imageFile: false,
               galleryFiles: false,
             };
@@ -141,6 +141,9 @@ export class AdminProductFormComponent implements OnInit {
   }
   removeFeature(index: number): void {
     this.features.update((items) => items.filter((_, i) => i !== index));
+  }
+  private sanitizeFeatures(features: string[]): string[] {
+    return [...new Set(features.map((f) => f.trim()).filter((f) => f.length > 0))];
   }
   onImageSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -211,12 +214,8 @@ export class AdminProductFormComponent implements OnInit {
       payload.append("oldPrice", String(oldPrice));
     }
     if (value.badge) payload.append("badge", value.badge);
-    const features = this.features();
-    if (features.length) {
-      payload.append("features", JSON.stringify(features));
-    } else {
-      payload.append("features", "[]");
-    }
+    const features = this.sanitizeFeatures(this.features());
+    features.forEach((feature) => payload.append("features[]", feature));
     const gallery = this.existingGallery();
     payload.append("galleryUrls", JSON.stringify(gallery));
     if (this.imageFile)
