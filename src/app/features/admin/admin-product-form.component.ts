@@ -188,17 +188,3 @@ export class AdminProductFormComponent implements OnInit {
     });
   }
 }
-
-function moneyValidator(moneyService: MoneyService): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const value = control.value;
-    if (value === null || value === undefined || String(value).trim() === "") {
-      return null;
-    }
-    const parsed = moneyService.parse(value);
-    if (parsed === null) {
-      return { money: true };
-    }
-    return null;
-  };
-}

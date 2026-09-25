@@ -35,18 +35,9 @@
             {{ category.label }}
           </option>
         </select></label
+      ><label>Preço<input type="text" inputmode="decimal" formControlName="price" /></label
       ><label
-        >Preço<input type="text" inputmode="decimal" formControlName="price" />
-        @if (form.controls.price.touched && form.controls.price.errors && form.controls.price.errors['money']) {
-          <small class="admin-field-error">Introduz um preço válido, por exemplo 1234,50.</small>
-        }
-      </label
-      ><label
-        >Preço anterior<input type="text" inputmode="decimal" formControlName="oldPrice" />
-        @if (form.controls.oldPrice.touched && form.controls.oldPrice.errors && form.controls.oldPrice.errors['money']) {
-          <small class="admin-field-error">Introduz um preço válido, por exemplo 1234,50.</small>
-        }
-      </label
+        >Preço anterior<input type="text" inputmode="decimal" formControlName="oldPrice" /></label
       ><label
         >Badge<select formControlName="badge">
           <option value="">Sem badge</option>
