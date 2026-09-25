@@ -17,10 +17,26 @@ export class MoneyService {
     if (value === null || value === undefined || value === "") {
       return null;
     }
-    const text = String(value).trim();
+    let text = String(value).trim();
     if (text === "") return null;
-    const normalized = text.replace(/\./g, "").replace(",", ".");
-    const num = Number(normalized);
+
+    text = text.replace(/\s/g, "");
+
+    const hasComma = text.includes(",");
+    const hasDot = text.includes(".");
+
+    if (hasComma && hasDot) {
+      text = text.replace(/\./g, "").replace(",", ".");
+    } else if (hasComma && !hasDot) {
+      text = text.replace(",", ".");
+    } else if (!hasComma && hasDot) {
+      const dotCount = (text.match(/\./g) || []).length;
+      if (dotCount > 1) {
+        text = text.replace(/\./g, "");
+      }
+    }
+
+    const num = Number(text);
     return Number.isNaN(num) ? null : num;
   }
   private parseNumber(value: string): number | null {

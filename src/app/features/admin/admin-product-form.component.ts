@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnInit, inject, signal } from "@angular/core";
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { AdminApiService } from "../../core/admin-api.service";
 import { CategoryApi, ProductApi, ProductBadge } from "../../core/api.models";
 import { MoneyService } from "../../core/money.service";
@@ -10,7 +10,7 @@ import { ToastService } from "../../shared/toast/toast.service";
 @Component({
   selector: "app-admin-product-form",
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: "./admin-product-form.component.html",
   styleUrls: ["./admin-page.component.scss"],
 })
@@ -36,7 +36,7 @@ export class AdminProductFormComponent implements OnInit {
     categorySlug: ["", Validators.required],
     name: ["", [Validators.required, Validators.maxLength(200)]],
     description: [""],
-    price: ["", [Validators.required, Validators.min(0)]],
+    price: ["", Validators.required],
     oldPrice: [""],
     badge: ["" as ProductBadge | ""],
     gallery: [""],
@@ -56,6 +56,7 @@ export class AdminProductFormComponent implements OnInit {
       error: () => this.toast.error("Não foi possível carregar categorias."),
     });
     if (id) {
+      this.loading.set(true);
       this.api.productById(id).subscribe({
         next: (response) => {
           const product = response.data;
@@ -72,8 +73,12 @@ export class AdminProductFormComponent implements OnInit {
             });
             this.features.set(product.features || []);
           }
+          this.loading.set(false);
         },
-        error: () => this.toast.error("Não foi possível carregar o produto."),
+        error: () => {
+          this.toast.error("Não foi possível carregar o produto.");
+          this.loading.set(false);
+        },
       });
     }
   }
@@ -182,4 +187,18 @@ export class AdminProductFormComponent implements OnInit {
       },
     });
   }
+}
+
+function moneyValidator(moneyService: MoneyService): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (value === null || value === undefined || String(value).trim() === "") {
+      return null;
+    }
+    const parsed = moneyService.parse(value);
+    if (parsed === null) {
+      return { money: true };
+    }
+    return null;
+  };
 }
