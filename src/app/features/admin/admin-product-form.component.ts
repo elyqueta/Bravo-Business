@@ -169,10 +169,11 @@ export class AdminProductFormComponent implements OnInit {
       input.value = "";
       return;
     }
-    this.galleryFiles = files;
+    this.galleryFiles = [...this.galleryFiles, ...files];
     const urls = files.map((file) => URL.createObjectURL(file));
     urls.forEach((url) => this.trackObjectUrl(url));
-    this.galleryPreviews.set(urls);
+    this.galleryPreviews.update((items) => [...items, ...urls]);
+    input.value = "";
   }
   removeGalleryPreview(index: number): void {
     this.galleryPreviews.update((items) => items.filter((_, i) => i !== index));
