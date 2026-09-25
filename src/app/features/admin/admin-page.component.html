@@ -5,30 +5,39 @@
         <h1>Visão geral</h1>
         <p>Gere o catálogo conectado à tua API.</p>
       </div>
-      <button class="admin-refresh" (click)="loadAll()">
+      <button class="admin-refresh" (click)="loadAll()" [disabled]="productsLoading() || categoriesLoading()">
         <i class="fa-solid fa-arrows-rotate"></i> Actualizar
       </button>
     </header>
     <section class="admin-stats">
-      <article class="admin-stat">
-        <i class="fa-solid fa-boxes-stacked"></i
-        ><strong>{{ products().length }}</strong
-        ><span>Produtos carregados</span>
-      </article>
-      <article class="admin-stat">
-        <i class="fa-solid fa-layer-group"></i
-        ><strong>{{ categories().length }}</strong
-        ><span>Categorias activas</span>
-      </article>
-      <article class="admin-stat">
-        <i class="fa-solid fa-chart-simple"></i
-        ><strong>{{
-          categories().length
-            ? (products().length / categories().length).toFixed(0)
-            : 0
-        }}</strong
-        ><span>Média por categoria</span>
-      </article>
+      @if (!hasLoadedOnce() && productsLoading()) {
+        @for (_ of [1,2,3]; track $index) {
+          <article class="admin-stat">
+            <div class="skel-line skel-short"></div>
+            <div class="skel-line" style="margin-top:10px"></div>
+          </article>
+        }
+      } @else {
+        <article class="admin-stat">
+          <i class="fa-solid fa-boxes-stacked"></i
+          ><strong>{{ products().length }}</strong
+          ><span>Produtos carregados</span>
+        </article>
+        <article class="admin-stat">
+          <i class="fa-solid fa-layer-group"></i
+          ><strong>{{ categories().length }}</strong
+          ><span>Categorias activas</span>
+        </article>
+        <article class="admin-stat">
+          <i class="fa-solid fa-chart-simple"></i
+          ><strong>{{
+            categories().length
+              ? (products().length / categories().length).toFixed(0)
+              : 0
+          }}</strong
+          ><span>Média por categoria</span>
+        </article>
+      }
     </section>
     <section class="admin-panel">
       <div class="admin-panel-head">
@@ -37,15 +46,25 @@
           >Gerir produtos <i class="fa-solid fa-arrow-right"></i
         ></a>
       </div>
-      <div class="admin-category-list">
-        <article
-          class="admin-category-card"
-          *ngFor="let category of categories()"
-        >
-          <i class="fa-solid" [ngClass]="category.icon || 'fa-box'"></i
-          ><strong>{{ category.label }}</strong
-          ><span>Prefixo {{ category.prefix }} · {{ category.slug }}</span>
-        </article>
-      </div>
+      @if (!hasLoadedOnce() && categoriesLoading()) {
+        <div class="admin-category-list">
+          <app-skeleton-card [count]="6"></app-skeleton-card>
+        </div>
+      } @else if (categoriesError()) {
+        <div class="admin-empty">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <p>{{ categoriesError() }}</p>
+        </div>
+      } @else {
+        <div class="admin-category-list">
+          @for (category of categories(); track category.id) {
+            <article class="admin-category-card">
+              <i class="fa-solid" [ngClass]="category.icon || 'fa-box'"></i
+              ><strong>{{ category.label }}</strong
+              ><span>Prefixo {{ category.prefix }} · {{ category.slug }}</span>
+            </article>
+          }
+        </div>
+      }
     </section>
   </section>

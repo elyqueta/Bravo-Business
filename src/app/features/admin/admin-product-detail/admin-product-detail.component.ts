@@ -3,13 +3,14 @@ import { Component, OnInit, inject, signal } from "@angular/core";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { AdminApiService } from "../../../core/admin-api.service";
 import { ProductApi } from "../../../core/api.models";
+import { MoneyPipe } from "../../../shared/pipes/money.pipe";
 import { ToastService } from "../../../shared/toast/toast.service";
 import { ConfirmDialogService } from "../../../shared/confirm-dialog/confirm-dialog.service";
 
 @Component({
   selector: "app-admin-product-detail",
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, MoneyPipe],
   templateUrl: "./admin-product-detail.component.html",
   styleUrls: ["./admin-product-detail.component.scss"]
 })
@@ -32,15 +33,10 @@ export class AdminProductDetailComponent implements OnInit {
   load(): void {
     if (!this.id) return;
     this.loading.set(true);
-    this.api.products("").subscribe({
-      next: (response: { data: ProductApi[] }) => {
-        const found = response.data.find((item) => item.id === this.id) ?? null;
-        this.product.set(found);
+    this.api.productById(this.id).subscribe({
+      next: (response) => {
+        this.product.set(response.data);
         this.loading.set(false);
-        if (!found) {
-          this.toast.error("Produto não encontrado.");
-          void this.router.navigateByUrl("/admin/produtos");
-        }
       },
       error: () => {
         this.toast.error("Não foi possível carregar o produto.");

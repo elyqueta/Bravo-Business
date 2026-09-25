@@ -21,9 +21,9 @@
             {{ category.label }}
           </option>
         </select></label
-      ><label>Preço<input type="number" formControlName="price" /></label
+      ><label>Preço<input type="text" inputmode="decimal" formControlName="price" /></label
       ><label
-        >Preço anterior<input type="number" formControlName="oldPrice" /></label
+        >Preço anterior<input type="text" inputmode="decimal" formControlName="oldPrice" /></label
       ><label
         >Badge<select formControlName="badge">
           <option value="">Sem badge</option>
@@ -60,8 +60,7 @@
         <div class="admin-feature-input">
           <input
             type="text"
-            [ngModel]="featureText()"
-            (ngModelChange)="featureText.set($event)"
+            [formControl]="featureCtrl"
             placeholder="Adicionar detalhe..."
             (keydown.enter)="$event.preventDefault(); addFeature()"
           />

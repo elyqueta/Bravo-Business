@@ -5,13 +5,14 @@ import { RouterLink } from "@angular/router";
 import { AdminApiService } from "../../core/admin-api.service";
 import { ProductApi } from "../../core/api.models";
 import { ConfirmDialogService } from "../../shared/confirm-dialog/confirm-dialog.service";
+import { MoneyPipe } from "../../shared/pipes/money.pipe";
 import { ToastService } from "../../shared/toast/toast.service";
 import { SkeletonRowComponent } from "../../shared/skeleton/skeleton-row.component";
 
 @Component({
   selector: "app-admin-products",
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, SkeletonRowComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, SkeletonRowComponent, MoneyPipe],
   templateUrl: "./admin-products.component.html",
   styleUrls: ["./admin-page.component.scss"],
 })

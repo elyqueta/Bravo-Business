@@ -1,6 +1,6 @@
 <span class="price" [class.has-old]="oldPrice()">
   @if (oldPrice()) {
-    <span class="old">{{ oldPrice() | number }} Kz</span>
+    <span class="old">{{ oldPrice() | money }} Kz</span>
   }
-  <strong>{{ price() | number }} Kz</strong>
+  <strong>{{ price() | money }} Kz</strong>
 </span>

@@ -53,12 +53,12 @@
             </div>
             <div>
               <span>Preço</span>
-              <strong>{{ product()!.price | number }} Kz</strong>
+               <strong>{{ product()!.price | money }} Kz</strong>
             </div>
             @if (product()!.oldPrice) {
               <div>
                 <span>Preço anterior</span>
-                <strong class="old">{{ product()!.oldPrice | number }} Kz</strong>
+                 <strong class="old">{{ product()!.oldPrice | money }} Kz</strong>
               </div>
             }
           </div>

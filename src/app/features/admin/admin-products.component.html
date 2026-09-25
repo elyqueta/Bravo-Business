@@ -1,4 +1,4 @@
-  <section class="admin-content">
+  <section class="admin-content admin-products-page">
     <header class="admin-topbar">
       <div>
         <span class="eyebrow">Bravo Business · Catálogo</span>
@@ -37,7 +37,7 @@
           </thead>
           <tbody>
             @if (loading() && !products().length) {
-              <tr class="skel-row"><td colspan="5"><app-skeleton-row [count]="5"></app-skeleton-row></td></tr>
+              <app-skeleton-row [count]="5"></app-skeleton-row>
             } @else {
               <tr *ngFor="let product of products()">
                 <td>
@@ -48,7 +48,7 @@
                   </div>
                 </td>
                 <td>{{ product.categorySlug }}</td>
-                <td>{{ product.price | number }} Kz</td>
+                <td>{{ product.price | money }} Kz</td>
                 <td>
                   <span class="admin-badge" *ngIf="product.badge">{{
                     product.badge
@@ -83,7 +83,7 @@
           <img [src]="product.img" [alt]="product.name" />
           <div>
             <strong>{{ product.name }}</strong>
-            <span>{{ product.categorySlug }} · {{ product.price | number }} Kz</span>
+            <span>{{ product.categorySlug }} · {{ product.price | money }} Kz</span>
             <span class="admin-badge" *ngIf="product.badge">{{ product.badge }}</span>
           </div>
         </div>

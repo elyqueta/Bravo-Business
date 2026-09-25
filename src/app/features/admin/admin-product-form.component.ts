@@ -1,9 +1,10 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnInit, inject, signal } from "@angular/core";
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { AdminApiService } from "../../core/admin-api.service";
 import { CategoryApi, ProductApi, ProductBadge } from "../../core/api.models";
+import { MoneyService } from "../../core/money.service";
 import { ToastService } from "../../shared/toast/toast.service";
 
 @Component({
@@ -15,6 +16,7 @@ import { ToastService } from "../../shared/toast/toast.service";
 })
 export class AdminProductFormComponent implements OnInit {
   private readonly api = inject(AdminApiService);
+  private readonly money = inject(MoneyService);
   private readonly toast = inject(ToastService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
@@ -25,7 +27,7 @@ export class AdminProductFormComponent implements OnInit {
   readonly imagePreview = signal("");
   readonly galleryPreviews = signal<string[]>([]);
   readonly features = signal<string[]>([]);
-  readonly featureText = signal("");
+  featureCtrl = new FormControl("");
   editingId: string | null = null;
   imageFile: File | null = null;
   galleryFiles: File[] = [];
@@ -34,8 +36,8 @@ export class AdminProductFormComponent implements OnInit {
     categorySlug: ["", Validators.required],
     name: ["", [Validators.required, Validators.maxLength(200)]],
     description: [""],
-    price: [0, [Validators.required, Validators.min(0)]],
-    oldPrice: [0],
+    price: ["", [Validators.required, Validators.min(0)]],
+    oldPrice: [""],
     badge: ["" as ProductBadge | ""],
     gallery: [""],
   });
@@ -54,22 +56,21 @@ export class AdminProductFormComponent implements OnInit {
       error: () => this.toast.error("Não foi possível carregar categorias."),
     });
     if (id) {
-      this.api.products(id).subscribe({
+      this.api.productById(id).subscribe({
         next: (response) => {
-          this.product.set(
-            response.data.find((item) => item.id === id) ?? null
-          );
-          if (this.product()) {
+          const product = response.data;
+          this.product.set(product);
+          if (product) {
             this.form.patchValue({
-              categorySlug: this.product()!.categorySlug,
-              name: this.product()!.name,
-              description: this.product()!.description || "",
-              price: this.product()!.price,
-              oldPrice: this.product()!.oldPrice || 0,
-              badge: this.product()!.badge || "",
-              gallery: (this.product()!.gallery || []).join("\n"),
+              categorySlug: product.categorySlug,
+              name: product.name,
+              description: product.description || "",
+              price: this.money.format(product.price),
+              oldPrice: product.oldPrice !== null && product.oldPrice !== undefined ? this.money.format(product.oldPrice) : "",
+              badge: product.badge || "",
+              gallery: (product.gallery || []).join("\n"),
             });
-            this.features.set(this.product()!.features || []);
+            this.features.set(product.features || []);
           }
         },
         error: () => this.toast.error("Não foi possível carregar o produto."),
@@ -83,14 +84,14 @@ export class AdminProductFormComponent implements OnInit {
     this.objectUrls.push(url);
   }
   addFeature(): void {
-    const text = this.featureText().trim();
+    const text = this.featureCtrl.value?.trim();
     if (!text) return;
     if (this.features().includes(text)) {
       this.toast.error("Essa característica já foi adicionada.");
       return;
     }
     this.features.update((items) => [...items, text]);
-    this.featureText.set("");
+    this.featureCtrl.setValue("");
   }
   removeFeature(index: number): void {
     this.features.update((items) => items.filter((_, i) => i !== index));
@@ -139,20 +140,20 @@ export class AdminProductFormComponent implements OnInit {
       return;
     }
     const value = this.form.getRawValue();
+    const price = this.money.parse(value.price);
+    const oldPrice = this.money.parse(value.oldPrice);
+    if (price === null) {
+      this.toast.error("Introduz um preço válido.");
+      return;
+    }
     const payload = new FormData();
     payload.append("categorySlug", value.categorySlug);
     payload.append("name", value.name);
     payload.append("description", value.description);
-    const price =
-      typeof value.price === "number"
-        ? value.price
-        : Number(String(value.price).replace(",", "."));
-    const oldPrice =
-      typeof value.oldPrice === "number"
-        ? value.oldPrice
-        : Number(String(value.oldPrice).replace(",", "."));
-    payload.append("price", String(Number.isNaN(price) ? 0 : price));
-    payload.append("oldPrice", String(Number.isNaN(oldPrice) ? 0 : oldPrice));
+    payload.append("price", String(price));
+    if (oldPrice !== null) {
+      payload.append("oldPrice", String(oldPrice));
+    }
     if (value.badge) payload.append("badge", value.badge);
     this.features().forEach((feature) => payload.append("features[]", feature));
     const gallery = value.gallery

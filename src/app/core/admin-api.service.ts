@@ -23,6 +23,9 @@ export class AdminApiService {
       params,
     });
   }
+  productById(id: string): Observable<ApiResponse<ProductApi>> {
+    return this.http.get<ApiResponse<ProductApi>>(`${this.base}/products/${id}`);
+  }
   createProduct(
     input: CreateProductInput | FormData,
   ): Observable<ApiResponse<ProductApi>> {

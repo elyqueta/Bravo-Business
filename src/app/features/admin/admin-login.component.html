@@ -16,6 +16,12 @@
       <h2>Entrar no backoffice</h2>
       <p>Usa as credenciais de administrador para continuar.</p>
     </div>
+    @if (auth.isLoginLocked()) {
+      <div class="admin-form-error">
+        <i class="fa-solid fa-clock"></i>
+        <span>{{ auth.lockMessage() }}<br /><small>{{ formatLockTime(lockRemaining()) }}</small></span>
+      </div>
+    }
     <form [formGroup]="form" (ngSubmit)="submit()">
       <label
         >Email<input
@@ -34,7 +40,7 @@
         *ngIf="form.controls.password.touched && form.controls.password.invalid"
         >A password deve ter pelo menos 6 caracteres.</small
       >
-      <button class="admin-submit" [disabled]="loading()">
+      <button class="admin-submit" [disabled]="loading() || auth.isLoginLocked()">
         <i
           class="fa-solid"
           [class.fa-right-to-bracket]="!loading()"
