@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { Observable, catchError, tap, throwError } from "rxjs";
 import { environment } from "../../environments/environment";
 import { ApiResponse, AuthResult, UserApi } from "./api.models";
+import { RefreshService } from "./refresh.service";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
@@ -17,6 +18,7 @@ export class AuthService {
   constructor(
     private readonly http: HttpClient,
     private readonly router: Router,
+    private readonly refreshService: RefreshService,
   ) {}
   login(email: string, password: string): Observable<ApiResponse<AuthResult>> {
     if (this.isLoginLocked()) {
@@ -33,6 +35,7 @@ export class AuthService {
             this.userKey,
             JSON.stringify(response.data.user),
           );
+          this.refreshService.setRefreshToken(response.data.refreshToken);
           this.user.set(response.data.user);
           this.clearLoginAttempts();
         }),
@@ -44,6 +47,9 @@ export class AuthService {
           return throwError(() => error);
         }),
       );
+  }
+  refresh(): Observable<ApiResponse<{ accessToken: string; refreshToken: string }>> {
+    return this.refreshService.refresh();
   }
   isLoginLocked(): boolean {
     const lockUntil = Number(localStorage.getItem(this.lockUntilKey) || 0);
