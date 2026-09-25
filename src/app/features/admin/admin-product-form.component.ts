@@ -32,6 +32,18 @@ export class AdminProductFormComponent implements OnInit {
   imageFile: File | null = null;
   galleryFiles: File[] = [];
   private objectUrls: string[] = [];
+  private initialState: {
+    categorySlug: string;
+    name: string;
+    description: string;
+    price: string;
+    oldPrice: string;
+    badge: string;
+    gallery: string;
+    features: string[];
+    imageFile: boolean;
+    galleryFiles: boolean;
+  } | null = null;
   readonly form = this.formBuilder.nonNullable.group({
     categorySlug: ["", Validators.required],
     name: ["", [Validators.required, Validators.maxLength(200)]],
@@ -62,6 +74,7 @@ export class AdminProductFormComponent implements OnInit {
           const product = response.data;
           this.product.set(product);
           if (product) {
+            const galleryText = (product.gallery || []).join("\n");
             this.form.patchValue({
               categorySlug: product.categorySlug,
               name: product.name,
@@ -69,9 +82,21 @@ export class AdminProductFormComponent implements OnInit {
               price: this.money.format(product.price),
               oldPrice: product.oldPrice !== null && product.oldPrice !== undefined ? this.money.format(product.oldPrice) : "",
               badge: product.badge || "",
-              gallery: (product.gallery || []).join("\n"),
+              gallery: galleryText,
             });
             this.features.set(product.features || []);
+            this.initialState = {
+              categorySlug: product.categorySlug,
+              name: product.name,
+              description: product.description || "",
+              price: this.money.format(product.price),
+              oldPrice: product.oldPrice !== null && product.oldPrice !== undefined ? this.money.format(product.oldPrice) : "",
+              badge: product.badge || "",
+              gallery: galleryText,
+              features: product.features ? [...product.features] : [],
+              imageFile: false,
+              galleryFiles: false,
+            };
           }
           this.loading.set(false);
         },
@@ -140,6 +165,10 @@ export class AdminProductFormComponent implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
+    if (this.editingId && !this.hasChanges()) {
+      this.toast.info("Não foram detectadas alterações para guardar.");
+      return;
+    }
     if (!this.editingId && !this.imageFile) {
       this.toast.error("Selecciona uma imagem principal para o produto.");
       return;
@@ -169,7 +198,7 @@ export class AdminProductFormComponent implements OnInit {
     if (this.imageFile)
       payload.append("img", this.imageFile, this.imageFile.name);
     this.galleryFiles.forEach((file) =>
-      payload.append("gallery", file, file.name),
+      payload.append("gallery[]", file, file.name),
     );
     this.loading.set(true);
     const request = this.editingId
@@ -186,5 +215,32 @@ export class AdminProductFormComponent implements OnInit {
         this.loading.set(false);
       },
     });
+  }
+  private hasChanges(): boolean {
+    if (!this.initialState) return true;
+    const value = this.form.getRawValue();
+    if (value.categorySlug !== this.initialState.categorySlug) return true;
+    if (value.name !== this.initialState.name) return true;
+    if ((value.description || "") !== this.initialState.description) return true;
+    if (this.money.parse(value.price) !== this.money.parse(this.initialState.price)) return true;
+    if (this.money.parse(value.oldPrice) !== this.money.parse(this.initialState.oldPrice)) return true;
+    if ((value.badge || "") !== this.initialState.badge) return true;
+    const initialStateGallery = (this.initialState?.gallery || "")
+      .split("\n")
+      .map((item) => item.trim())
+      .filter(Boolean);
+    const currentGallery = value.gallery
+      .split("\n")
+      .map((item) => item.trim())
+      .filter(Boolean);
+    if (currentGallery.length !== initialStateGallery.length) return true;
+    if (currentGallery.some((url, index) => url !== initialStateGallery[index])) return true;
+    const initialStateFeatures = this.initialState?.features || [];
+    const currentFeatures = this.features();
+    if (currentFeatures.length !== initialStateFeatures.length) return true;
+    if (currentFeatures.some((feature, index) => feature !== initialStateFeatures[index])) return true;
+    if (this.imageFile) return true;
+    if (this.galleryFiles.length) return true;
+    return false;
   }
 }
