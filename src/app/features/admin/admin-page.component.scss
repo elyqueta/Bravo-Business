@@ -77,6 +77,24 @@
   font-family: "Bebas Neue", sans-serif;
   font-size: 28px;
 }
+.admin-link-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+.admin-link-button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
 .admin-search {
   height: 36px;
   border: 1px solid var(--border);
