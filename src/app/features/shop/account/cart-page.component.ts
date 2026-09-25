@@ -14,12 +14,15 @@ export class CartPageComponent {
   clearCart(): void {
     this.store.clearCart();
   }
+  private imageUrl(path: string): string {
+    return new URL(path, window.location.origin).href;
+  }
   checkout(): void {
     const lines = this.store
       .cart()
       .map(
         (item) =>
-          `• ${item.name} (${item.id}) x${item.qty} = ${this.store.formatPrice(item.price * item.qty)}`,
+          `• ${item.name} (${item.id}) x${item.qty} = ${this.store.formatPrice(item.price * item.qty)}\n  Imagem principal: ${this.imageUrl(item.img)}`,
       )
       .join("\n");
     this.store.openWhatsApp(
