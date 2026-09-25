@@ -1,6 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnInit, inject, signal } from "@angular/core";
-import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import {
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AdminApiService } from "../../core/admin-api.service";
 import { CategoryApi, ProductApi, ProductBadge } from "../../core/api.models";
@@ -62,7 +68,9 @@ export class AdminProductFormComponent implements OnInit {
       next: (response) => {
         this.categories.set(response.data);
         if (!this.editingId) {
-          this.form.patchValue({ categorySlug: this.categories()[0]?.slug || "" });
+          this.form.patchValue({
+            categorySlug: this.categories()[0]?.slug || "",
+          });
         }
       },
       error: () => this.toast.error("Não foi possível carregar categorias."),
@@ -80,7 +88,10 @@ export class AdminProductFormComponent implements OnInit {
               name: product.name,
               description: product.description || "",
               price: this.money.format(product.price),
-              oldPrice: product.oldPrice !== null && product.oldPrice !== undefined ? this.money.format(product.oldPrice) : "",
+              oldPrice:
+                product.oldPrice !== null && product.oldPrice !== undefined
+                  ? this.money.format(product.oldPrice)
+                  : "",
               badge: product.badge || "",
               gallery: galleryText,
             });
@@ -90,7 +101,10 @@ export class AdminProductFormComponent implements OnInit {
               name: product.name,
               description: product.description || "",
               price: this.money.format(product.price),
-              oldPrice: product.oldPrice !== null && product.oldPrice !== undefined ? this.money.format(product.oldPrice) : "",
+              oldPrice:
+                product.oldPrice !== null && product.oldPrice !== undefined
+                  ? this.money.format(product.oldPrice)
+                  : "",
               badge: product.badge || "",
               gallery: galleryText,
               features: product.features ? [...product.features] : [],
@@ -147,7 +161,9 @@ export class AdminProductFormComponent implements OnInit {
       (file) => !file.type.startsWith("image/") || file.size > 5 * 1024 * 1024,
     );
     if (invalid) {
-      this.toast.error("Todas as imagens devem ser válidas e ter no máximo 5 MB.");
+      this.toast.error(
+        "Todas as imagens devem ser válidas e ter no máximo 5 MB.",
+      );
       input.value = "";
       return;
     }
@@ -189,12 +205,13 @@ export class AdminProductFormComponent implements OnInit {
       payload.append("oldPrice", String(oldPrice));
     }
     if (value.badge) payload.append("badge", value.badge);
-    this.features().forEach((feature) => payload.append("features[]", feature));
+    const features = this.features();
+    payload.append("features", JSON.stringify(features));
     const gallery = value.gallery
       .split("\n")
       .map((item) => item.trim())
       .filter(Boolean);
-    gallery.forEach((url) => payload.append("gallery[]", url));
+    payload.append("galleryUrls", JSON.stringify(gallery));
     if (this.imageFile)
       payload.append("img", this.imageFile, this.imageFile.name);
     this.galleryFiles.forEach((file) =>
@@ -206,12 +223,28 @@ export class AdminProductFormComponent implements OnInit {
       : this.api.createProduct(payload);
     request.subscribe({
       next: () => {
-        this.toast.success(this.editingId ? "Produto actualizado." : "Produto criado.");
+        this.toast.success(
+          this.editingId ? "Produto actualizado." : "Produto criado.",
+        );
         void this.router.navigateByUrl("/admin/produtos");
       },
-      error: (response: { error?: { message?: string; details?: Array<{ field?: string; message?: string }> } }) => {
-        const details = response.error?.details?.map((detail) => `${detail.field || "campo"}: ${detail.message || "valor inválido"}`).join(" ");
-        this.toast.error(details || response.error?.message || "Não foi possível guardar o produto.");
+      error: (response: {
+        error?: {
+          message?: string;
+          details?: Array<{ field?: string; message?: string }>;
+        };
+      }) => {
+        const details = response.error?.details
+          ?.map(
+            (detail) =>
+              `${detail.field || "campo"}: ${detail.message || "valor inválido"}`,
+          )
+          .join(" ");
+        this.toast.error(
+          details ||
+            response.error?.message ||
+            "Não foi possível guardar o produto.",
+        );
         this.loading.set(false);
       },
     });
@@ -221,9 +254,18 @@ export class AdminProductFormComponent implements OnInit {
     const value = this.form.getRawValue();
     if (value.categorySlug !== this.initialState.categorySlug) return true;
     if (value.name !== this.initialState.name) return true;
-    if ((value.description || "") !== this.initialState.description) return true;
-    if (this.money.parse(value.price) !== this.money.parse(this.initialState.price)) return true;
-    if (this.money.parse(value.oldPrice) !== this.money.parse(this.initialState.oldPrice)) return true;
+    if ((value.description || "") !== this.initialState.description)
+      return true;
+    if (
+      this.money.parse(value.price) !==
+      this.money.parse(this.initialState.price)
+    )
+      return true;
+    if (
+      this.money.parse(value.oldPrice) !==
+      this.money.parse(this.initialState.oldPrice)
+    )
+      return true;
     if ((value.badge || "") !== this.initialState.badge) return true;
     const initialStateGallery = (this.initialState?.gallery || "")
       .split("\n")
@@ -234,11 +276,17 @@ export class AdminProductFormComponent implements OnInit {
       .map((item) => item.trim())
       .filter(Boolean);
     if (currentGallery.length !== initialStateGallery.length) return true;
-    if (currentGallery.some((url, index) => url !== initialStateGallery[index])) return true;
+    if (currentGallery.some((url, index) => url !== initialStateGallery[index]))
+      return true;
     const initialStateFeatures = this.initialState?.features || [];
     const currentFeatures = this.features();
     if (currentFeatures.length !== initialStateFeatures.length) return true;
-    if (currentFeatures.some((feature, index) => feature !== initialStateFeatures[index])) return true;
+    if (
+      currentFeatures.some(
+        (feature, index) => feature !== initialStateFeatures[index],
+      )
+    )
+      return true;
     if (this.imageFile) return true;
     if (this.galleryFiles.length) return true;
     return false;
