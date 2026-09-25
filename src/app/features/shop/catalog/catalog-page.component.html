@@ -50,7 +50,13 @@
     ></app-product-card>
   </div>
   <ng-template #empty>
-    @if (!store.catalogReady()) {
+    @if (store.catalogError()) {
+      <div class="empty-state">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <h2>Não foi possível carregar o catálogo</h2>
+        <p>{{ store.catalogError() }}</p>
+      </div>
+    } @else if (!store.catalogReady()) {
       <div class="pgrid">
         <app-skeleton-card [count]="8"></app-skeleton-card>
       </div>

@@ -100,7 +100,13 @@
       >Ver todos <i class="fa-solid fa-arrow-right"></i
     ></a>
   </div>
-  @if (store.catalogReady()) {
+  @if (store.catalogError()) {
+    <div class="empty-state">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <h2>Não foi possível carregar o catálogo</h2>
+      <p>{{ store.catalogError() }}</p>
+    </div>
+  } @else if (store.catalogReady()) {
     <div class="pgrid">
       <app-product-card
         *ngFor="let product of productsFor(category)"
