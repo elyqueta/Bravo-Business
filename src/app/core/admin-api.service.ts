@@ -10,7 +10,9 @@ import {
   CreateProductInput,
   ProductApi,
   ProductListResponse,
+  normalizeProduct,
 } from "./api.models";
+import { map } from "rxjs";
 
 @Injectable({ providedIn: "root" })
 export class AdminApiService {
@@ -19,12 +21,24 @@ export class AdminApiService {
   products(search = ""): Observable<ProductListResponse> {
     let params = new HttpParams().set("page", 1).set("limit", 100);
     if (search) params = params.set("search", search);
-    return this.http.get<ProductListResponse>(`${this.base}/products`, {
-      params,
-    });
+    return this.http
+      .get<ProductListResponse>(`${this.base}/products`, { params })
+      .pipe(
+        map((response) => ({
+          ...response,
+          data: response.data.map(normalizeProduct),
+        })),
+      );
   }
   productById(id: string): Observable<ApiResponse<ProductApi>> {
-    return this.http.get<ApiResponse<ProductApi>>(`${this.base}/products/${id}`);
+    return this.http
+      .get<ApiResponse<ProductApi>>(`${this.base}/products/${id}`)
+      .pipe(
+        map((response) => ({
+          ...response,
+          data: normalizeProduct(response.data),
+        })),
+      );
   }
   createProduct(
     input: CreateProductInput | FormData,

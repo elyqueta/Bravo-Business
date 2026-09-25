@@ -26,6 +26,32 @@ export interface ProductApi {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export function normalizeStringArray(
+  value: string[] | string | null | undefined,
+): string[] | null | undefined {
+  if (Array.isArray(value)) return value.filter(Boolean);
+  if (value === null || value === undefined) return value;
+  if (value === "") return [];
+  try {
+    const parsed: unknown = JSON.parse(value);
+    return Array.isArray(parsed)
+      ? parsed.filter(
+          (item): item is string => typeof item === "string" && !!item,
+        )
+      : [];
+  } catch {
+    return value === "[]" ? [] : [value];
+  }
+}
+
+export function normalizeProduct(product: ProductApi): ProductApi {
+  return {
+    ...product,
+    features: normalizeStringArray(product.features),
+    gallery: normalizeStringArray(product.gallery),
+  };
+}
 export interface CategoryApi {
   id: string;
   slug: string;

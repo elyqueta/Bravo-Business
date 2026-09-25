@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable, signal } from "@angular/core";
 import { environment } from "../../environments/environment";
-import { CategoryApi, ProductApi } from "./api.models";
+import { CategoryApi, ProductApi, normalizeStringArray } from "./api.models";
 import { ApiResponse } from "./api.models";
 import { Observable, catchError, map, of } from "rxjs";
 
@@ -147,8 +147,8 @@ export class StoreService {
       img: product.img,
       badge: product.badge ?? undefined,
       description: product.description,
-      features: product.features,
-      gallery: product.gallery,
+      features: normalizeStringArray(product.features),
+      gallery: normalizeStringArray(product.gallery),
     };
   }
 
