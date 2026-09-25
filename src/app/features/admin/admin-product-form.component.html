@@ -1,43 +1,50 @@
-  <section class="admin-content">
-    <header class="admin-topbar">
-      <div>
-        <span class="eyebrow">Bravo Business · Catálogo</span>
-        <h1>{{ editingId ? "Editar produto" : "Novo produto" }}</h1>
-        <p>Preenche os dados que aparecem na loja.</p>
+<section class="admin-content">
+  <header class="admin-topbar">
+    <div>
+      <span class="eyebrow">Bravo Business · Catálogo</span>
+      <h1>{{ editingId ? "Editar produto" : "Novo produto" }}</h1>
+      <p>Preenche os dados que aparecem na loja.</p>
+    </div>
+    <a routerLink="/admin/produtos" class="admin-secondary"
+      ><i class="fa-solid fa-arrow-left"></i> Voltar</a
+    >
+  </header>
+  @if (loading() && editingId) {
+    <div class="admin-form-loading">
+      <div class="admin-form-loading-inner">
+        <div class="skel-line skel-short" style="width: 40%"></div>
+        <div class="skel-line" style="margin-top: 12px"></div>
+        <div class="skel-line skel-short" style="margin-top: 12px"></div>
+        <div class="skel-line" style="margin-top: 12px"></div>
+        <div class="skel-line" style="margin-top: 12px"></div>
+        <div class="skel-line skel-short" style="margin-top: 12px"></div>
+        <div class="skel-line" style="margin-top: 12px"></div>
+        <div class="skel-line skel-short" style="margin-top: 12px"></div>
       </div>
-      <a routerLink="/admin/produtos" class="admin-secondary"
-        ><i class="fa-solid fa-arrow-left"></i> Voltar</a
-      >
-    </header>
-    @if (loading() && editingId) {
-      <div class="admin-form-loading">
-        <div class="admin-form-loading-inner">
-          <div class="skel-line skel-short" style="width:40%"></div>
-          <div class="skel-line" style="margin-top:12px"></div>
-          <div class="skel-line skel-short" style="margin-top:12px"></div>
-          <div class="skel-line" style="margin-top:12px"></div>
-          <div class="skel-line" style="margin-top:12px"></div>
-          <div class="skel-line skel-short" style="margin-top:12px"></div>
-          <div class="skel-line" style="margin-top:12px"></div>
-          <div class="skel-line skel-short" style="margin-top:12px"></div>
-        </div>
-      </div>
-    } @else {
-      <form
-        class="admin-form admin-form-page"
-        [formGroup]="form"
-        (ngSubmit)="save()"
-      >
-        <label>Nome<input formControlName="name" /></label
+    </div>
+  } @else {
+    <form
+      class="admin-form admin-form-page"
+      [formGroup]="form"
+      (ngSubmit)="save()"
+    >
+      <label>Nome<input formControlName="name" /></label
       ><label
         >Categoria<select formControlName="categorySlug">
           <option *ngFor="let category of categories()" [value]="category.slug">
             {{ category.label }}
           </option>
         </select></label
-      ><label>Preço<input type="text" inputmode="decimal" formControlName="price" /></label
       ><label
-        >Preço anterior<input type="text" inputmode="decimal" formControlName="oldPrice" /></label
+        >Preço<input
+          type="text"
+          inputmode="decimal"
+          formControlName="price" /></label
+      ><label
+        >Preço anterior<input
+          type="text"
+          inputmode="decimal"
+          formControlName="oldPrice" /></label
       ><label
         >Badge<select formControlName="badge">
           <option value="">Sem badge</option>
@@ -78,10 +85,15 @@
             placeholder="Adicionar detalhe..."
             (keydown.enter)="$event.preventDefault(); addFeature()"
           />
-          <button type="button" class="admin-secondary" (click)="addFeature()">Adicionar</button>
+          <button type="button" class="admin-secondary" (click)="addFeature()">
+            Adicionar
+          </button>
         </div>
         <div class="admin-feature-list" *ngIf="features().length">
-          <span class="feat-chip" *ngFor="let feature of features(); let index = index">
+          <span
+            class="feat-chip"
+            *ngFor="let feature of features(); let index = index"
+          >
             {{ feature }}
             <button type="button" (click)="removeFeature(index)">×</button>
           </span>
@@ -101,37 +113,69 @@
             <span>Arrasta imagens ou clica para escolher</span>
             <small>PNG, JPG ou WEBP · máx. 5 MB por imagem</small>
           </label>
-          <div class="admin-gallery-preview" *ngIf="galleryPreviews().length || (editingId && product()?.gallery?.length)">
+          <div
+            class="admin-gallery-preview"
+            *ngIf="galleryPreviews().length || existingGallery().length"
+          >
             @for (preview of galleryPreviews(); track $index) {
               <div class="admin-gallery-thumb">
                 <img [src]="preview" alt="Pré-visualização" />
-                <button type="button" class="admin-gallery-remove" (click)="removeGalleryPreview($index)">×</button>
+                <button
+                  type="button"
+                  class="admin-gallery-remove"
+                  (click)="removeGalleryPreview($index)"
+                >
+                  ×
+                </button>
               </div>
             }
-            @if (editingId && product()?.gallery?.length && !galleryFiles.length) {
-              @for (url of product()!.gallery!; track url) {
-                <div class="admin-gallery-thumb">
-                  <img [src]="url" alt="Galeria existente" />
-                </div>
-              }
+            @for (url of existingGallery(); track url) {
+              <div class="admin-gallery-thumb">
+                <img [src]="url" alt="Galeria existente" />
+                <button
+                  type="button"
+                  class="admin-gallery-remove"
+                  (click)="removeExistingGallery($index)"
+                  aria-label="Remover imagem da galeria"
+                >
+                  ×
+                </button>
+              </div>
             }
           </div>
         </div>
       </label>
       @if (editingId && product()?.createdAt) {
         <p class="admin-meta">
-          <span>Criado em: {{ product()!.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          <span
+            >Criado em:
+            {{ product()!.createdAt | date: "dd/MM/yyyy HH:mm" }}</span
+          >
           @if (product()!.updatedAt) {
-            <span>Última actualização: {{ product()!.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span
+              >Última actualização:
+              {{ product()!.updatedAt | date: "dd/MM/yyyy HH:mm" }}</span
+            >
           }
         </p>
       }
       <div class="admin-form-actions wide">
         <button type="submit" class="admin-primary" [disabled]="loading()">
-          <i class="fa-solid" [class.fa-floppy-disk]="!loading()" [class.fa-spinner]="loading()" [class.fa-spin]="loading()"></i
-          >{{ loading() ? "A guardar..." : (editingId ? "Guardar alterações" : "Criar produto") }}
+          <i
+            class="fa-solid"
+            [class.fa-floppy-disk]="!loading()"
+            [class.fa-spinner]="loading()"
+            [class.fa-spin]="loading()"
+          ></i
+          >{{
+            loading()
+              ? "A guardar..."
+              : editingId
+                ? "Guardar alterações"
+                : "Criar produto"
+          }}
         </button>
       </div>
     </form>
-    }
-  </section>
+  }
+</section>

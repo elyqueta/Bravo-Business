@@ -32,6 +32,7 @@ export class AdminProductFormComponent implements OnInit {
   readonly loading = signal(false);
   readonly imagePreview = signal("");
   readonly galleryPreviews = signal<string[]>([]);
+  readonly existingGallery = signal<string[]>([]);
   readonly features = signal<string[]>([]);
   featureCtrl = new FormControl("");
   editingId: string | null = null;
@@ -96,6 +97,7 @@ export class AdminProductFormComponent implements OnInit {
               gallery: galleryText,
             });
             this.features.set(product.features || []);
+            this.existingGallery.set(product.gallery || []);
             this.initialState = {
               categorySlug: product.categorySlug,
               name: product.name,
@@ -176,6 +178,9 @@ export class AdminProductFormComponent implements OnInit {
     this.galleryPreviews.update((items) => items.filter((_, i) => i !== index));
     this.galleryFiles = this.galleryFiles.filter((_, i) => i !== index);
   }
+  removeExistingGallery(index: number): void {
+    this.existingGallery.update((items) => items.filter((_, i) => i !== index));
+  }
   save(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -207,10 +212,7 @@ export class AdminProductFormComponent implements OnInit {
     if (value.badge) payload.append("badge", value.badge);
     const features = this.features();
     payload.append("features", JSON.stringify(features));
-    const gallery = value.gallery
-      .split("\n")
-      .map((item) => item.trim())
-      .filter(Boolean);
+    const gallery = this.existingGallery();
     payload.append("galleryUrls", JSON.stringify(gallery));
     if (this.imageFile)
       payload.append("img", this.imageFile, this.imageFile.name);
@@ -271,10 +273,7 @@ export class AdminProductFormComponent implements OnInit {
       .split("\n")
       .map((item) => item.trim())
       .filter(Boolean);
-    const currentGallery = value.gallery
-      .split("\n")
-      .map((item) => item.trim())
-      .filter(Boolean);
+    const currentGallery = this.existingGallery();
     if (currentGallery.length !== initialStateGallery.length) return true;
     if (currentGallery.some((url, index) => url !== initialStateGallery[index]))
       return true;
