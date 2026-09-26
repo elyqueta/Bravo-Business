@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { Observable, catchError, map, of, switchMap, tap, throwError } from "rxjs";
 import { environment } from "../../environments/environment";
-import { ApiResponse, AuthResult, UserApi } from "./api.models";
+import { ApiResponse, AuthResult, RefreshResponse, UserApi } from "./api.models";
 import { RefreshService } from "./refresh.service";
 
 @Injectable({ providedIn: "root" })
@@ -67,7 +67,7 @@ export class AuthService {
     );
   }
 
-  refresh(): Observable<ApiResponse<{ accessToken: string; refreshToken: string }>> {
+  refresh(): Observable<ApiResponse<RefreshResponse["data"]>> {
     return this.refreshService.refresh();
   }
 

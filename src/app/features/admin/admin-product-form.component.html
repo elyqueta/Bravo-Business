@@ -29,51 +29,55 @@
       (ngSubmit)="save()"
       [class.form-locked]="submitState() === 'submitting'"
     >
-      <fieldset class="admin-form-grid" [disabled]="submitState() === 'submitting'">
-        <app-form-field
-          caption="Nome"
-          [state]="form.controls.name.touched && form.controls.name.invalid ? 'error' : 'default'"
-          [maxLength]="200"
-          [currentLength]="form.controls.name.value.length || 0"
-        >
-          <input formControlName="name" maxlength="200" />
-        </app-form-field>
-        <app-form-field
-          caption="Categoria"
-          [state]="form.controls.categorySlug.touched && form.controls.categorySlug.invalid ? 'error' : 'default'"
-        >
-          <select formControlName="categorySlug">
-            <option *ngFor="let category of categories()" [value]="category.slug">
-              {{ category.label }}
-            </option>
-          </select>
-        </app-form-field>
-        <app-form-field
-          caption="Preço"
-          [state]="priceState()"
-          [helpText]="priceHelp()"
-        >
-          <input
-            type="text"
-            inputmode="decimal"
-            formControlName="price"
-            (input)="onPriceInput('price', $event)"
-            (keydown)="onPriceKeydown('price', $event)"
-          />
-        </app-form-field>
-        <app-form-field
-          caption="Preço anterior"
-          [state]="oldPriceState()"
-          [helpText]="oldPriceHelp()"
-        >
-          <input
-            type="text"
-            inputmode="decimal"
-            formControlName="oldPrice"
-            (input)="onPriceInput('oldPrice', $event)"
-            (keydown)="onPriceKeydown('oldPrice', $event)"
-          />
-        </app-form-field>
+      <fieldset class="admin-form-fieldset" [disabled]="submitState() === 'submitting'">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <app-form-field
+            caption="Nome"
+            [state]="form.controls.name.touched && form.controls.name.invalid ? 'error' : 'default'"
+            [maxLength]="200"
+            [currentLength]="form.controls.name.value.length || 0"
+          >
+            <input formControlName="name" maxlength="200" />
+          </app-form-field>
+          <app-form-field
+            caption="Categoria"
+            [state]="form.controls.categorySlug.touched && form.controls.categorySlug.invalid ? 'error' : 'default'"
+          >
+            <select formControlName="categorySlug">
+              <option *ngFor="let category of categories()" [value]="category.slug">
+                {{ category.label }}
+              </option>
+            </select>
+          </app-form-field>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <app-form-field
+            caption="Preço"
+            [state]="priceState()"
+            [helpText]="priceHelp()"
+          >
+            <input
+              type="text"
+              inputmode="decimal"
+              formControlName="price"
+              (input)="onPriceInput('price', $event)"
+              (keydown)="onPriceKeydown('price', $event)"
+            />
+          </app-form-field>
+          <app-form-field
+            caption="Preço anterior"
+            [state]="oldPriceState()"
+            [helpText]="oldPriceHelp()"
+          >
+            <input
+              type="text"
+              inputmode="decimal"
+              formControlName="oldPrice"
+              (input)="onPriceInput('oldPrice', $event)"
+              (keydown)="onPriceKeydown('oldPrice', $event)"
+            />
+          </app-form-field>
+        </div>
         <app-form-field
           caption="Badge"
           [state]="form.controls.badge.touched && form.controls.badge.invalid ? 'error' : 'default'"
@@ -85,92 +89,125 @@
             <option value="Premium">Premium</option>
           </select>
         </app-form-field>
-        <app-form-field class="full-width" caption="Imagem principal" [helpText]="editingId ? 'Escolhe uma nova imagem apenas se quiseres substituir a actual.' : 'PNG, JPG ou WEBP até 5 MB.'">
-          <input
-            type="file"
-            accept="image/*"
-            (change)="onImageSelected($event)"
-          />
-        </app-form-field>
-        <div class="admin-image-preview" *ngIf="imagePreview() || product()?.img">
-          <img
-            [src]="imagePreview() || product()?.img"
-            alt="Pré-visualização do produto"
-          />
-        </div>
-        <app-form-field class="full-width" caption="Descrição" [maxLength]="500"          [currentLength]="form.controls.description.value.length || 0">
-          <textarea
-            formControlName="description"
-            rows="5"
-            maxlength="500"
-          ></textarea>
-        </app-form-field>
-        <app-form-field class="full-width" caption="Detalhes do produto" [helpText]="'Ex: Material: 100% algodão · Tamanhos: S, M, L, XL'" [state]="featureSuccess() ? 'success' : 'default'">
-          <div class="admin-feature-input">
-            <input
-              type="text"
-              [formControl]="featureCtrl"
-              placeholder="Adicionar detalhe..."
-              (keydown.enter)="$event.preventDefault(); addFeature()"
-            />
-            <button type="button" class="admin-secondary" (click)="addFeature()">
-              Adicionar
-            </button>
-          </div>
-          <div class="admin-feature-list" *ngIf="features().length">
-            @for (feature of features(); track $index) {
-              <span class="feat-chip">
-                {{ feature }}
-                <button type="button" (click)="removeFeature($index)">×</button>
-              </span>
-            }
-          </div>
-        </app-form-field>
-        <app-form-field class="full-width" caption="Galeria">
-          <div class="admin-gallery-zone" (click)="$event.stopPropagation()">
-            <label class="admin-dropzone">
+        <div class="admin-form-section full-width">
+          <h3 class="admin-section-title">Mídia</h3>
+          <app-form-field
+            caption="Imagem principal"
+            [helpText]="editingId ? 'Escolhe uma nova imagem apenas se quiseres substituir a actual.' : 'PNG, JPG ou WEBP até 5 MB.'"
+          >
+            <div
+              class="admin-dropzone"
+              [class.admin-dropzone-drag]="imageDragOver()"
+              (dragover)="onImageDragOver($event)"
+              (dragleave)="onImageDragLeave($event)"
+              (drop)="onImageDrop($event)"
+              (click)="triggerImagePicker(imageInput)"
+            >
+              @if (imagePreview(); as preview) {
+                <img [src]="preview" alt="Pré-visualização" class="admin-dropzone-preview" />
+                <span class="admin-dropzone-text">Substituir imagem</span>
+              } @else {
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Arrasta uma imagem ou clica para escolher</span>
+                <small>PNG, JPG ou WEBP · máx. 5 MB</small>
+              }
               <input
+                #imageInput
+                type="file"
+                accept="image/*"
+                (change)="onImageSelected($event)"
+                hidden
+              />
+            </div>
+          </app-form-field>
+        </div>
+        <div class="admin-form-section full-width">
+          <h3 class="admin-section-title">Descrição e detalhes</h3>
+          <app-form-field caption="Descrição" [maxLength]="500" [currentLength]="form.controls.description.value.length || 0">
+            <textarea
+              formControlName="description"
+              rows="5"
+              maxlength="500"
+            ></textarea>
+          </app-form-field>
+          <app-form-field caption="Detalhes do produto" [helpText]="'Ex: Material: 100% algodão · Tamanhos: S, M, L, XL'" [state]="featureSuccess() ? 'success' : 'default'">
+            <div class="admin-feature-input">
+              <input
+                type="text"
+                [formControl]="featureCtrl"
+                placeholder="Adicionar detalhe..."
+                (keydown.enter)="$event.preventDefault(); addFeature()"
+              />
+              <button type="button" class="admin-secondary" (click)="addFeature()">
+                Adicionar
+              </button>
+            </div>
+            <div class="admin-feature-list" *ngIf="features().length">
+              @for (feature of features(); track $index) {
+                <span class="feat-chip">
+                  {{ feature }}
+                  <button type="button" (click)="removeFeature($index)">×</button>
+                </span>
+              }
+            </div>
+          </app-form-field>
+        </div>
+        <div class="admin-form-section full-width">
+          <h3 class="admin-section-title">Galeria</h3>
+          <app-form-field caption="Galeria">
+            <div
+              class="admin-dropzone"
+              [class.admin-dropzone-drag]="galleryDragOver()"
+              (dragover)="onGalleryDragOver($event)"
+              (dragleave)="onGalleryDragLeave($event)"
+              (drop)="onGalleryDrop($event)"
+              (click)="triggerGalleryPicker(galleryInput)"
+            >
+              @if (galleryPreviews().length || existingGallery().length) {
+                <div class="admin-gallery-preview admin-gallery-preview--inside">
+                  @for (preview of galleryPreviews(); track $index) {
+                    <div class="admin-gallery-thumb">
+                      <img [src]="preview" alt="Pré-visualização" />
+                      <button
+                        type="button"
+                        class="admin-gallery-remove"
+                        (click)="removeGalleryPreview($index)"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  }
+                  @for (url of existingGallery(); track url) {
+                    <div class="admin-gallery-thumb">
+                      <img [src]="url" alt="Galeria existente" />
+                      <button
+                        type="button"
+                        class="admin-gallery-remove"
+                        (click)="removeExistingGallery($index)"
+                        aria-label="Remover imagem da galeria"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  }
+                </div>
+                <span class="admin-dropzone-text">Adicionar mais imagens</span>
+              } @else {
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Arrasta imagens ou clica para escolher</span>
+                <small>PNG, JPG ou WEBP · máx. 5 MB por imagem</small>
+              }
+              <input
+                #galleryInput
                 type="file"
                 accept="image/*"
                 multiple
                 (change)="onGallerySelected($event)"
+                hidden
               />
-              <i class="fa-solid fa-cloud-arrow-up"></i>
-              <span>Arrasta imagens ou clica para escolher</span>
-              <small>PNG, JPG ou WEBP · máx. 5 MB por imagem</small>
-            </label>
-            <div
-              class="admin-gallery-preview"
-              *ngIf="galleryPreviews().length || existingGallery().length"
-            >
-              @for (preview of galleryPreviews(); track $index) {
-                <div class="admin-gallery-thumb">
-                  <img [src]="preview" alt="Pré-visualização" />
-                  <button
-                    type="button"
-                    class="admin-gallery-remove"
-                    (click)="removeGalleryPreview($index)"
-                  >
-                    ×
-                  </button>
-                </div>
-              }
-              @for (url of existingGallery(); track url) {
-                <div class="admin-gallery-thumb">
-                  <img [src]="url" alt="Galeria existente" />
-                  <button
-                    type="button"
-                    class="admin-gallery-remove"
-                    (click)="removeExistingGallery($index)"
-                    aria-label="Remover imagem da galeria"
-                  >
-                    ×
-                  </button>
-                </div>
-              }
             </div>
-          </div>
-        </app-form-field>
+          </app-form-field>
+        </div>
         @if (editingId && product()?.createdAt) {
           <p class="admin-meta">
             <span

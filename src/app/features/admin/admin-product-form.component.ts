@@ -43,6 +43,8 @@ export class AdminProductFormComponent implements OnInit {
   editingId: string | null = null;
   imageFile: File | null = null;
   galleryFiles: File[] = [];
+  imageDragOver = signal(false);
+  galleryDragOver = signal(false);
   private objectUrls: string[] = [];
   private initialState: {
     categorySlug: string;
@@ -255,6 +257,60 @@ export class AdminProductFormComponent implements OnInit {
   }
   removeExistingGallery(index: number): void {
     this.existingGallery.update((items) => items.filter((_, i) => i !== index));
+  }
+  onImageDragOver(event: DragEvent): void {
+    event.preventDefault();
+    this.imageDragOver.set(true);
+  }
+  onImageDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    this.imageDragOver.set(false);
+  }
+  onImageDrop(event: DragEvent): void {
+    event.preventDefault();
+    this.imageDragOver.set(false);
+    const file = event.dataTransfer?.files[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/") || file.size > 5 * 1024 * 1024) {
+      this.toast.error("Escolhe uma imagem válida até 5 MB.");
+      return;
+    }
+    this.imageFile = file;
+    const url = URL.createObjectURL(file);
+    this.trackObjectUrl(url);
+    this.imagePreview.set(url);
+  }
+  onGalleryDragOver(event: DragEvent): void {
+    event.preventDefault();
+    this.galleryDragOver.set(true);
+  }
+  onGalleryDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    this.galleryDragOver.set(false);
+  }
+  onGalleryDrop(event: DragEvent): void {
+    event.preventDefault();
+    this.galleryDragOver.set(false);
+    const files = Array.from(event.dataTransfer?.files || []);
+    const invalid = files.find(
+      (file) => !file.type.startsWith("image/") || file.size > 5 * 1024 * 1024,
+    );
+    if (invalid) {
+      this.toast.error(
+        "Todas as imagens devem ser válidas e ter no máximo 5 MB.",
+      );
+      return;
+    }
+    this.galleryFiles = [...this.galleryFiles, ...files];
+    const urls = files.map((file) => URL.createObjectURL(file));
+    urls.forEach((url) => this.trackObjectUrl(url));
+    this.galleryPreviews.update((items) => [...items, ...urls]);
+  }
+  triggerImagePicker(input: HTMLInputElement): void {
+    input.click();
+  }
+  triggerGalleryPicker(input: HTMLInputElement): void {
+    input.click();
   }
   save(): void {
     if (this.form.invalid) {

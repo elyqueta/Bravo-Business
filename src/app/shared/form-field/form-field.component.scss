@@ -1,4 +1,4 @@
-.field { display: grid; gap: 6px; }
+.field { display: grid; gap: 6px; width: 100%; }
 .field-caption {
   font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
   color: var(--muted);

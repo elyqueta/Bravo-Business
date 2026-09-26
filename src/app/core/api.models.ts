@@ -77,16 +77,15 @@ export interface UserApi {
 export interface AuthResult {
   user: UserApi;
   accessToken: string;
-  refreshToken: string;
+  refreshExpiresAt: string;
+}
+export interface RefreshResponseData {
+  accessToken: string;
   refreshExpiresAt: string;
 }
 export interface RefreshResponse {
   status: string;
-  data: {
-    accessToken: string;
-    refreshToken: string;
-    refreshExpiresAt: string;
-  };
+  data: RefreshResponseData;
 }
 export interface ProductListResponse extends ApiResponse<ProductApi[]> {
   pagination: Pagination;
