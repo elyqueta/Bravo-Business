@@ -14,11 +14,12 @@ import { AdminApiService } from "../../core/admin-api.service";
 import { CategoryApi, ProductApi, ProductBadge } from "../../core/api.models";
 import { MoneyService } from "../../core/money.service";
 import { ToastService } from "../../shared/toast/toast.service";
+import { FormFieldComponent } from "../../shared/form-field/form-field.component";
 
 @Component({
   selector: "app-admin-product-form",
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, FormFieldComponent],
   templateUrl: "./admin-product-form.component.html",
   styleUrls: ["./admin-page.component.scss"],
 })
@@ -32,10 +33,12 @@ export class AdminProductFormComponent implements OnInit {
   readonly categories = signal<CategoryApi[]>([]);
   readonly product = signal<ProductApi | null>(null);
   readonly loading = signal(false);
+  readonly submitState = signal<'idle' | 'submitting' | 'success'>('idle');
   readonly imagePreview = signal("");
   readonly galleryPreviews = signal<string[]>([]);
   readonly existingGallery = signal<string[]>([]);
   readonly features = signal<string[]>([]);
+  readonly featureSuccess = signal(false);
   featureCtrl = new FormControl("");
   editingId: string | null = null;
   imageFile: File | null = null;
@@ -146,9 +149,33 @@ export class AdminProductFormComponent implements OnInit {
     }
     this.features.update((items) => [...items, text]);
     this.featureCtrl.setValue("");
+    this.featureSuccess.set(true);
+    setTimeout(() => this.featureSuccess.set(false), 1200);
   }
   removeFeature(index: number): void {
     this.features.update((items) => items.filter((_, i) => i !== index));
+  }
+  priceState(): 'default' | 'error' | 'success' {
+    const control = this.form.controls.price;
+    if (control.touched && control.invalid) return 'error';
+    if (control.touched && !control.invalid && control.value !== this.money.format(0)) return 'success';
+    return 'default';
+  }
+  priceHelp(): string {
+    const control = this.form.controls.price;
+    if (control.touched && control.invalid) return 'Introduz um preço válido.';
+    return '';
+  }
+  oldPriceState(): 'default' | 'error' | 'success' {
+    const control = this.form.controls.oldPrice;
+    if (control.touched && control.invalid) return 'error';
+    if (control.touched && !control.invalid && control.value) return 'success';
+    return 'default';
+  }
+  oldPriceHelp(): string {
+    const control = this.form.controls.oldPrice;
+    if (control.touched && control.invalid) return 'Introduz um preço válido.';
+    return '';
   }
   private moneyValidator(control: AbstractControl<string | null, string | null>): ValidationErrors | null {
     const value = control.value;
@@ -158,79 +185,33 @@ export class AdminProductFormComponent implements OnInit {
     const parsed = this.money.parse(value);
     return parsed === null ? { invalidMoney: true } : null;
   }
-  private formatCurrencyInput(value: string, cursorPos: number): { formatted: string; cursorPos: number } {
-    const digits = value.replace(/\D/g, "");
-    if (!digits) {
-      return { formatted: "0", cursorPos: 1 };
-    }
-    const num = parseInt(digits, 10);
-    const formatted = this.money.format(num);
-    const digitsBeforeCursor = value.substring(0, cursorPos).replace(/\D/g, "").length;
-    let newCursorPos = 0;
-    let digitCount = 0;
-    for (let i = 0; i < formatted.length && digitCount < digitsBeforeCursor; i++) {
-      if (/\d/.test(formatted[i])) {
-        digitCount++;
-      }
-      newCursorPos = i + 1;
-    }
-    return { formatted, cursorPos: newCursorPos };
+  private centsFromFormatted(value: string): number {
+    const digitsOnly = value.replace(/\D/g, "");
+    return digitsOnly ? parseInt(digitsOnly, 10) : 0;
+  }
+  private formatFromCents(cents: number): string {
+    const value = cents / 100;
+    return value.toLocaleString('pt-AO', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
   onPriceInput(controlName: "price" | "oldPrice", event: Event): void {
     const input = event.target as HTMLInputElement;
-    const cursorStart = input.selectionStart ?? 0;
-    const cursorEnd = input.selectionEnd ?? 0;
-    const value = input.value;
-    let hasLetters = /[a-zA-Z]/.test(value.substring(0, cursorStart));
-    if (!hasLetters) {
-      hasLetters = /[a-zA-Z]/.test(value.substring(cursorStart, cursorEnd));
-    }
-    if (hasLetters) {
-      input.value = value.replace(/[^0-9,.]/g, "");
-      return;
-    }
-    let currentValue = value;
-    if (controlName === "price") {
-      const digits = value.replace(/[^\d]/g, "");
-      if (digits) {
-        const num = parseInt(digits, 10);
-        currentValue = this.money.format(num);
-      } else {
-        currentValue = "0";
-      }
-    } else {
-      currentValue = value.replace(/[^\d]/g, "");
-      if (currentValue) {
-        const num = parseInt(currentValue, 10);
-        currentValue = this.money.format(num);
-      } else {
-        currentValue = "";
-      }
-    }
-    const { formatted, cursorPos } = this.formatCurrencyInput(value, cursorStart);
+    const cents = this.centsFromFormatted(input.value);
+    const formatted = this.formatFromCents(cents);
     this.form.get(controlName)?.setValue(formatted, { emitEvent: false });
     requestAnimationFrame(() => {
-      input.setSelectionRange(cursorPos, cursorPos);
+      const end = input.value.length;
+      input.setSelectionRange(end, end);
     });
   }
-  onPriceBlur(controlName: "price" | "oldPrice"): void {
-    const value = this.form.get(controlName)?.value;
-    if (value === null || value === undefined || value.trim() === "") {
-      this.form.get(controlName)?.setValue(controlName === "price" ? this.money.format(0) : "");
-      return;
-    }
-    const parsed = this.money.parse(value);
-    if (parsed === null) {
-      const numbers = value.replace(/[^0-9]/g, "");
-      if (numbers) {
-        const num = parseInt(numbers, 10);
-        this.form.get(controlName)?.setValue(this.money.format(num));
-      } else {
-        this.form.get(controlName)?.setValue(controlName === "price" ? this.money.format(0) : "");
-      }
-    } else {
-      this.form.get(controlName)?.setValue(this.money.format(parsed));
-    }
+  onPriceKeydown(controlName: "price" | "oldPrice", event: KeyboardEvent): void {
+    if (event.key !== 'Backspace') return;
+    event.preventDefault();
+    const current = this.form.get(controlName)?.value || '';
+    const cents = Math.floor(this.centsFromFormatted(current) / 10);
+    this.form.get(controlName)?.setValue(this.formatFromCents(cents), { emitEvent: false });
   }
   private sanitizeFeatures(features: string[]): string[] {
     return [...new Set(features.map((f) => f.trim()).filter((f) => f.length > 0))];
@@ -295,9 +276,9 @@ export class AdminProductFormComponent implements OnInit {
       this.form.get("price")?.setErrors({ ...this.form.get("price")?.errors, invalidMoney: true });
       this.form.get("price")?.markAsTouched();
       this.toast.error("Introduz um preço válido.");
-      this.loading.set(false);
       return;
     }
+    this.submitState.set('submitting');
     const payload = new FormData();
     payload.append("categorySlug", value.categorySlug);
     payload.append("name", value.name);
@@ -316,16 +297,18 @@ export class AdminProductFormComponent implements OnInit {
     this.galleryFiles.forEach((file) =>
       payload.append("gallery[]", file, file.name),
     );
-    this.loading.set(true);
     const request = this.editingId
       ? this.api.updateProduct(this.editingId, payload)
       : this.api.createProduct(payload);
     request.subscribe({
       next: () => {
-        this.toast.success(
-          this.editingId ? "Produto actualizado." : "Produto criado.",
-        );
-        void this.router.navigateByUrl("/admin/produtos");
+        this.submitState.set('success');
+        setTimeout(() => {
+          this.toast.success(
+            this.editingId ? "Produto actualizado." : "Produto criado.",
+          );
+          void this.router.navigateByUrl("/admin/produtos");
+        }, 600);
       },
       error: (response: {
         error?: {
@@ -333,6 +316,7 @@ export class AdminProductFormComponent implements OnInit {
           details?: Array<{ field?: string; message?: string }>;
         };
       }) => {
+        this.submitState.set('idle');
         const details = response.error?.details
           ?.map(
             (detail) =>
@@ -344,7 +328,6 @@ export class AdminProductFormComponent implements OnInit {
             response.error?.message ||
             "Não foi possível guardar o produto.",
         );
-        this.loading.set(false);
       },
     });
   }

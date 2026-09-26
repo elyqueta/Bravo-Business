@@ -72,6 +72,19 @@ ul {
 }
 
 /* ════════════════════════════════════════
+   SKELETON UTILITIES
+════════════════════════════════════════ */
+.skel-shimmer {
+  background: linear-gradient(90deg, var(--surface2) 25%, var(--surface3) 50%, var(--surface2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ════════════════════════════════════════
    NAVBAR
 ════════════════════════════════════════ */
 #navbar {
@@ -80,7 +93,8 @@ ul {
   left: 0;
   right: 0;
   z-index: 1000;
-  height: var(--nav);
+  height: calc(var(--nav) + env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
   background: rgba(255, 255, 255, 0.86);
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
@@ -351,7 +365,7 @@ ul {
 }
 
 .mob-foot {
-  padding: 20px 24px 32px;
+  padding: 20px 24px calc(32px + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid var(--border);
   flex-shrink: 0;
 }
@@ -1198,7 +1212,7 @@ ul {
 }
 
 .drw-ft {
-  padding: 17px 26px 28px;
+  padding: 17px 26px calc(28px + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid var(--border);
   flex-shrink: 0;
 }
@@ -1404,12 +1418,13 @@ footer {
 ════════════════════════════════════════ */
 .toast {
   position: fixed;
-  bottom: 26px;
+  bottom: calc(26px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%) translateY(14px);
   background: var(--text);
   color: var(--bg);
   padding: 11px 20px;
+  padding-bottom: calc(11px + env(safe-area-inset-bottom, 0px));
   border-radius: 10px;
   font-size: 13px;
   font-weight: 600;
@@ -1521,6 +1536,28 @@ footer {
   }
   .pprice {
     font-size: 14px;
+  }
+  .qbtn {
+    width: 40px;
+    height: 40px;
+  }
+  .pact {
+    width: 40px;
+    height: 40px;
+  }
+  .pcard-acts {
+    gap: 10px;
+  }
+  .soc {
+    width: 40px;
+    height: 40px;
+  }
+  .mthumb {
+    width: 60px;
+    height: 60px;
+  }
+  .modal-thumbs {
+    gap: 12px;
   }
 }
 
@@ -2244,6 +2281,12 @@ footer {
   }
   .admin-category-form button {
     grid-column: 1/-1;
+  }
+}
+@media (max-width: 900px) {
+  .contact-map,
+  .contact-map iframe {
+    min-height: 380px;
   }
 }
 @media (max-width: 700px) {

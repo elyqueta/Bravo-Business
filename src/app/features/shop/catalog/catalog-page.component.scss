@@ -27,16 +27,18 @@
 .search-field {
   min-width: 250px;
   flex: 1;
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 .search-field i {
-  position: absolute;
-  left: 13px;
-  bottom: 13px;
+  position: static;
   color: var(--accent);
+  font-size: 14px;
 }
 .search-field input {
-  padding-left: 36px !important;
+  padding-left: 8px !important;
+  width: 100%;
 }
 .catalog-toolbar input,
 .catalog-toolbar select {

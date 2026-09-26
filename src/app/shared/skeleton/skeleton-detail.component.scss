@@ -1,0 +1,50 @@
+.skeleton-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(24px, 4vw, 60px);
+  padding: clamp(24px, 4vw, 48px) clamp(18px, 4vw, 60px) 80px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+.skeleton-detail-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.skeleton-detail-main {
+  aspect-ratio: 4/3;
+  border-radius: var(--r);
+  background: var(--surface2);
+}
+.skeleton-detail-thumbs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.skeleton-detail-thumb {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  background: var(--surface2);
+}
+.skeleton-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+}
+.skeleton-detail-price {
+  width: 120px;
+  height: 16px;
+  border-radius: 6px;
+  background: var(--surface2);
+}
+.skeleton-detail-actions {
+  display: grid;
+  gap: 10px;
+}
+@media (max-width: 760px) {
+  .skeleton-detail {
+    grid-template-columns: 1fr;
+    padding: 24px 18px 64px;
+  }
+}

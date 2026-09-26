@@ -1,8 +1,5 @@
 @if (loading()) {
-  <main class="admin-detail-loading">
-    <i class="fa-solid fa-spinner"></i>
-    <p>A carregar produto...</p>
-  </main>
+  <app-skeleton-detail></app-skeleton-detail>
 } @else if (product()) {
   <section class="admin-content">
     <header class="admin-topbar">

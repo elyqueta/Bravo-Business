@@ -2,11 +2,12 @@ import { CommonModule } from "@angular/common";
 import { Component, OnInit, effect, inject } from "@angular/core";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { Product, StoreService } from "../../../core/store.service";
+import { SkeletonDetailComponent } from "../../../shared/skeleton/skeleton-detail.component";
 
 @Component({
   selector: "app-product-detail-page",
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, SkeletonDetailComponent],
   templateUrl: "./product-detail-page.component.html",
   styleUrls: ["./product-detail-page.component.scss"],
 })

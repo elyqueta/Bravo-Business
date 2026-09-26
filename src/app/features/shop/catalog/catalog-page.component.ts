@@ -1,15 +1,16 @@
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { Component, OnInit, effect, inject } from "@angular/core";
+import { Component, OnInit, effect, inject, signal } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { Product, Category, StoreService } from "../../../core/store.service";
 import { ProductCardComponent } from "../../../shared/product-card/product-card.component";
 import { SkeletonCardComponent } from "../../../shared/skeleton/skeleton-card.component";
+import { FormFieldComponent } from "../../../shared/form-field/form-field.component";
 
 @Component({
   selector: "app-catalog-page",
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, ProductCardComponent, SkeletonCardComponent],
+  imports: [CommonModule, FormsModule, RouterLink, ProductCardComponent, SkeletonCardComponent, FormFieldComponent],
   templateUrl: "./catalog-page.component.html",
   styleUrls: ["./catalog-page.component.scss"],
 })
@@ -78,6 +79,10 @@ export class CatalogPageComponent implements OnInit {
     this.sort = "featured";
     this.apply();
   }
+  readonly clearSearchSignal = signal<() => void>(() => {
+    this.search = "";
+    this.apply();
+  });
   title(): string {
     return this.category
       ? this.store.categoryLabel(this.category)

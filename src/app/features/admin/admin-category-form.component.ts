@@ -5,11 +5,12 @@ import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { AdminApiService } from "../../core/admin-api.service";
 import { CategoryApi } from "../../core/api.models";
 import { ToastService } from "../../shared/toast/toast.service";
+import { FormFieldComponent } from "../../shared/form-field/form-field.component";
 
 @Component({
   selector: "app-admin-category-form",
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, FormFieldComponent],
   templateUrl: "./admin-category-form.component.html",
   styleUrls: ["./admin-page.component.scss"],
 })
@@ -21,6 +22,7 @@ export class AdminCategoryFormComponent implements OnInit {
   private readonly router = inject(Router);
   readonly category = signal<CategoryApi | null>(null);
   readonly loading = signal(false);
+  readonly submitState = signal<'idle' | 'submitting' | 'success'>('idle');
   readonly iconPickerOpen = signal(false);
   editingId: string | null = null;
   readonly iconOptions = [
@@ -84,18 +86,23 @@ export class AdminCategoryFormComponent implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
+    this.submitState.set('submitting');
     this.loading.set(true);
     const request = this.editingId
       ? this.api.updateCategory(this.editingId, this.form.getRawValue())
       : this.api.createCategory(this.form.getRawValue());
     request.subscribe({
       next: () => {
-        this.toast.success(this.editingId ? "Categoria actualizada." : "Categoria criada.");
-        void this.router.navigateByUrl("/admin/categorias");
+        this.submitState.set('success');
+        setTimeout(() => {
+          this.toast.success(this.editingId ? "Categoria actualizada." : "Categoria criada.");
+          void this.router.navigateByUrl("/admin/categorias");
+        }, 600);
       },
       error: () => {
-        this.toast.error("Não foi possível guardar a categoria.");
+        this.submitState.set('idle');
         this.loading.set(false);
+        this.toast.error("Não foi possível guardar a categoria.");
       },
     });
   }

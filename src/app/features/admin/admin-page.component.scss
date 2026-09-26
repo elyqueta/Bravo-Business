@@ -64,6 +64,21 @@
   border: 1px solid var(--border);
   border-radius: var(--r);
   overflow: hidden;
+  position: relative;
+}
+.admin-panel-loading-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--accent);
+  z-index: 10;
+  animation: loadingBar 1.1s ease-in-out infinite;
+}
+@keyframes loadingBar {
+  0% { width: 0; left: 0; }
+  50% { width: 60%; }
+  100% { width: 0; left: 100%; }
 }
 .admin-panel-head {
   display: flex;
@@ -492,10 +507,6 @@
 .admin-feature-input input {
   flex: 1;
   height: 42px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
-  color: var(--text);
   padding: 0 12px;
   font: inherit;
 }
@@ -611,18 +622,6 @@
   padding: 40px clamp(28px, 5vw, 80px);
 }
 
-.skel-line {
-  height: 12px;
-  border-radius: 6px;
-  background: linear-gradient(90deg, var(--surface2) 25%, var(--surface3) 50%, var(--surface2) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-.skel-short {
-  width: 60%;
-}
-
 .admin-form-loading {
   display: flex;
   align-items: center;
@@ -643,11 +642,6 @@
   font-size: 11px;
   margin-top: 6px;
   display: block;
-}
-
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
 }
 
 @media (max-width: 850px) {

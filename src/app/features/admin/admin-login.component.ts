@@ -4,11 +4,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../../core/auth.service";
 import { ToastService } from "../../shared/toast/toast.service";
+import { FormFieldComponent } from "../../shared/form-field/form-field.component";
 
 @Component({
   selector: "app-admin-login",
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, FormFieldComponent],
   templateUrl: "./admin-login.component.html",
   styleUrls: ["./admin-login.component.scss"],
 })
@@ -22,6 +23,7 @@ export class AdminLoginComponent implements OnDestroy {
     password: ["", [Validators.required, Validators.minLength(6)]],
   });
   readonly loading = signal(false);
+  readonly submitState = signal<'idle' | 'submitting' | 'success'>('idle');
   readonly lockRemaining = signal(this.auth.getRemainingLockTime());
   readonly lockTimer: ReturnType<typeof setInterval> | undefined;
   constructor() {
@@ -47,14 +49,17 @@ export class AdminLoginComponent implements OnDestroy {
       this.toast.error(this.auth.lockMessage());
       return;
     }
-    this.loading.set(true);
+    this.submitState.set('submitting');
     this.auth.login(this.form.value.email!, this.form.value.password!).subscribe({
       next: () => {
-        this.loading.set(false);
-        void this.router.navigateByUrl("/admin");
+        this.submitState.set('success');
+        setTimeout(() => {
+          this.submitState.set('idle');
+          void this.router.navigateByUrl('/admin');
+        }, 600);
       },
       error: (error: { status?: number; error?: { message?: string } }) => {
-        this.loading.set(false);
+        this.submitState.set('idle');
         const message = error.error?.message || this.auth.lockMessage();
         this.toast.error(message);
       },

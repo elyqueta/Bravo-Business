@@ -13,29 +13,51 @@
       class="admin-form admin-form-page category-form-page"
       [formGroup]="form"
       (ngSubmit)="save()"
+      [class.form-locked]="submitState() === 'submitting'"
     >
-      <label>Nome<input formControlName="label" placeholder="Roupas" /></label
-      ><label
-        >Prefixo<input
-          formControlName="prefix"
-          maxlength="1"
-          placeholder="R" /></label
-      ><label
-        >Ícone Font Awesome<button
-          type="button"
-          class="icon-picker-trigger"
-          (click)="openIconPicker()"
+      <fieldset [disabled]="submitState() === 'submitting'">
+        <app-form-field
+          caption="Nome"
+          [state]="form.controls.label.touched && form.controls.label.invalid ? 'error' : 'default'"
         >
-          <i class="fa-solid" [ngClass]="form.controls.icon.value"></i
-          ><span>{{ form.controls.icon.value }}</span
-          ><i class="fa-solid fa-chevron-down"></i></button></label
-      ><label
-        >Âncora<input formControlName="anchor" placeholder="s-roupas"
-      /></label>
+          <input formControlName="label" placeholder="Roupas" />
+        </app-form-field>
+        <app-form-field
+          caption="Prefixo"
+          [state]="form.controls.prefix.touched && form.controls.prefix.invalid ? 'error' : 'default'"
+        >
+          <input
+            formControlName="prefix"
+            maxlength="1"
+            placeholder="R" />
+        </app-form-field>
+        <app-form-field
+          caption="Ícone Font Awesome"
+          [helpText]="form.controls.icon.value || 'fa-box'"
+        >
+          <button
+            type="button"
+            class="icon-picker-trigger"
+            (click)="openIconPicker()"
+          >
+            <i class="fa-solid" [ngClass]="form.controls.icon.value"></i
+            ><span>{{ form.controls.icon.value }}</span
+            ><i class="fa-solid fa-chevron-down"></i></button>
+        </app-form-field>
+        <app-form-field
+          caption="Âncora"
+          [state]="form.controls.anchor.touched && form.controls.anchor.invalid ? 'error' : 'default'"
+        >
+          <input formControlName="anchor" placeholder="s-roupas" />
+        </app-form-field>
+      </fieldset>
       <div class="admin-form-actions wide">
-        <button class="admin-primary" type="submit" [disabled]="loading()">
-          <i class="fa-solid" [class.fa-floppy-disk]="!loading()" [class.fa-spinner]="loading()" [class.fa-spin]="loading()"></i
-          >{{ loading() ? "A guardar..." : (editingId ? "Guardar alterações" : "Criar categoria") }}
+        <button class="admin-primary" type="submit" [disabled]="submitState() === 'submitting'" [class.is-success]="submitState() === 'success'">
+          @switch (submitState()) {
+            @case ('submitting') { <i class="fa-solid fa-spinner fa-spin"></i> A guardar... }
+            @case ('success') { <i class="fa-solid fa-circle-check"></i> Guardado! }
+            @default { <i class="fa-solid fa-floppy-disk"></i> {{ editingId ? 'Guardar alterações' : 'Criar categoria' }} }
+          }
         </button>
       </div>
     </form>

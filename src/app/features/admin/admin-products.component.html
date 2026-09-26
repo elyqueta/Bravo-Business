@@ -9,7 +9,8 @@
         ><i class="fa-solid fa-plus"></i> Novo produto</a
       >
     </header>
-    <section class="admin-panel">
+    <section class="admin-panel" [class.admin-panel-loading]="loading() && products().length">
+      <div class="admin-panel-loading-bar" *ngIf="loading() && products().length"></div>
       <div class="admin-panel-head">
         <h2>Todos os produtos</h2>
         <span class="admin-results-count">{{ products().length }} resultados</span>
@@ -19,8 +20,8 @@
             [ngModel]="search()"
             (ngModelChange)="onSearchChange($event)"
             placeholder="Pesquisar produtos"
-          /><button class="admin-refresh" (click)="load()">
-            <i class="fa-solid fa-arrows-rotate"></i>
+          /><button class="admin-refresh" (click)="load()" [disabled]="loading()">
+            <i class="fa-solid fa-arrows-rotate" [class.fa-spin]="loading()"></i>
           </button>
         </div>
       </div>
@@ -67,9 +68,10 @@
                     class="delete"
                     (click)="delete(product)"
                     [disabled]="deletingId() === product.id"
+                    [class.deleting]="deletingId() === product.id"
                     title="Eliminar"
                   >
-                    <i class="fa-solid fa-trash"></i>
+                    <i class="fa-solid" [class.fa-trash]="deletingId() !== product.id" [class.fa-spinner]="deletingId() === product.id" [class.fa-spin]="deletingId() === product.id"></i>
                   </button>
                 </div>
               </td>
@@ -94,8 +96,8 @@
           <a [routerLink]="['/admin/produtos', product.id, 'editar']" title="Editar">
             <i class="fa-solid fa-pen"></i>
           </a>
-          <button class="delete" (click)="delete(product)" [disabled]="deletingId() === product.id" title="Eliminar">
-            <i class="fa-solid fa-trash"></i>
+          <button class="delete" (click)="delete(product)" [disabled]="deletingId() === product.id" [class.deleting]="deletingId() === product.id" title="Eliminar">
+            <i class="fa-solid" [class.fa-trash]="deletingId() !== product.id" [class.fa-spinner]="deletingId() === product.id" [class.fa-spin]="deletingId() === product.id"></i>
           </button>
         </div>
       </article>

@@ -118,9 +118,10 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 18px;
+  padding-top: calc(10px + env(safe-area-inset-top, 0px));
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  height: var(--nav);
+  height: calc(var(--nav) + env(safe-area-inset-top, 0px));
 }
 .admin-mob-brand {
   display: flex;

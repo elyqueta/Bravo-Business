@@ -6,15 +6,15 @@
         <p>Gere o catálogo conectado à tua loja.</p>
       </div>
       <button class="admin-refresh" (click)="loadAll()" [disabled]="productsLoading() || categoriesLoading()">
-        <i class="fa-solid fa-arrows-rotate"></i> Actualizar
+        <i class="fa-solid fa-arrows-rotate" [class.fa-spin]="productsLoading() || categoriesLoading()"></i> Actualizar
       </button>
     </header>
     <section class="admin-stats">
       @if (!hasLoadedOnce() && productsLoading()) {
         @for (_ of [1,2,3]; track $index) {
           <article class="admin-stat">
-            <div class="skel-line skel-short"></div>
-            <div class="skel-line" style="margin-top:10px"></div>
+            <div class="skel-line skel-shimmer skel-short"></div>
+            <div class="skel-line skel-shimmer" style="margin-top:10px"></div>
           </article>
         }
       } @else {
@@ -39,7 +39,8 @@
         </article>
       }
     </section>
-    <section class="admin-panel">
+    <section class="admin-panel" [class.admin-panel-loading]="productsLoading() && products().length">
+      <div class="admin-panel-loading-bar" *ngIf="productsLoading() && products().length"></div>
       <div class="admin-panel-head">
         <h2>Catálogo</h2>
         <a class="admin-link-button cursor-pointer" routerLink="/admin/produtos"

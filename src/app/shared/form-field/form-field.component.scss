@@ -1,0 +1,36 @@
+.field { display: grid; gap: 6px; }
+.field-caption {
+  font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted);
+}
+.field-control {
+  position: relative; display: flex; align-items: center;
+  border: 1.5px solid var(--border); border-radius: 8px; background: var(--surface2);
+  transition: border-color .18s, box-shadow .18s;
+}
+.field-control:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-lt);
+}
+.field-error .field-control { border-color: var(--danger); }
+.field-error .field-control:focus-within { box-shadow: 0 0 0 3px rgba(224,85,85,.14); }
+.field-success .field-control { border-color: #25a35a; }
+.field-success .field-control:focus-within { box-shadow: 0 0 0 3px rgba(37,163,90,.14); }
+.field-disabled .field-control { opacity: .55; cursor: not-allowed; pointer-events: none; }
+.field-control ::ng-content, .field-control input, .field-control textarea, .field-control select {
+  flex: 1; border: none; background: transparent; padding: 11px 12px; font: inherit; color: var(--text); min-width: 0;
+}
+.field-control input:focus, .field-control textarea:focus, .field-control select:focus { outline: none; }
+.field-icon { padding-right: 12px; font-size: 14px; }
+.field-icon.success { color: #25a35a; }
+.field-icon.error { color: var(--danger); }
+.field-clear {
+  padding: 0 10px; color: var(--muted); font-size: 13px; background: none; border: none; cursor: pointer;
+  display: flex; align-items: center;
+}
+.field-clear:hover { color: var(--text); }
+.field-foot { display: flex; justify-content: space-between; gap: 10px; min-height: 14px; }
+.field-msg { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+.field-msg.error { color: var(--danger); }
+.field-msg.success { color: #25a35a; }
+.field-count { font-size: 11px; color: var(--muted); margin-left: auto; }

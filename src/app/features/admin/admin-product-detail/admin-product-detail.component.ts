@@ -6,11 +6,12 @@ import { ProductApi } from "../../../core/api.models";
 import { MoneyPipe } from "../../../shared/pipes/money.pipe";
 import { ToastService } from "../../../shared/toast/toast.service";
 import { ConfirmDialogService } from "../../../shared/confirm-dialog/confirm-dialog.service";
+import { SkeletonDetailComponent } from "../../../shared/skeleton/skeleton-detail.component";
 
 @Component({
   selector: "app-admin-product-detail",
   standalone: true,
-  imports: [CommonModule, RouterLink, MoneyPipe],
+  imports: [CommonModule, RouterLink, MoneyPipe, SkeletonDetailComponent],
   templateUrl: "./admin-product-detail.component.html",
   styleUrls: ["./admin-product-detail.component.scss"]
 })

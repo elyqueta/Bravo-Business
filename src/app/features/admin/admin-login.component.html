@@ -23,30 +23,38 @@
       </div>
     }
     <form [formGroup]="form" (ngSubmit)="submit()">
-      <label
-        >Email<input
+      <app-form-field
+        caption="Email"
+        [state]="form.controls.email.touched && form.controls.email.invalid ? 'error' : 'default'"
+        [helpText]="form.controls.email.touched && form.controls.email.invalid ? 'Indica um email válido.' : ''"
+        [disabled]="submitState() === 'submitting' || auth.isLoginLocked()"
+      >
+        <input
           type="email"
           formControlName="email"
-          placeholder="admin@bravo.co.ao" /></label
-      ><small *ngIf="form.controls.email.touched && form.controls.email.invalid"
-        >Indica um email válido.</small
+          placeholder="admin@bravo.co.ao"
+          [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid ? true : null"
+        />
+      </app-form-field>
+      <app-form-field
+        caption="Password"
+        [state]="form.controls.password.touched && form.controls.password.invalid ? 'error' : 'default'"
+        [helpText]="form.controls.password.touched && form.controls.password.invalid ? 'A password deve ter pelo menos 6 caracteres.' : ''"
+        [disabled]="submitState() === 'submitting' || auth.isLoginLocked()"
       >
-      <label
-        >Password<input
+        <input
           type="password"
           formControlName="password"
-          placeholder="A tua password" /></label
-      ><small
-        *ngIf="form.controls.password.touched && form.controls.password.invalid"
-        >A password deve ter pelo menos 6 caracteres.</small
-      >
-      <button class="admin-submit" [disabled]="loading() || auth.isLoginLocked()">
-        <i
-          class="fa-solid"
-          [class.fa-right-to-bracket]="!loading()"
-          [class.fa-spinner]="loading()"
-        ></i
-        >{{ loading() ? "A entrar..." : "Entrar" }}
+          placeholder="A tua password"
+          [attr.aria-invalid]="form.controls.password.touched && form.controls.password.invalid ? true : null"
+        />
+      </app-form-field>
+      <button class="admin-submit" type="submit" [disabled]="submitState() === 'submitting' || auth.isLoginLocked()">
+        @switch (submitState()) {
+          @case ('submitting') { <i class="fa-solid fa-spinner fa-spin"></i> A guardar... }
+          @case ('success') { <i class="fa-solid fa-circle-check"></i> Guardado! }
+          @default { <i class="fa-solid fa-right-to-bracket"></i> Entrar }
+        }
       </button>
     </form>
   </section>

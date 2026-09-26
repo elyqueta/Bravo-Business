@@ -1,0 +1,36 @@
+<div
+  class="field"
+  [class.field-error]="state() === 'error'"
+  [class.field-success]="state() === 'success'"
+  [class.field-disabled]="disabled()"
+>
+  @if (caption()) {
+    <span class="field-caption">{{ caption() }}</span>
+  }
+  <div class="field-control">
+    <ng-content></ng-content>
+    @if (state() === 'success') {
+      <i class="fa-solid fa-circle-check field-icon success"></i>
+    }
+    @if (state() === 'error') {
+      <i class="fa-solid fa-triangle-exclamation field-icon error"></i>
+    }
+    @if (showClear() && !disabled()) {
+      <button type="button" class="field-clear" (click)="clear()()" aria-label="Limpar">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    }
+  </div>
+  <div class="field-foot">
+    @if (state() === 'error' && errorText()) {
+      <small class="field-msg error"
+        ><i class="fa-solid fa-triangle-exclamation"></i>{{ errorText() }}</small
+      >
+    } @else if (helpText()) {
+      <small class="field-msg">{{ helpText() }}</small>
+    }
+    @if (maxLength()) {
+      <small class="field-count">{{ currentLength() }} / {{ maxLength() }}</small>
+    }
+  </div>
+</div>

@@ -21,6 +21,7 @@ export class AdminCategoriesComponent implements OnInit {
   readonly categories = signal<CategoryApi[]>([]);
   readonly loading = signal(false);
   readonly deletingId = signal<string | null>(null);
+  readonly deleteState = signal<'idle' | 'removing'>('idle');
   ngOnInit(): void {
     this.load();
   }
@@ -47,14 +48,17 @@ export class AdminCategoriesComponent implements OnInit {
       danger: true,
     }).then((confirmed) => {
       if (!confirmed) return;
+      this.deleteState.set('removing');
       this.deletingId.set(category.id);
       this.api.deleteCategory(category.id).subscribe({
         next: () => {
           this.deletingId.set(null);
+          this.deleteState.set('idle');
           this.load();
         },
         error: () => {
           this.deletingId.set(null);
+          this.deleteState.set('idle');
           this.toast.error("Não foi possível remover a categoria.");
         },
       });

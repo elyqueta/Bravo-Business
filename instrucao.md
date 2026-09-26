@@ -1,266 +1,507 @@
-# Auditoria UX/UI — Loja & Painel Admin (Bravo Business)
-### Instrução de trabalho para o Kilo Code
+# Auditoria UX/UI, Formulários & Segurança — Bravo Business (Angular)
+### Instrução de trabalho complementar para o agente de código
 
 ---
 
 ## 0. Como usar este documento
 
-Este ficheiro deve ser lido pelo agente de código (Kilo Code) como instrução de execução. O projecto é uma aplicação Angular standalone (v22) com loja pública (`features/shop/*`) e painel administrativo (`features/admin/*`), já ligada a uma API real (`environment.apiUrl`). A base funcional já foi corrigida numa ronda anterior (reactividade com signals, shell do admin, interceptor de sessão, debounce na pesquisa). Este documento foca-se exclusivamente em **experiência de utilizador**: feedback do sistema, estados de carregamento/vazio, responsividade, componentização e polimento visual — para dar ao produto um acabamento de nível profissional, coerente com uma loja em produção.
+Este ficheiro complementa `instrucao.md` (já em grande parte implementado: toasts, confirm dialog, skeletons de catálogo/tabela, sidebar mobile do admin, formulário de produto com detalhes/galeria). Foca-se em quatro frentes pedidas explicitamente: **(1)** estados visuais dos inputs a igualar a referência anexada, **(2)** animação de submissão diferente do skeleton de GET, **(3)** máscara de preço "estilo banco", **(4)** segurança de tokens/CSP — mais um conjunto de achados extra de responsividade e robustez encontrados durante a análise.
 
-**Regras gerais para o agente:**
-
-- Confirma o plano de cada fase antes de codificar; não avances sem validação.
-- Entrega sempre ficheiros completos (não excertos parciais).
-- Não alteres `environment.apiUrl`, `api.models.ts` (contratos de dados) nem o fluxo de checkout via WhatsApp.
-- Mantém a linguagem visual existente: Bebas Neue + DM Sans, cor de destaque `#c8a96e`, tokens `--surface`/`--border`/`--r`/`--sh`, ícones Font Awesome (nunca emojis), suporte a modo escuro.
-- Texto de interface em português de Portugal (pt-PT).
-- Sempre que criares um padrão reutilizável (toast, skeleton, modal de confirmação, estado vazio), extrai-o para `src/app/shared/` como componente/serviço standalone, para não voltar a duplicar-se entre loja e admin.
-- Corre `ng build` no final de cada fase para confirmar que compila sem erros.
+**Regras gerais (mantidas de `instrucao.md`):**
+- Confirma o plano de cada fase antes de codificar.
+- Entrega ficheiros completos.
+- Não alteres `environment.apiUrl`, `api.models.ts` nem o fluxo de checkout via WhatsApp.
+- Mantém a linguagem visual: Bebas Neue + DM Sans, `#c8a96e`, tokens `--surface`/`--border`/`--r`/`--sh`, ícones Font Awesome, dark mode.
+- Texto em pt-PT.
+- Corre `ng build` no fim de cada fase.
 
 ---
 
-## 1. Resumo executivo
+## 1. Estados visuais dos inputs (igualar a imagem de referência)
 
-O que já está bem resolvido:
-- Estado reactivo com signals em toda a parte admin.
-- Debounce na pesquisa de produtos do admin.
-- Interceptor de sessão (401 → logout automático).
-- Estados vazios já existem em: carrinho, favoritos, catálogo da loja, lista de produtos do admin.
-- Toast de sucesso já existe na loja (`toast()` do `global.js` legado — nota: a app Angular actual **não tem equivalente**, ver secção 2.A).
+**Observação:** a imagem mostra um sistema de input com: rótulo/legenda opcional acima do valor ("Input Caption"), estado *Default*, *Active* (foco, borda azul/accent), *Filled*, *Error* (borda vermelha + ícone + mensagem por baixo + contador "0 results"), *Success* (borda verde + ícone check), *Com texto de ajuda* + contador de caracteres (`15/60`), *Com botão* (ícone à direita, ex. pesquisa), *Disabled* (cinza, sem interação).
 
-O que falta para um acabamento "produção séria":
-1. Feedback de sucesso/erro do admin aparece como banner estático no topo da página — obriga a fazer scroll para ver. Precisa de virar toast/notificação flutuante.
-2. Sem spinners/skeletons durante os pedidos à API (loja e admin) — o utilizador só vê "aparecer" o conteúdo sem transição.
-3. `window.confirm()` nativo para eliminar produtos/categorias — feio, inconsistente com a marca.
-4. Formulário de produto do admin: falta um editor de "detalhes/características" (tamanhos, materiais, etc. — o campo `features` já existe no modelo de dados e é usado para leitura, mas não tem UI de edição).
-5. Gestão de galeria de imagens no admin é uma `<textarea>` de URLs em texto livre — não é utilizável por uma pessoa não-técnica.
-6. Sidebar do admin em mobile vira uma navbar horizontal — o pedido é que continue como sidebar/drawer com hambúrguer, tal como a loja já faz.
-7. Tabela de produtos do admin não é responsiva em ecrãs pequenos.
-8. Botão "Ver loja" colado visualmente ao botão de logout, e o logout não segue o estilo dos restantes itens de navegação da sidebar.
-9. Falta uma página de detalhe/visualização de produto no admin (ver quando foi criado/actualizado — os campos `createdAt`/`updatedAt` já existem no `ProductApi` e não são mostrados em lado nenhum).
-10. Duplicação de markup por várias páginas (cabeçalhos de página, badges, preços) que deveria estar componentizado.
+**Estado actual:** os inputs do admin (`admin-form input`, `admin-auth-card input`) e do catálogo (`.catalog-toolbar input`) usam um único estilo de borda `var(--border)`; erro é apenas texto vermelho por baixo (`.admin-field-error`), sem alterar a borda do campo; não existe estado de sucesso, nem contador de caracteres, nem botão de limpar (×) dentro do campo.
 
----
+### 1.1 Criar componente partilhado `app-form-field`
 
-## 2. Achados detalhados e proposta de solução
+Novo ficheiro `src/app/shared/form-field/form-field.component.ts` (+ html/scss), standalone, para uniformizar todos os campos de texto/número da app (login, produto, categoria, pesquisa do catálogo, contacto):
 
-### A. Sistema global de feedback (toast + confirmação) — prioridade máxima
+```ts
+// form-field.component.ts
+import { Component, ContentChild, ElementRef, input, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
-**Problema:** `AdminPageComponent`, `AdminProductsComponent`, `AdminProductFormComponent`, `AdminCategoriesComponent`, `AdminCategoryFormComponent`, `AdminLoginComponent` mostram erro/sucesso através de `<div class="admin-error">`/`<div class="admin-success">` fixos no topo do formulário/painel. Em ecrãs longos (ex.: formulário de produto), o utilizador submete o formulário, a mensagem aparece no topo, mas o scroll continua onde estava — a pessoa não vê nada e pensa que não aconteceu nada.
+export type FieldState = 'default' | 'error' | 'success';
 
-Adicionalmente, `window.confirm(...)` é usado em `deleteProduct`/`deleteCategory`/`delete(product)` — janela nativa do browser, sem identidade visual.
-
-**Solução proposta:**
-
-1. Criar `src/app/shared/toast/toast.service.ts` — serviço standalone (`providedIn: 'root'`) com um `signal<ToastMessage[]>([])`, método `show(message: string, type: 'success' | 'error' | 'info')`, auto-dismiss em ~4s, suporte a múltiplos toasts empilhados.
-2. Criar `src/app/shared/toast/toast-container.component.ts` — componente fixo (`position: fixed; bottom: 26px; right: 26px` no desktop, full-width no mobile), reaproveitando o visual do `.toast` que já existe em `styles.css` (ícone Font Awesome, fundo `var(--text)`, texto `var(--bg)`), mas com variante de cor para erro (usar `var(--danger)` como borda/ícone) e sucesso (usar `var(--accent)` ou verde `#25d366` para alinhar com o WhatsApp da marca).
-3. Montar `<app-toast-container>` uma única vez em `app.component.html`, para funcionar tanto na loja como no admin.
-4. Substituir, em todos os componentes admin listados acima, `error.set(...)`/`success.set(...)` por chamadas a `toastService.show(...)`. Podes manter os signals `error`/`success` apenas onde ainda sejam necessários para desenhar estado inline (ex.: mensagem de validação por campo), mas o feedback de "operação concluída/falhou" passa a ser sempre toast.
-5. Criar `src/app/shared/confirm-dialog/confirm-dialog.service.ts` + componente modal (overlay com blur, caixa `--surface`/`--r`/`--sh-lg`, título, texto, botão "Cancelar" e botão de acção destrutiva a vermelho) para substituir todos os `window.confirm(...)`. Deve devolver uma `Promise<boolean>` ou usar um `Observable`, para manter a chamada tão simples como:
-   ```ts
-   const confirmed = await this.confirmDialog.ask({
-     title: 'Remover produto',
-     message: `Tens a certeza que queres remover "${product.name}"? Esta acção não pode ser revertida.`,
-     confirmLabel: 'Remover',
-     danger: true,
-   });
-   if (!confirmed) return;
-   ```
-
-**Ficheiros afectados:** `app.component.html`, todos os componentes em `features/admin/*` que hoje usam `error()`/`success()`/`window.confirm`.
-
----
-
-### B. Estados de carregamento (spinners/skeletons)
-
-**Problema:** Não existe nenhum indicador visual enquanto se espera pela API:
-- `StoreService.loadCatalog()` na loja — a home e o catálogo mostram grelha vazia até os produtos chegarem, sem feedback.
-- `ProductDetailPageComponent` já tem um estado de "A carregar produto..." com spinner Font Awesome — bom exemplo a replicar.
-- Admin: `AdminProductsComponent`, `AdminCategoriesComponent`, `AdminPageComponent` têm o signal `loading()` disponível mas não é usado visualmente em lado nenhum excepto para desactivar botões.
-
-**Solução proposta:**
-
-1. Criar `src/app/shared/skeleton/skeleton-card.component.ts` — bloco cinza com animação de "shimmer" (gradiente animado via CSS, usando `var(--surface2)`/`var(--surface3)`), no formato de um `.pcard` (mesma altura/proporção). Usar em:
-   - `catalog-page.component.html` — mostrar 8 `<app-skeleton-card>` enquanto `!store.catalogReady()`.
-   - `home-page.component.html` — idem nas secções de categoria em destaque.
-2. Criar `src/app/shared/skeleton/skeleton-row.component.ts` (ou reutilizar o mesmo componente com `[variant]="'row'"`) para a tabela de produtos/categorias do admin, mostrado enquanto `loading()` é `true` e a lista está vazia.
-3. Em botões de submissão (login, guardar produto, guardar categoria), o padrão já usado no login (`[class.fa-spinner]="loading()"` a girar) deve ser replicado em `admin-product-form` e `admin-category-form` (confirmar se já está — está parcialmente feito, mas confirmar consistência visual do `fa-spin`).
-4. No modal/página de produto, ao trocar de imagem no upload, mostrar um pequeno spinner sobreposto à pré-visualização durante a leitura do ficheiro (é instantâneo com `URL.createObjectURL`, mas útil manter o padrão para quando a gravação for para o servidor).
-
----
-
-### C. Formulário de produto do admin — pré-preenchimento, detalhes e galeria
-
-**Nota:** o pré-preenchimento do formulário ao editar **já funciona** (`AdminProductFormComponent.ngOnInit`, quando existe `id`, chama `this.api.products(id)` e faz `this.form.patchValue({...})`, incluindo a imagem actual via `product()?.img` no template). O que falta é:
-
-1. **Detalhes/características do produto** (tamanhos, materiais, etc.):
-   - O modelo `Product`/`ProductApi` já tem `features?: string[] | null` e já é lido e mostrado na página de detalhe da loja (secção "Qualidade seleccionada" é fixa — os `features` reais do produto nunca aparecem em lado nenhum na loja!). Corrigir isto também na loja (`product-detail-page.component.html`): substituir a lista fixa de 3 itens por `*ngFor` sobre `item.features`, com fallback para os 3 itens genéricos actuais quando `features` estiver vazio.
-   - No admin, adicionar ao `FormGroup` de `AdminProductFormComponent` um `FormArray` (ou uma lista simples gerida fora do form reactivo, tipo `signal<string[]>([])`) chamada "Detalhes do produto". UI: um input de texto + botão "Adicionar" (Enter também deve adicionar), e a lista mostrada como chips/tags removíveis (`<span class="feat-chip">Tamanho: M <button (click)="remove(i)">×</button></span>`). Placeholder com exemplos: "Material: 100% algodão", "Tamanhos: S, M, L, XL".
-   - Ao gravar, serializar como `payload.append('features', JSON.stringify(features()))`, tal como já é feito com `galleryUrls`.
-
-2. **Galeria de imagens** — eliminar a exposição de URLs em texto livre ao utilizador comum:
-   - Remover do template o `<textarea formControlName="gallery">` visível como campo de texto solto.
-   - Ao editar um produto, mostrar as imagens de galeria existentes (`product()?.gallery`) como uma grelha de miniaturas, cada uma com um botão "×" no canto para marcar para remoção (basta filtrá-la da lista antes de reconstruir o `galleryUrls` a enviar — não precisa de chamada extra à API).
-   - Manter o campo de upload múltiplo (`onGallerySelected`) mas estilizá-lo como uma zona de "arrastar e largar" (dropzone) em vez do `<input type="file">` cru — pode ser um `<label>` estilizado a englobar o input (padrão comum: borda tracejada, ícone de upload, texto "Arrasta imagens ou clica para escolher").
-   - O resultado final: o admin só vê miniaturas e botões de "+" / "×"; nunca escreve ou lê uma URL manualmente.
-
-3. **Metadados só de leitura**: mostrar, quando `editingId` existe, uma pequena secção discreta (texto `--muted`, tipo rodapé do formulário) com "Criado em: {{ product()?.createdAt | date:'dd/MM/yyyy HH:mm' }}" e "Última actualização: {{ product()?.updatedAt | date:'dd/MM/yyyy HH:mm' }}" — usa `DatePipe` (precisa `CommonModule`, já importado).
-
-4. **Remover código morto**: confirmar que não sobra nenhum controlo de formulário não ligado ao template (o antigo campo `img` do `AdminPageComponent.productForm` já não é usado pela versão actual do formulário standalone — ao migrar tudo para o novo componente, o `AdminPageComponent` deixou de ser necessário para produtos/categorias; confirmar se ainda faz sentido manter os métodos `saveProduct`/`deleteProduct`/`saveCategory`/`deleteCategory`/`productForm`/`categoryForm` nesse ficheiro, já que a página `/admin` agora é só o dashboard de visão geral — se não forem usados em lado nenhum do template actual do dashboard, remover para não confundir manutenção futura).
-
-**Ficheiros afectados:** `admin-product-form.component.ts/html/scss`, `product-detail-page.component.html`, `api.models.ts` (confirmar que `CreateProductInput.features` já existe — existe), `admin-page.component.ts` (limpeza).
-
----
-
-### D. Página de detalhe do produto no admin (nova)
-
-**Pedido:** ver quando o produto foi criado/adicionado, e outros detalhes, numa página dedicada (não apenas no formulário de edição).
-
-**Solução proposta:** criar `src/app/features/admin/admin-product-detail/admin-product-detail.component.ts` (+ html/scss), rota `admin/produtos/:id` (distinta de `:id/editar`). Conteúdo:
-- Imagem principal + galeria em miniatura (read-only, clicável para trocar a imagem principal, tal como a página de detalhe da loja).
-- Nome, código, categoria, preço (com preço antigo riscado se existir), badge.
-- Lista de `features` (detalhes/características).
-- Descrição completa.
-- Bloco de metadados: criado em / actualizado em.
-- Botões: "Editar" (vai para `/admin/produtos/:id/editar`) e "Eliminar" (abre o `ConfirmDialog` da secção 2.A).
-
-Na tabela de produtos (`admin-products.component.html`), o nome do produto ou uma nova acção "olho" (`fa-eye`) deve linkar para esta página de detalhe, ficando: `fa-eye` (ver) · `fa-pen` (editar) · `fa-trash` (eliminar).
-
----
-
-### E. Painel Admin — sidebar/shell mobile como drawer, não navbar
-
-**Problema:** em `admin-shell.component.scss`, a media query `@media (max-width: 850px)` transforma a sidebar numa barra horizontal fixa no topo (`grid-template-columns: 1fr`, `.admin-nav { display: flex; overflow: auto }`), escondendo o rodapé (`.admin-sidebar-foot p`, `.admin-sidebar-store` ficam com `display: none`). O pedido é que o comportamento mobile siga o mesmo padrão já usado na loja: um botão de hambúrguer que abre a sidebar completa como um **drawer lateral com overlay**, exactamente como `NavbarComponent`/`navbar.component.html` já faz (`.mob-overlay`, `.mob-menu`, transição `translateX`).
-
-**Solução proposta:**
-
-1. Adicionar a `AdminShellComponent` um `mobileOpen = signal(false)` e um botão de hambúrguer visível apenas em mobile (`@media max-width: 850px`), fixo no topo (pequena barra com o logo + hambúrguer, tipo "topbar mobile" — reaproveitar as classes `.hbg`/`span` já existentes em `styles.css` para o ícone de 3 traços).
-2. A `<aside class="admin-sidebar">` passa a ter, em mobile, `position: fixed; transform: translateX(-100%)`, com `.on { transform: translateX(0) }` quando `mobileOpen()` for verdadeiro — mesma mecânica do `.mob-menu` da loja, mas a abrir pela esquerda (é uma sidebar, não um menu de conta) ou pela direita, o que fizer mais sentido visualmente; adicionar `<div class="admin-mob-overlay">` com blur, clicável para fechar.
-3. Ao navegar (clique num link do menu), fechar o drawer automaticamente (`(click)="mobileOpen.set(false)"` em cada `<a>` da nav, ou subscrever a `Router.events` para fechar em qualquer `NavigationEnd`).
-4. O rodapé da sidebar (nome do utilizador, "Ver loja", logout) deixa de ser escondido em mobile — fica dentro do mesmo drawer, sempre acessível, tal como no desktop.
-
-**Ficheiros afectados:** `admin-shell.component.ts/html/scss`.
-
----
-
-### F. Sidebar do admin — reorganizar "Ver loja" e estilo do logout
-
-**Problema:** `admin-sidebar-foot` tem, em sequência: nome do utilizador, botão de logout (estilo texto simples, cor `var(--danger)`, sem fundo), depois o link "Ver loja" (estilo diferente, texto pequeno cinza). Ficam visualmente colados e com tratamentos inconsistentes — o pedido é que "Ver loja" suba para junto dos outros itens de navegação (mesmo estilo de `.admin-nav a`), e que o logout também siga esse mesmo estilo de botão de navegação (ícone + texto, padding, hover), apenas com uma cor de destaque diferente (ex.: hover a vermelho) para sinalizar que é uma acção diferente — sem parecer "gerado por IA"/deslocado do resto do design.
-
-**Solução proposta:**
-
-1. Mover o link "Ver loja" (`<a routerLink="/loja">`) para dentro de `<nav class="admin-nav">`, como mais um item de navegação (com o mesmo `<i class="fa-solid ...">` + texto), posicionado no topo ou como último item da lista principal — não como um extra separado no rodapé. Sugestão de ícone: `fa-store` ou `fa-arrow-up-right-from-square`.
-2. Transformar o `<button (click)="logout()">` para usar exactamente as mesmas classes/estrutura visual de `.admin-nav a` (ícone à esquerda + texto, mesmo padding/border-radius/font-size), mas como `<button class="admin-nav-link admin-nav-danger">` — no CSS, criar uma variante `.admin-nav a.danger, .admin-nav button.danger { color: var(--danger) } .admin-nav a.danger:hover, .admin-nav button.danger:hover { background: rgba(224,85,85,.1); color: var(--danger) }` em vez do sublinhado actual.
-3. O rodapé da sidebar (`.admin-sidebar-foot`) passa a conter apenas o nome do utilizador (ex.: como um pequeno cartão com avatar/inicial + nome), servindo de identificação, sem mais acções penduradas ali.
-
-**Ficheiros afectados:** `admin-shell.component.html`, `admin-shell.component.scss`.
-
----
-
-### G. Tabela de produtos do admin — responsividade
-
-**Problema:** `admin-products.component.html` usa uma `<table class="admin-table">` dentro de `.admin-table-wrap { overflow-x: auto }` — em ecrãs pequenos isto obriga a fazer scroll horizontal para ver preço/badge/acções, o que é uma má experiência táctil.
-
-**Solução proposta:** abaixo de um breakpoint (ex.: 700px), esconder a tabela e mostrar a mesma informação como uma lista de cartões (padrão já usado em `.ditem`/`.account-list` do carrinho/favoritos da loja — reaproveitar esse padrão visual):
+@Component({
+  selector: 'app-form-field',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './form-field.component.html',
+  styleUrls: ['./form-field.component.scss'],
+})
+export class FormFieldComponent {
+  readonly caption = input<string>('');
+  readonly state = input<FieldState>('default');
+  readonly helpText = input<string>('');
+  readonly errorText = input<string>('');
+  readonly maxLength = input<number | null>(null);
+  readonly currentLength = input<number>(0);
+  readonly disabled = input(false);
+  readonly showClear = input(false);
+  readonly clear = signal<() => void>(() => {});
+}
+```
 
 ```html
-<!-- desktop: tabela normal -->
-<table class="admin-table hide-sm">...</table>
-
-<!-- mobile: cartões -->
-<div class="admin-product-cards show-sm">
-  <article class="admin-product-card" *ngFor="let product of products()">
-    <img [src]="product.img" [alt]="product.name" />
-    <div>
-      <strong>{{ product.name }}</strong>
-      <span>{{ product.categorySlug }} · {{ product.price | number }} Kz</span>
-      <span class="admin-badge" *ngIf="product.badge">{{ product.badge }}</span>
-    </div>
-    <div class="admin-row-actions">
-      <a [routerLink]="['/admin/produtos', product.id]"><i class="fa-solid fa-eye"></i></a>
-      <a [routerLink]="['/admin/produtos', product.id, 'editar']"><i class="fa-solid fa-pen"></i></a>
-      <button (click)="delete(product)"><i class="fa-solid fa-trash"></i></button>
-    </div>
-  </article>
+<!-- form-field.component.html -->
+<div
+  class="field"
+  [class.field-error]="state() === 'error'"
+  [class.field-success]="state() === 'success'"
+  [class.field-disabled]="disabled()"
+>
+  @if (caption()) {
+    <span class="field-caption">{{ caption() }}</span>
+  }
+  <div class="field-control">
+    <ng-content></ng-content>
+    @if (state() === 'success') {
+      <i class="fa-solid fa-circle-check field-icon success"></i>
+    }
+    @if (state() === 'error') {
+      <i class="fa-solid fa-triangle-exclamation field-icon error"></i>
+    }
+    @if (showClear() && !disabled()) {
+      <button type="button" class="field-clear" (click)="clear()()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    }
+  </div>
+  <div class="field-foot">
+    @if (state() === 'error' && errorText()) {
+      <small class="field-msg error"
+        ><i class="fa-solid fa-triangle-exclamation"></i>{{ errorText() }}</small
+      >
+    } @else if (state() === 'success' && helpText()) {
+      <small class="field-msg success">{{ helpText() }}</small>
+    } @else if (helpText()) {
+      <small class="field-msg">{{ helpText() }}</small>
+    }
+    @if (maxLength()) {
+      <small class="field-count">{{ currentLength() }} / {{ maxLength() }}</small>
+    }
+  </div>
 </div>
 ```
-Usar classes utilitárias `hide-sm`/`show-sm` já existentes em `styles.css` (ou criar `.show-sm { display: none } @media (max-width: 700px) { .hide-sm { display: none } .show-sm { display: block } }`) — mesmo princípio aplicado à lista de categorias, que já usa cartões (`admin-category-list`) e só precisa de confirmar que o grid colapsa bem em 1 coluna (já tem `@media 850px { grid-template-columns: 1fr }` no SCSS partilhado — confirmar visualmente).
 
-Rever também o `.admin-form` do formulário de produto/categoria em ecrãs pequenos: já tem `grid-template-columns: 1fr` a partir de 850px — confirmar que a pré-visualização de imagem, chips de detalhes e dropzone de galeria (novos, da secção C) também se ajustam correctamente a 1 coluna.
+```scss
+// form-field.component.scss
+.field { display: grid; gap: 6px; }
+.field-caption {
+  font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted);
+}
+.field-control {
+  position: relative; display: flex; align-items: center;
+  border: 1.5px solid var(--border); border-radius: 8px; background: var(--surface2);
+  transition: border-color .18s, box-shadow .18s;
+}
+.field-control:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-lt);
+}
+.field-error .field-control { border-color: var(--danger); }
+.field-error .field-control:focus-within { box-shadow: 0 0 0 3px rgba(224,85,85,.14); }
+.field-success .field-control { border-color: #25a35a; }
+.field-success .field-control:focus-within { box-shadow: 0 0 0 3px rgba(37,163,90,.14); }
+.field-disabled .field-control { opacity: .55; cursor: not-allowed; }
+.field-control ::ng-content, .field-control input, .field-control textarea {
+  flex: 1; border: none; background: transparent; padding: 11px 12px; font: inherit; color: var(--text);
+}
+.field-control input:focus, .field-control textarea:focus { outline: none; }
+.field-icon { padding-right: 12px; font-size: 14px; }
+.field-icon.success { color: #25a35a; }
+.field-icon.error { color: var(--danger); }
+.field-clear {
+  padding-right: 12px; color: var(--muted); font-size: 13px;
+}
+.field-clear:hover { color: var(--text); }
+.field-foot { display: flex; justify-content: space-between; gap: 10px; min-height: 14px; }
+.field-msg { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+.field-msg.error { color: var(--danger); }
+.field-msg.success { color: #25a35a; }
+.field-count { font-size: 11px; color: var(--muted); margin-left: auto; }
+```
 
-**Ficheiros afectados:** `admin-products.component.html/ts`, `admin-page.component.scss` (partilhado por várias páginas admin), `styles.css` (classes utilitárias, se ainda não existirem globais suficientes).
+> Nota de acessibilidade: liga `errorText()`/`helpText()` ao input via `aria-describedby` (id gerado) e `aria-invalid="true"` quando `state()==='error'` — adiciona isto ao componente com um `id` de instância única (`crypto.randomUUID()` ou contador estático).
 
----
+### 1.2 Onde aplicar
 
-### H. Componentização — duplicação a eliminar
-
-Padrões repetidos em vários templates que devem virar componentes `shared/`:
-
-| Padrão duplicado | Onde aparece hoje | Componente a extrair |
+| Campo | Ficheiro | Estado a activar |
 |---|---|---|
-| Badge de produto (Sale/Premium/Novo) | `product-card.component.html`, `product-detail-page.component.html`, `admin-products.component.html` | `<app-product-badge [badge]="...">` |
-| Preço com preço antigo riscado | `product-card.component.html`, `cart-page.component.html`, `product-detail-page.component.html` | `<app-price [price]="..." [oldPrice]="...">` (usa `store.formatPrice` internamente) |
-| Cabeçalho `.page-hero` (eyebrow + título + texto) | `home`, `catalog`, `contactos`, `info-page`, `cart-page` | `<app-page-hero [eyebrow]="..." [title]="..." [subtitle]="...">` |
-| Estado vazio (ícone + título + texto + CTA) | `cart-page`, `wishlist-page`, `catalog-page`, `admin-products` (`.admin-empty`) | `<app-empty-state [icon]="..." [title]="..." [text]="..." [ctaLink]="..." [ctaLabel]="...">` |
-| Linha de item de carrinho/favorito (`.ditem`) | `cart-page.component.html`, `global.js` legado | já são suficientemente parecidos para extrair `<app-cart-line-item>` reutilizado em ambos os drawers/páginas |
+| Email / Password | `admin-login.component.html` | `error` quando `form.controls.X.touched && invalid`; `success` opcional ao ficar válido após toque |
+| Preço / Preço anterior | `admin-product-form.component.html` | `error` já existe como texto solto — migrar para o wrapper com borda vermelha |
+| Nome / Descrição | `admin-product-form.component.html` | contador de caracteres (`maxLength=200` já definido no form) |
+| Nome / Prefixo / Âncora | `admin-category-form.component.html` | `error` em validação |
+| Pesquisa do catálogo | `catalog-page.component.html` | `showClear` quando `search` não vazio (botão × que já existe visualmente noutros campos do wireframe) |
+| Detalhe do produto — input de característica | `admin-product-form.component.html` (`featureCtrl`) | `success` breve ao adicionar (feedback de que foi aceite) |
 
-Isto reduz drasticamente o risco de o que aconteceu no passado (sidebar do admin duplicada em 5 sítios, ver `bravo-business-admin-auditoria-plano-correcao.md`, Causa Raiz #2) se repetir noutra área da aplicação.
-
----
-
-### I. Outras melhorias de e-commerce (nice-to-have, baixa prioridade)
-
-Itens comuns em lojas online de referência que não foram pedidos explicitamente mas valem a pena registar:
-
-- Paginação real na tabela de produtos/categorias do admin (hoje o `AdminApiService.products()` já pede `limit: 100` fixo — se o catálogo crescer, isto deixa de escalar).
-- Ordenar/filtrar produtos por categoria também no admin (só existe pesquisa por texto).
-- Contador de resultados de pesquisa no admin (ex.: "12 produtos encontrados"), tal como já existe na loja (`.catalog-meta`).
-- Página 404 dedicada em vez do redireccionamento silencioso para `/loja` (`{ path: '**', redirectTo: 'loja' }`).
-- Debounce também na pesquisa/filtros do catálogo da loja (`catalog-page.component.ts` chama `apply()` directamente em cada `ngModelChange`) — hoje é tudo local (sem pedido à API), por isso é de impacto baixo, mas melhora a fluidez em telemóveis mais lentos.
-- Indicador de "produto adicionado" mais visível no botão (ex.: ícone muda para "check" durante 1s) além do toast.
+**Importante:** isto é uma refactorização visual/estrutural — corre `ng build` após cada ficheiro migrado e confirma que o `FormControl`/`ngModel` por trás continua a funcionar (o `<input>` real fica dentro de `<app-form-field>` via `<ng-content>`, a diretiva `formControlName`/`ngModel` mantém-se no `<input>`, não no wrapper).
 
 ---
 
-## 3. Plano de implementação por fases
+## 2. Animação de submissão de formulário (distinta do skeleton de GET)
 
-### Fase 1 — Sistema global de feedback (toast + confirm dialog)
-Ver secção 2.A. Base para todas as fases seguintes (todas as fases usam o toast em vez de banners).
+**Princípio:** skeleton = "ainda não tenho dados" (GET inicial); animação de submit = "tenho dados, estou a processá-los" (POST/PATCH/DELETE). Não devem parecer a mesma coisa.
 
-### Fase 2 — Sidebar admin: mobile drawer + reorganização "Ver loja"/logout
-Ver secções 2.E e 2.F. Alterações isoladas a `admin-shell.*`.
+### 2.1 Estado actual
+- Botões de submit já mudam ícone para `fa-spinner fa-spin` + texto "A guardar..." (login, produto, categoria) — bom ponto de partida, mas falta:
+  1. Bloquear o resto do formulário durante o submit (hoje só o botão fica `disabled`; os campos continuam editáveis).
+  2. Um sinal de sucesso perceptível antes do redirecionamento (hoje navega imediatamente após o toast, o que pode passar despercebido em ecrãs rápidos).
 
-### Fase 3 — Responsividade da tabela de produtos/categorias do admin
-Ver secção 2.G.
+### 2.2 Proposta — `submitting` + `submitted` como dois estados distintos do skeleton
 
-### Fase 4 — Estados de carregamento (skeletons/spinners)
-Ver secção 2.B. Componentes novos em `shared/skeleton/`.
+Adicionar a cada formulário (produto, categoria, login) um `signal<'idle' | 'submitting' | 'success'>('idle')` e:
 
-### Fase 5 — Formulário de produto: detalhes/características + galeria estilizada + metadados
-Ver secção 2.C. Inclui a correcção da página de detalhe da loja para mostrar `features` reais.
+```html
+<form [formGroup]="form" (ngSubmit)="save()" [class.form-locked]="submitState() === 'submitting'">
+  <fieldset [disabled]="submitState() === 'submitting'">
+    ...campos...
+  </fieldset>
+  <div class="admin-form-actions wide">
+    <button type="submit" class="admin-primary" [class.is-success]="submitState() === 'success'">
+      @switch (submitState()) {
+        @case ('submitting') { <i class="fa-solid fa-spinner fa-spin"></i> A guardar... }
+        @case ('success') { <i class="fa-solid fa-circle-check"></i> Guardado! }
+        @default { <i class="fa-solid fa-floppy-disk"></i> Guardar alterações }
+      }
+    </button>
+  </div>
+</form>
+```
 
-### Fase 6 — Página de detalhe de produto no admin
-Ver secção 2.D. Depende da Fase 1 (toast/confirm) e reaproveita padrões da Fase 5.
+```scss
+.form-locked { position: relative; }
+.form-locked::after {
+  content: ''; position: absolute; inset: 0; background: rgba(255,255,255,.02);
+  pointer-events: none; border-radius: var(--r);
+}
+.admin-primary.is-success {
+  background: #25a35a; color: #fff;
+  animation: submitPop .35s ease;
+}
+@keyframes submitPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+```
 
-### Fase 7 — Componentização (badge, preço, page-hero, empty-state)
-Ver secção 2.H. Fazer por último, depois de todas as outras fases estabilizarem os templates, para evitar reabrir ficheiros já mexidos várias vezes.
+No TS: ao receber sucesso da API, define `submitState.set('success')`, aguarda ~500-600ms (`setTimeout`) e só depois chama `toast.success(...)` + `router.navigateByUrl(...)`. Isto dá um feedback visual claro de "aconteceu", distinto do shimmer cinzento dos skeletons.
 
-### Fase 8 (opcional) — Melhorias de e-commerce da secção 2.I
-A avaliar com o Elizandro após as fases 1–7 estarem em produção.
+Aplicar em: `admin-login.component.ts` (submit), `admin-product-form.component.ts` (save), `admin-category-form.component.ts` (save), e nos botões de eliminar dentro do `ConfirmDialogComponent` (feedback de "A remover..." semelhante, já parcialmente coberto por `deletingId()`).
+
+### 2.3 Barra de progresso fina para "refresh" (não é GET inicial nem submit)
+Para o botão "Actualizar" (`admin-refresh`) em produtos/categorias/dashboard, que hoje troca para skeleton completo mesmo quando já há dados no ecrã (perde-se o conteúdo por um instante), propor uma barra fina (estilo YouTube) no topo do painel em vez de substituir a lista:
+
+```scss
+.admin-panel { position: relative; }
+.admin-panel-loading-bar {
+  position: absolute; top: 0; left: 0; height: 2px; background: var(--accent);
+  animation: loadingBar 1.1s ease-in-out infinite;
+}
+@keyframes loadingBar {
+  0% { width: 0; left: 0; }
+  50% { width: 60%; }
+  100% { width: 0; left: 100%; }
+}
+```
+Mostrar esta barra apenas quando `loading() && products().length > 0` (já há dados, é um refresh); manter o skeleton actual só quando `loading() && !products().length` (estado inicial), que já é o comportamento em `admin-products.component.html`/`admin-categories.component.html` — confirmar e alinhar `admin-page.component.html` da mesma forma.
 
 ---
 
-## 4. Checklist de aceitação
+## 3. Máscara de preço "estilo input bancário"
 
-- [ ] Nenhuma mensagem de sucesso/erro no admin obriga a fazer scroll — todas aparecem como toast visível.
-- [ ] Eliminar um produto/categoria abre um modal de confirmação com a identidade visual da marca, nunca `window.confirm`.
-- [ ] Catálogo da loja e tabelas do admin mostram skeleton/spinner enquanto aguardam a API, nunca uma grelha em branco.
-- [ ] Editar um produto mostra a imagem principal, a galeria existente (com opção de remover cada imagem) e os detalhes/características já preenchidos.
-- [ ] É possível adicionar/remover "detalhes do produto" (tamanho, material, etc.) no formulário do admin, sem escrever JSON ou texto solto.
-- [ ] Já não existe nenhum campo de texto livre para URLs de galeria visível ao utilizador do admin.
-- [ ] A página de detalhe do produto no admin mostra data de criação e de última actualização.
-- [ ] A loja mostra as características reais do produto (`features`) na página de detalhe, não uma lista fixa genérica.
-- [ ] Em mobile, o painel admin abre como sidebar/drawer com hambúrguer (igual à loja), nunca como navbar horizontal, e o botão de logout continua sempre acessível.
-- [ ] "Ver loja" está junto dos restantes itens de navegação da sidebar, com o mesmo estilo; o botão de logout usa a mesma estrutura visual dos outros itens, apenas com destaque de cor diferente.
-- [ ] A tabela de produtos do admin é totalmente legível e utilizável em ecrãs de telemóvel, sem scroll horizontal forçado.
+**Pedido:** o utilizador digita dígitos e eles entram pela direita, empurrando as casas decimais para a esquerda à medida que se digita (ex.: digitar `1`,`2`,`3`,`4`,`5` produz `0,01` → `0,12` → `1,23` → `12,34` → `123,45`), sem quebrar a formatação `pt-AO` já usada (`MoneyService`).
+
+### 3.1 Problema no código actual
+`admin-product-form.component.ts` (`onPriceInput`/`formatCurrencyInput`) já tenta preservar a posição do cursor no meio da string formatada — é frágil (recalcula "dígitos antes do cursor" a cada tecla) e não implementa o padrão "cents-first" pedido. A abordagem correcta de inputs bancários **fixa o cursor sempre no fim** e trata o valor como um número inteiro de cêntimos.
+
+### 3.2 Algoritmo proposto (substituir `onPriceInput`/`formatCurrencyInput`)
+
+```ts
+/** Converte o valor actual do campo (já formatado ou não) num total de cêntimos,
+ *  aplica o novo dígito/tecla, e devolve a string formatada pt-AO com 2 casas decimais. */
+private centsFromFormatted(value: string): number {
+  const digitsOnly = value.replace(/\D/g, '');
+  return digitsOnly ? parseInt(digitsOnly, 10) : 0;
+}
+
+private formatFromCents(cents: number): string {
+  const value = cents / 100;
+  return value.toLocaleString('pt-AO', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
+onPriceInput(controlName: 'price' | 'oldPrice', event: Event): void {
+  const input = event.target as HTMLInputElement;
+  // Ignora qualquer tecla que não seja dígito/backspace — o browser já filtra a maior
+  // parte via inputmode="decimal", isto é só a rede de segurança final.
+  const cents = this.centsFromFormatted(input.value);
+  const formatted = this.formatFromCents(cents);
+  this.form.get(controlName)?.setValue(formatted, { emitEvent: false });
+  // Cursor sempre no fim — é o padrão de qualquer input monetário tipo "banco".
+  requestAnimationFrame(() => {
+    const end = input.value.length;
+    input.setSelectionRange(end, end);
+  });
+}
+
+/** Backspace deve "puxar" um dígito de volta, não apagar um separador. */
+onPriceKeydown(controlName: 'price' | 'oldPrice', event: KeyboardEvent): void {
+  if (event.key !== 'Backspace') return;
+  event.preventDefault();
+  const current = this.form.get(controlName)?.value || '';
+  const cents = Math.floor(this.centsFromFormatted(current) / 10);
+  this.form.get(controlName)?.setValue(this.formatFromCents(cents), { emitEvent: false });
+}
+```
+
+```html
+<input
+  type="text"
+  inputmode="decimal"
+  formControlName="price"
+  (input)="onPriceInput('price', $event)"
+  (keydown)="onPriceKeydown('price', $event)"
+/>
+```
+
+- `onPriceBlur` pode ser removido — o valor já está sempre bem formatado a cada tecla, não há "estado inválido a meio" para corrigir no blur. Manter apenas a inicialização (`this.money.format(product.price)` ao carregar em edição) convertendo primeiro para cêntimos: `this.formatFromCents(Math.round(product.price * 100))`.
+- `MoneyService.parse()` continua a ser usado tal como está no `save()` para reconverter a string formatada num número antes de enviar à API — não precisa de alterações.
+- Aplicar exactamente o mesmo par de métodos a `oldPrice`.
+- Testar casos-limite: campo vazio → deve mostrar `0,00`; colar um valor grande (`ctrl+v`) → `centsFromFormatted` extrai só os dígitos, funciona igual; apagar tudo com backspace repetido → chega a `0,00` e para (sem `NaN`).
+
+---
+
+## 4. Skeletons — auditoria e melhorias
+
+### 4.1 Inventário actual
+| Local | Componente usado | Estado |
+|---|---|---|
+| `catalog-page` | `app-skeleton-card` (8) | ✅ ok |
+| `home-page` (por categoria) | `app-skeleton-card` (4) | ✅ ok |
+| `admin-categories` | `app-skeleton-card` (6) | ✅ ok |
+| `admin-products` (tabela) | `app-skeleton-row` (5) | ✅ ok |
+| `admin-page` (dashboard) | `skel-line` inline duplicado | ⚠️ ver 4.2 |
+| `admin-product-form` (edição) | `skel-line` inline dedicado | ⚠️ ver 4.3 |
+| `admin-product-detail` | spinner + texto | ⚠️ ver 4.4 |
+| `product-detail-page` (loja) | spinner + texto | ⚠️ ver 4.4 (prioridade menor) |
+
+### 4.2 Consolidar shimmer
+O keyframe `@keyframes shimmer` e as classes `.skel-line`/`.skel-short`/`.skel-price` estão duplicados em pelo menos 4 ficheiros (`styles.css`, `admin-page.component.scss`, `skeleton-card.component.scss`, `skeleton-row.component.scss`). Propor mover para uma única classe utilitária global em `src/styles.css` (`.skel-shimmer` com o keyframe) e os componentes/scss locais passam só a compor tamanhos (`width`, `height`) sobre essa classe base, evitando 4 cópias do mesmo gradiente/animação a divergirem ao longo do tempo.
+
+### 4.3 `admin-product-form` — alinhar skeleton ao grid real
+Hoje usa linhas genéricas de largura fixa. Propor gerar as linhas com as mesmas proporções do `admin-form` (grid 3 colunas): nome (2 linhas curtas), categoria/preço/preço-antigo (3 blocos lado a lado), descrição (bloco alto), detalhes (3 chips), galeria (grelha de 4 quadrados). Isto reduz o "salto" de layout entre skeleton e conteúdo real.
+
+### 4.4 Criar skeleton dedicado para páginas de detalhe
+Novo componente `src/app/shared/skeleton/skeleton-detail.component.ts` (imagem grande + 2 linhas de título + bloco de descrição + preço), usado em:
+- `admin-product-detail.component.html` — substitui o spinner actual enquanto `loading()`.
+- `product-detail-page.component.html` — substitui o `#loading` template actual.
+
+Mantém o spinner apenas como *fallback* para chamadas muito rápidas onde nem vale a pena montar skeleton (opcional, baixa prioridade).
+
+---
+
+## 5. Responsividade — achados adicionais
+
+Já implementado e confirmado nos ficheiros analisados: drawer mobile do admin (`admin-shell`), tabela→cartões em `admin-products`, toolbar do catálogo em coluna a 620px, grid do formulário de produto a 1 coluna a 850px, `admin-product-detail` a 1 coluna a 760px.
+
+Pontos a melhorar:
+
+1. **Áreas de toque pequenas em mobile.** `.qbtn` (28px), `.pact` (33px), `.soc` (38px), `.icn` (40px) ficam abaixo ou no limite da recomendação de 44×44px (Apple HIG / Material). Propor, só dentro de `@media (max-width: 520px)`, aumentar `.qbtn`/`.pact`/`.soc` para no mínimo 40px e `.pcard-acts`/`.mthumb` com mais espaçamento entre alvos tocáveis.
+2. **Safe-area em iOS (notch/home indicator).** Não há `viewport-fit=cover` nem `env(safe-area-inset-*)` em lado nenhum. Como `.toast` fica fixo a `bottom: 26px`, `.drw-ft` e `.mob-foot` ficam colados ao fundo do ecrã, e o `.admin-mob-topbar` ao topo — em iPhones com home indicator/notch isto pode ficar parcialmente tapado. Adicionar a `src/index.html`:
+   ```html
+   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+   ```
+   E em `styles.css`:
+   ```css
+   .toast { padding-bottom: calc(11px + env(safe-area-inset-bottom, 0px)); bottom: calc(26px + env(safe-area-inset-bottom, 0px)); }
+   .drw-ft, .mob-foot { padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px)); }
+   #navbar, .admin-mob-topbar { padding-top: env(safe-area-inset-top, 0px); height: calc(var(--nav) + env(safe-area-inset-top, 0px)); }
+   ```
+3. **Breakpoint intermédio (700–900px) na página de contactos.** `.contact-map iframe` só reduz altura a partir de 700px (`min-height: 320px`); entre 700-900px o layout já empilhou (grid vira 1 coluna a 700px) mas o iframe de 320px de altura ao lado de um painel de contacto pequeno pode deixar muito espaço vazio em tablets — considerar um valor intermédio (`~380px`) num breakpoint a 900px, opcional/baixa prioridade.
+4. **`admin-form-loading-inner` (skeleton do form) não tem breakpoint próprio** — herda o container, confirmar visualmente em 375px que as linhas não ficam demasiado longas/curtas face aos campos reais depois da mudança da secção 4.3.
+5. **Ficheiros legados fora do Angular (`index.htm`, `global.js`, `style.css` na raiz).** Não fazem parte do `angular.json` (`browser: src/main.ts`, `index: src/index.html`, `styles: src/styles.css`) — parecem um protótipo vanilla anterior à migração para Angular, duplicando ~1500 linhas de HTML/JS/CSS que já não são build-adas. Recomenda-se confirmar com o Elizandro se podem ser removidos do repositório: reduzem confusão de manutenção, tamanho do repo, e superfície de ataque acidental (nenhuma validação/segurança nesses ficheiros, caso algum hosting estático os sirva por engano via URL directa `/index.htm`).
+
+---
+
+## 6. Segurança — prioridade máxima
+
+### 6.1 Tokens em `localStorage` → mover para memória + cookie HttpOnly
+
+**Problema concreto:** `auth.service.ts` guarda `bravo-admin-token` e `bravo-admin-user` em `localStorage`; `refresh.service.ts` guarda `bravo-admin-refresh-token` também em `localStorage`. Qualquer XSS (mesmo um único `<script>` injectado, ex. via uma dependência npm comprometida ou um campo mal sanitizado no futuro) consegue ler `localStorage.getItem(...)` e exfiltrar o token de acesso **e** o refresh token — controlo total e persistente da conta admin. Isto é o risco nº1 identificado nesta auditoria.
+
+**Arquitectura alvo (exige alterações no frontend E no backend — sinalizar isto claramente, não é só uma mudança de ficheiro Angular):**
+
+1. **Access token:** deixa de ir para `localStorage`. Passa a viver apenas em memória, num `signal` privado dentro de `AuthService` (`private readonly _token = signal<string | null>(null)`). Se a página for recarregada (F5), o token em memória perde-se — é esperado e aceitável, resolve-se com o passo 3.
+2. **Refresh token:** deixa de ser lido/escrito pelo Angular. Passa a ser um cookie `HttpOnly; Secure; SameSite=Strict` definido pela **API** na resposta de `/auth/login` e `/auth/refresh` (`Set-Cookie`), nunca visível a JavaScript. `/auth/logout` no backend deve limpar esse cookie.
+3. **Rehidratação silenciosa no arranque da app:** no `APP_INITIALIZER` (ou no construtor de `AuthService` chamado uma vez em `app.component.ts`), chamar `POST /auth/refresh` com `{ withCredentials: true }` e sem corpo — se existir um cookie de sessão válido, a API devolve um novo access token que é guardado em memória; se não existir/expirou, o utilizador simplesmente fica por autenticar (comportamento actual do guard já o redirecciona para login).
+4. **Interceptor:** `auth.interceptor.ts` passa a ler `authService.token()` (o signal em memória) em vez de `localStorage.getItem(...)`.
+5. **Todas as chamadas relacionadas com sessão** (`/auth/login`, `/auth/refresh`, `/auth/logout`, `/admin/me`) precisam de `{ withCredentials: true }` no `HttpClient` para o browser enviar/receber o cookie.
+6. **CORS no backend** tem de mudar de qualquer wildcard (`*`) para a origem exacta do domínio Vercel + `Access-Control-Allow-Credentials: true` (obrigatório para cookies cross-site funcionarem).
+
+**Esboço do `AuthService` alvo (substituir os métodos que tocam em `localStorage` para tokens):**
+
+```ts
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private readonly _accessToken = signal<string | null>(null);
+  readonly user = signal<UserApi | null>(null);
+
+  token(): string | null {
+    return this._accessToken();
+  }
+  isAuthenticated(): boolean {
+    return !!this._accessToken();
+  }
+
+  login(email: string, password: string) {
+    return this.http
+      .post<ApiResponse<AuthResult>>(`${environment.apiUrl}/auth/login`, { email, password }, { withCredentials: true })
+      .pipe(
+        tap((response) => {
+          this._accessToken.set(response.data.accessToken); // refreshToken já não vem para o corpo/JS
+          this.user.set(response.data.user);
+        }),
+      );
+  }
+
+  bootstrap(): Observable<boolean> {
+    // chamado uma vez no arranque da app
+    return this.refreshService.refresh().pipe(
+      tap((response) => this._accessToken.set(response.data.accessToken)),
+      switchMap(() => this.me()),
+      map(() => true),
+      catchError(() => of(false)),
+    );
+  }
+
+  logout(): void {
+    this.http.post(`${environment.apiUrl}/auth/logout`, {}, { withCredentials: true }).subscribe();
+    this._accessToken.set(null);
+    this.user.set(null);
+    void this.router.navigateByUrl('/admin/login');
+  }
+}
+```
+
+> Se, por restrição de prazo, a mudança de backend (cookies `HttpOnly`) não puder acontecer já nesta ronda: **não tratar isto como opcional/nice-to-have** — é o item de maior risco desta auditoria. Como mitigação mínima e temporária enquanto o backend não muda: manter o access token só em memória (passo 1-4 acima são só frontend e já reduzem a janela de exposição, já que o access token deixa de persistir entre sessões), e deixar claramente assinalado no backlog que o refresh token em `localStorage` continua vulnerável até à mudança para cookie `HttpOnly`.
+
+Também mover `bravo-admin-user` (nome/email/role) para fora do `localStorage` — é menos sensível que os tokens mas ainda é PII; passa a vir sempre de `/admin/me` após a rehidratação em vez de ser lido de disco.
+
+### 6.2 Content-Security-Policy e outros headers HTTP
+
+**Problema:** não existe qualquer CSP, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy` ou HSTS configurados — nem via `<meta>` no `index.html` nem via servidor. Como o deploy é estático via Vercel (`vercel.json` já existe), a forma correcta de aplicar isto é o bloco `headers` do `vercel.json` (headers como `X-Frame-Options` **não** funcionam via `<meta>`, só CSP tem suporte parcial em `<meta http-equiv="Content-Security-Policy">` — mas para `frame-ancestors`, HSTS, etc. tem de ser via servidor/edge).
+
+**Adicionar a `vercel.json`:**
+
+```json
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "buildCommand": "npm run build",
+        "outputDirectory": "dist/bravo-business/browser"
+      }
+    }
+  ],
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https: ; connect-src 'self' https://bravo-bussiness-api.onrender.com; frame-src https://www.google.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
+        },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" }
+      ]
+    }
+  ]
+}
+```
+
+Notas importantes:
+- `style-src` precisa de `'unsafe-inline'` **apenas** porque o build de produção (`angular.json` → `optimization.styles.inlineCritical: true`) injecta CSS crítico inline no `<head>`. Alternativa mais estrita: desligar `inlineCritical` (custo: um pequeno flash de estilo a menos optimizado) e remover `'unsafe-inline'` do `style-src`. Decidir com o Elizandro qual o trade-off preferido.
+- `connect-src` tem de incluir **ambos** os ambientes se o build de staging usar `environment.ts` (localhost) — em produção só o domínio Render é necessário; ajustar se houver mais ambientes.
+- `img-src` ficou permissivo (`https:`) porque o catálogo carrega imagens Unsplash e de utilizadores diversos — se as imagens de produto passarem a vir todas de um único domínio (ex. bucket próprio), apertar para esse domínio específico.
+- Depois de aplicado, testar a app inteira (loja + admin, incluindo o mapa embutido em Contactos e o botão WhatsApp) para confirmar que nada é bloqueado pela CSP — abrir a consola do browser e procurar erros `Refused to ...`.
+
+**No backend (fora deste repositório, mas necessário em conjunto):** CORS deve listar a origem exacta do site (não `*`), e responder `Access-Control-Allow-Credentials: true` assim que os cookies HttpOnly da secção 6.1 forem implementados.
+
+### 6.3 Outros riscos encontrados
+
+1. **Bloqueio de tentativas de login é só client-side.** `AuthService.recordFailedLogin()`/`isLoginLocked()` usam contadores em `localStorage` (`bravo-login-failed-attempts`, `bravo-login-lock-until`) — qualquer pessoa contorna isto limpando o `localStorage`, usando uma janela anónima, ou chamando a API directamente (Postman/curl), sem passar pelo frontend. Isto dá uma falsa sensação de protecção contra força bruta. `express-rate-limit` já consta como dependência no projecto, o que sugere que a proteção real já pode existir no backend — confirmar, e se sim, fazer o frontend **ler** o estado de bloqueio devolvido pela API (ex. um `429` com `retryAfter`) em vez de o calcular localmente; manter o cronómetro visual apenas como reflexo do que a API já impõe, nunca como a barreira real.
+2. **`admin.guard.ts`** protege apenas a navegação (UX) — confirmar que toda a gente na equipa entende que a autorização real tem de estar sempre no backend (o guard nunca pode ser a única barreira a dados sensíveis).
+3. **Validação de ficheiros só no frontend.** `onImageSelected`/`onGallerySelected` verificam `file.type.startsWith('image/')` e tamanho ≤5MB — o tipo MIME é trivialmente falsificável; isto deve continuar a existir como UX (feedback imediato), mas o backend tem de re-validar por assinatura de ficheiro (magic bytes), nunca confiar no `Content-Type` enviado pelo browser.
+4. **SRI (Subresource Integrity) na CDN do Font Awesome.** `src/index.html` carrega `https://cdnjs.cloudflare.com/.../font-awesome/6.5.2/css/all.min.css` sem `integrity`/`crossorigin`. Adicionar:
+   ```html
+   <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+     integrity="<hash-sha384-da-versao-exacta>"
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+   />
+   ```
+   (obter o hash correcto a partir do próprio cdnjs, que publica o `integrity` junto de cada versão). Isto impede que um CDN comprometido injecte CSS/JS malicioso sem ser detectado.
+5. **Segredos nunca em `environment.*.ts`.** Confirmar como regra permanente: estes ficheiros vão para o bundle público, visíveis a qualquer visitante via DevTools — só a URL pública da API deve lá estar, nunca chaves de API privadas, credenciais, ou tokens de terceiros.
+6. **`npm audit`** — dado o tamanho da árvore de dependências (`package-lock.json` extenso), recomenda-se correr `npm audit` periodicamente e antes de cada deploy de produção, como parte do processo (não é uma alteração de código).
+
+---
+
+## 7. Plano de fases
+
+| Fase | Conteúdo | Depende de |
+|---|---|---|
+| 1 | Componente `app-form-field` + migração dos formulários (secção 1) | — |
+| 2 | Máscara de preço cents-first (secção 3) | — |
+| 3 | Estados `submitting`/`success` + barra de refresh fina (secção 2) | Fase 1 (usa os mesmos botões) |
+| 4 | Consolidar shimmer + skeleton de detalhe (secção 4) | — |
+| 5 | Safe-area, touch targets, breakpoint de contactos, limpeza de ficheiros legados (secção 5) | — |
+| 6 | Refactor de tokens: access token em memória, remoção de `localStorage` para tokens/refresh, chamadas `withCredentials` (secção 6.1) — **coordenar com quem trata da API**, já que exige `Set-Cookie` + CORS no backend | — |
+| 7 | `vercel.json` com CSP e headers (secção 6.2) | Testar exaustivamente depois da Fase 6, já que `connect-src`/CORS interagem |
+| 8 | SRI no Font Awesome, alinhar bloqueio de login ao backend, `npm audit` (secção 6.3) | Fase 6/7 |
+
+---
+
+## 8. Checklist de aceitação
+
+- [ ] Inputs em toda a app mostram claramente os estados *default/active/error/success/disabled*, com borda colorida e ícone, tal como na referência.
+- [ ] Campos com limite de caracteres mostram contador `x / y`.
+- [ ] Submeter um formulário bloqueia os campos, mostra "A guardar...", depois um breve estado de sucesso antes de navegar — visualmente distinto do skeleton cinzento de carregamento inicial.
+- [ ] Actualizar uma lista já carregada mostra uma barra fina de progresso em vez de substituir tudo por skeleton.
+- [ ] Digitar num campo de preço preenche da direita para a esquerda como um input bancário, backspace remove um dígito de cada vez, sem nunca mostrar `NaN` ou string vazia inválida.
+- [ ] Existe skeleton dedicado nas páginas de detalhe de produto (loja e admin), não apenas spinner+texto.
+- [ ] Botões/ícones tocáveis em mobile têm pelo menos ~40px.
+- [ ] `viewport-fit=cover` + `env(safe-area-inset-*)` aplicados onde há elementos fixos ao fundo/topo.
+- [ ] O access token do admin já não está em `localStorage`; vive apenas em memória durante a sessão do separador.
+- [ ] O refresh token está num cookie `HttpOnly; Secure; SameSite` definido pelo backend, nunca acessível a `document.cookie`/JS.
+- [ ] `withCredentials: true` está presente em todas as chamadas de autenticação/sessão.
+- [ ] `vercel.json` define CSP + `X-Content-Type-Options` + `X-Frame-Options` + `Referrer-Policy` + `Permissions-Policy` + HSTS, testado sem erros de consola em toda a app.
+- [ ] Font Awesome carregado com `integrity`/`crossorigin`.
+- [ ] Ficheiros legados vanilla (`index.htm`, `global.js`, `style.css` na raiz) removidos ou confirmados como necessários por outro motivo.
 - [ ] `ng build --configuration production` compila sem erros nem avisos novos.
-- [ ] A loja pública (checkout WhatsApp, carrinho, favoritos) continua a funcionar exactamente como antes — nenhuma destas fases deve alterar essa lógica de negócio.
+- [ ] Nenhuma destas fases altera o fluxo de checkout via WhatsApp nem os contratos de `api.models.ts`.

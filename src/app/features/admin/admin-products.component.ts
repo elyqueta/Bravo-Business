@@ -24,6 +24,7 @@ export class AdminProductsComponent implements OnInit {
   readonly search = signal("");
   readonly loading = signal(false);
   readonly deletingId = signal<string | null>(null);
+  readonly deleteState = signal<'idle' | 'removing'>('idle');
   private loadTimeout?: number;
   ngOnInit(): void {
     this.load();
@@ -54,14 +55,17 @@ export class AdminProductsComponent implements OnInit {
       danger: true,
     }).then((confirmed) => {
       if (!confirmed) return;
+      this.deleteState.set('removing');
       this.deletingId.set(product.id);
       this.api.deleteProduct(product.id).subscribe({
         next: () => {
           this.deletingId.set(null);
+          this.deleteState.set('idle');
           this.load();
         },
         error: () => {
           this.deletingId.set(null);
+          this.deleteState.set('idle');
           this.toast.error("Não foi possível remover o produto.");
         },
       });

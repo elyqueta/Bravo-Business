@@ -9,11 +9,12 @@
         ><i class="fa-solid fa-plus"></i> Nova categoria</a
       >
     </header>
-    <section class="admin-panel">
+    <section class="admin-panel" [class.admin-panel-loading]="loading() && categories().length">
+      <div class="admin-panel-loading-bar" *ngIf="loading() && categories().length"></div>
       <div class="admin-panel-head">
         <h2>Todas as categorias</h2>
-        <button class="admin-refresh" (click)="load()">
-          <i class="fa-solid fa-arrows-rotate"></i> Actualizar
+        <button class="admin-refresh" (click)="load()" [disabled]="loading()">
+          <i class="fa-solid fa-arrows-rotate" [class.fa-spin]="loading()"></i> Actualizar
         </button>
       </div>
       <div class="admin-category-list">
@@ -32,8 +33,8 @@
                 [routerLink]="['/admin/categorias', category.id, 'editar']"
                 title="Editar"
                 ><i class="fa-solid fa-pen"></i></a
-              ><button class="delete" (click)="delete(category)" [disabled]="deletingId() === category.id" title="Eliminar">
-                <i class="fa-solid fa-trash"></i>
+              ><button class="delete" (click)="delete(category)" [disabled]="deletingId() === category.id || deleteState() === 'removing'" [class.deleting]="deletingId() === category.id || deleteState() === 'removing'" title="Eliminar">
+                <i class="fa-solid" [class.fa-trash]="deletingId() !== category.id && deleteState() !== 'removing'" [class.fa-spinner]="deletingId() === category.id || deleteState() === 'removing'" [class.fa-spin]="deletingId() === category.id || deleteState() === 'removing'"></i>
               </button>
             </div>
           </article>
