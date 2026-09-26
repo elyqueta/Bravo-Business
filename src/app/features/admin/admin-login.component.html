@@ -23,32 +23,32 @@
       </div>
     }
     <form [formGroup]="form" (ngSubmit)="submit()">
-      <app-form-field
-        caption="Email"
-        [state]="form.controls.email.touched && form.controls.email.invalid ? 'error' : 'default'"
-        [helpText]="form.controls.email.touched && form.controls.email.invalid ? 'Indica um email válido.' : ''"
-        [disabled]="submitState() === 'submitting' || auth.isLoginLocked()"
-      >
-        <input
-          type="email"
-          formControlName="email"
-          placeholder="admin@bravo.co.ao"
-          [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid ? true : null"
-        />
-      </app-form-field>
-      <app-form-field
-        caption="Password"
-        [state]="form.controls.password.touched && form.controls.password.invalid ? 'error' : 'default'"
-        [helpText]="form.controls.password.touched && form.controls.password.invalid ? 'A password deve ter pelo menos 6 caracteres.' : ''"
-        [disabled]="submitState() === 'submitting' || auth.isLoginLocked()"
-      >
-        <input
-          type="password"
-          formControlName="password"
-          placeholder="A tua password"
-          [attr.aria-invalid]="form.controls.password.touched && form.controls.password.invalid ? true : null"
-        />
-      </app-form-field>
+      <fieldset [disabled]="submitState() === 'submitting' || auth.isLoginLocked()">
+        <app-form-field
+          caption="Email"
+          [state]="form.controls.email.touched && form.controls.email.invalid ? 'error' : 'default'"
+          [helpText]="form.controls.email.touched && form.controls.email.invalid ? 'Indica um email válido.' : ''"
+        >
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="admin@bravo.co.ao"
+            [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid ? true : null"
+          />
+        </app-form-field>
+        <app-form-field
+          caption="Password"
+          [state]="form.controls.password.touched && form.controls.password.invalid ? 'error' : 'default'"
+          [helpText]="form.controls.password.touched && form.controls.password.invalid ? 'A password deve ter pelo menos 6 caracteres.' : ''"
+        >
+          <input
+            type="password"
+            formControlName="password"
+            placeholder="A tua password"
+            [attr.aria-invalid]="form.controls.password.touched && form.controls.password.invalid ? true : null"
+          />
+        </app-form-field>
+      </fieldset>
       <button class="admin-submit" type="submit" [disabled]="submitState() === 'submitting' || auth.isLoginLocked()">
         @switch (submitState()) {
           @case ('submitting') { <i class="fa-solid fa-spinner fa-spin"></i> A guardar... }

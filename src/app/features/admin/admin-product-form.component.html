@@ -112,7 +112,6 @@
               [formControl]="featureCtrl"
               placeholder="Adicionar detalhe..."
               (keydown.enter)="$event.preventDefault(); addFeature()"
-              [class.field-success]="featureSuccess()"
             />
             <button type="button" class="admin-secondary" (click)="addFeature()">
               Adicionar

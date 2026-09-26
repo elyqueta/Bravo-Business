@@ -17,10 +17,6 @@
 .field-success .field-control { border-color: #25a35a; }
 .field-success .field-control:focus-within { box-shadow: 0 0 0 3px rgba(37,163,90,.14); }
 .field-disabled .field-control { opacity: .55; cursor: not-allowed; pointer-events: none; }
-.field-control ::ng-content, .field-control input, .field-control textarea, .field-control select {
-  flex: 1; border: none; background: transparent; padding: 11px 12px; font: inherit; color: var(--text); min-width: 0;
-}
-.field-control input:focus, .field-control textarea:focus, .field-control select:focus { outline: none; }
 .field-icon { padding-right: 12px; font-size: 14px; }
 .field-icon.success { color: #25a35a; }
 .field-icon.error { color: var(--danger); }

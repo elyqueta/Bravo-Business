@@ -2314,3 +2314,38 @@ footer {
     min-height: 320px;
   }
 }
+
+/* ════════════════════════════════════════
+   FORM FIELD — RESET DO INPUT PROJECTADO
+   Tem de ficar aqui (global, sem encapsulamento).
+   O Angular marca um elemento projectado via
+   <ng-content> com o atributo do componente que
+   o ESCREVEU no template, nunca do componente
+   que o recebe — por isso uma regra equivalente
+   dentro de form-field.component.scss nunca
+   correspondia a nada. Ver auditoria-inputs-formfield.md.
+════════════════════════════════════════ */
+.field .field-control > input,
+.field .field-control > select,
+.field .field-control > textarea,
+.field .field-control label > input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  padding: 11px 12px;
+  font: inherit;
+  color: var(--text);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.field .field-control > input:focus,
+.field .field-control > select:focus,
+.field .field-control > textarea:focus,
+.field .field-control label > input:focus {
+  outline: none;
+}
+.field .field-control > textarea {
+  resize: vertical;
+}
