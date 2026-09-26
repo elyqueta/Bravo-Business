@@ -29,7 +29,7 @@
       (ngSubmit)="save()"
       [class.form-locked]="submitState() === 'submitting'"
     >
-      <fieldset [disabled]="submitState() === 'submitting'">
+      <fieldset class="admin-form-grid" [disabled]="submitState() === 'submitting'">
         <app-form-field
           caption="Nome"
           [state]="form.controls.name.touched && form.controls.name.invalid ? 'error' : 'default'"
@@ -85,7 +85,7 @@
             <option value="Premium">Premium</option>
           </select>
         </app-form-field>
-        <app-form-field caption="Imagem principal" [helpText]="editingId ? 'Escolhe uma nova imagem apenas se quiseres substituir a actual.' : 'PNG, JPG ou WEBP até 5 MB.'">
+        <app-form-field class="full-width" caption="Imagem principal" [helpText]="editingId ? 'Escolhe uma nova imagem apenas se quiseres substituir a actual.' : 'PNG, JPG ou WEBP até 5 MB.'">
           <input
             type="file"
             accept="image/*"
@@ -98,14 +98,14 @@
             alt="Pré-visualização do produto"
           />
         </div>
-        <app-form-field caption="Descrição" [maxLength]="500"          [currentLength]="form.controls.description.value.length || 0">
+        <app-form-field class="full-width" caption="Descrição" [maxLength]="500"          [currentLength]="form.controls.description.value.length || 0">
           <textarea
             formControlName="description"
             rows="5"
             maxlength="500"
           ></textarea>
         </app-form-field>
-        <app-form-field caption="Detalhes do produto" [helpText]="'Ex: Material: 100% algodão · Tamanhos: S, M, L, XL'" [state]="featureSuccess() ? 'success' : 'default'">
+        <app-form-field class="full-width" caption="Detalhes do produto" [helpText]="'Ex: Material: 100% algodão · Tamanhos: S, M, L, XL'" [state]="featureSuccess() ? 'success' : 'default'">
           <div class="admin-feature-input">
             <input
               type="text"
@@ -126,7 +126,7 @@
             }
           </div>
         </app-form-field>
-        <app-form-field caption="Galeria">
+        <app-form-field class="full-width" caption="Galeria">
           <div class="admin-gallery-zone" (click)="$event.stopPropagation()">
             <label class="admin-dropzone">
               <input

@@ -20,7 +20,7 @@
             [ngModel]="search()"
             (ngModelChange)="onSearchChange($event)"
             placeholder="Pesquisar produtos"
-          /><button class="admin-refresh" (click)="load()" [disabled]="loading()">
+          /><button class="admin-refresh" (click)="loadAll()" [disabled]="loading()">
             <i class="fa-solid fa-arrows-rotate" [class.fa-spin]="loading()"></i>
           </button>
         </div>

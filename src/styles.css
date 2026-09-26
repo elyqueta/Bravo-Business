@@ -2325,10 +2325,15 @@ footer {
    dentro de form-field.component.scss nunca
    correspondia a nada. Ver auditoria-inputs-formfield.md.
 ════════════════════════════════════════ */
+fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
 .field .field-control > input,
 .field .field-control > select,
-.field .field-control > textarea,
-.field .field-control label > input {
+.field .field-control > textarea {
   flex: 1;
   width: 100%;
   min-width: 0;
@@ -2342,10 +2347,14 @@ footer {
 }
 .field .field-control > input:focus,
 .field .field-control > select:focus,
-.field .field-control > textarea:focus,
-.field .field-control label > input:focus {
+.field .field-control > textarea:focus {
   outline: none;
 }
 .field .field-control > textarea {
   resize: vertical;
+}
+.field .field-control > i:first-child {
+  padding-right: 8px;
+  color: var(--accent);
+  font-size: 14px;
 }

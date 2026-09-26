@@ -8,14 +8,12 @@
 <main class="catalog-page">
   <div class="catalog-toolbar">
     <app-form-field [showClear]="!!search" [clear]="clearSearchSignal">
-      <label class="search-field"
-        ><i class="fa-solid fa-magnifying-glass"></i
-        ><input
-          [(ngModel)]="search"
-          (ngModelChange)="onSearchChange($event)"
-          placeholder="Pesquisar produtos"
-        /></label
-      >
+      <i class="fa-solid fa-magnifying-glass"></i
+      ><input
+        [(ngModel)]="search"
+        (ngModelChange)="onSearchChange($event)"
+        placeholder="Pesquisar produtos"
+      />
     </app-form-field><label
       ><span>Preço máximo</span
       ><input

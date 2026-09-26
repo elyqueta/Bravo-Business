@@ -21,24 +21,26 @@ export class AdminProductsComponent implements OnInit {
   private readonly confirm = inject(ConfirmDialogService);
   private readonly toast = inject(ToastService);
   readonly products = signal<ProductApi[]>([]);
+  private readonly allProducts = signal<ProductApi[]>([]);
   readonly search = signal("");
   readonly loading = signal(false);
   readonly deletingId = signal<string | null>(null);
   readonly deleteState = signal<'idle' | 'removing'>('idle');
   private loadTimeout?: number;
   ngOnInit(): void {
-    this.load();
+    this.loadAll();
   }
   onSearchChange(value: string): void {
     this.search.set(value);
     clearTimeout(this.loadTimeout);
-    this.loadTimeout = window.setTimeout(() => this.load(), 350);
+    this.loadTimeout = window.setTimeout(() => this.filterProducts(), 150);
   }
-  load(): void {
+  loadAll(): void {
     this.loading.set(true);
-    this.api.products(this.search()).subscribe({
+    this.api.products("").subscribe({
       next: (response) => {
-        this.products.set(response.data);
+        this.allProducts.set(response.data);
+        this.filterProducts();
         this.loading.set(false);
       },
       error: () => {
@@ -46,6 +48,20 @@ export class AdminProductsComponent implements OnInit {
         this.loading.set(false);
       },
     });
+  }
+  private filterProducts(): void {
+    const term = this.search().trim().toLowerCase();
+    if (!term) {
+      this.products.set(this.allProducts());
+      return;
+    }
+    this.products.set(
+      this.allProducts().filter(
+        (product) =>
+          product.name.toLowerCase().includes(term) ||
+          product.id.toLowerCase().includes(term)
+      )
+    );
   }
   delete(product: ProductApi): void {
     this.confirm.ask({
@@ -59,13 +75,13 @@ export class AdminProductsComponent implements OnInit {
       this.deletingId.set(product.id);
       this.api.deleteProduct(product.id).subscribe({
         next: () => {
-          this.deletingId.set(null);
           this.deleteState.set('idle');
-          this.load();
+          this.deletingId.set(null);
+          this.loadAll();
         },
         error: () => {
-          this.deletingId.set(null);
           this.deleteState.set('idle');
+          this.deletingId.set(null);
           this.toast.error("Não foi possível remover o produto.");
         },
       });
