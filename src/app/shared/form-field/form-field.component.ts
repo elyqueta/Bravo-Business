@@ -9,6 +9,7 @@ export type FieldState = 'default' | 'error' | 'success';
   imports: [CommonModule],
   templateUrl: './form-field.component.html',
   styleUrls: ['./form-field.component.scss'],
+  host: { display: 'block' },
 })
 export class FormFieldComponent {
   readonly caption = input<string>('');

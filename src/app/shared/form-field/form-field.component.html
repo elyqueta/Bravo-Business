@@ -9,9 +9,6 @@
   }
   <div class="field-control">
     <ng-content></ng-content>
-    @if (state() === 'success') {
-      <i class="fa-solid fa-circle-check field-icon success"></i>
-    }
     @if (state() === 'error') {
       <i class="fa-solid fa-triangle-exclamation field-icon error"></i>
     }
